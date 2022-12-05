@@ -1670,8 +1670,13 @@ alternation to pick between one or more alternative patterns.</p>
 <div id="htmlwidget-e6692a905aa12c44b681" style="width:960px;height:100%;" class="str_view html-widget"></div>
 <script type="application/json" data-for="htmlwidget-e6692a905aa12c44b681">{"x":{"html":"<ul>\n  <li><span class='match'>grey<\/span><\/li>\n  <li><span class='match'>gray<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
 </div>
+<<<<<<< HEAD
+<div id="repetition---1" class="slide section level2">
+<h1>Repetition - 1</h1>
+=======
 <div id="repetition" class="slide section level2">
 <h1>Repetition</h1>
+>>>>>>> 216dddb5b36d6e516062434d323adc979aac5674
 <ul>
 <li>?: 0 or 1</li>
 <li>+: 1 or more</li>
@@ -1687,6 +1692,113 @@ alternation to pick between one or more alternative patterns.</p>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(x, <span class="st">&quot;CC?&quot;</span>)</span></code></pre></div>
 <div id="htmlwidget-70962889e1c053835a21" style="width:960px;height:100%;" class="str_view html-widget"></div>
 <script type="application/json" data-for="htmlwidget-70962889e1c053835a21">{"x":{"html":"<ul>\n  <li>1888 is the longest year in Roman numerals: MD<span class='match'>CC<\/span>CLXXXVIII<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+<<<<<<< HEAD
+</div>
+<div id="repetition---2" class="slide section level2">
+<h1>Repetition - 2</h1>
+<p>We can also specify the number of matches precisely.</p>
+<ul>
+<li><code>{n}</code>: exactly n</li>
+<li><code>{n,}</code>: n or more</li>
+<li><code>{,m}</code>: at most m</li>
+<li><code>{n,m}</code>: between n amd m</li>
+</ul>
+<pre><code>str_view(x, &quot;C{2}&quot;)
+str_view(x, &quot;C{2,}&quot;)
+str_view(x, &quot;C{2,3}&quot;)</code></pre>
+<p>By default these matches will match the longest string possible. You
+can make them “lazy”, matching the shortest string possible, by putting
+a ? after them.</p>
+<pre><code>str_view(x, &quot;C{2,3}?&quot;)</code></pre>
+</div>
+<div id="detect-matches" class="slide section level2">
+<h1>Detect Matches</h1>
+<p>We can use the <span style="color:blue">str_detect()</span> function
+to check if a character vector matches a pattern.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Jazz Chisholm Jr&quot;</span>, <span class="st">&quot;Cedric Mullins&quot;</span>, <span class="st">&quot;Alex Colome&quot;</span>, <span class="st">&quot;LaMonte Wade Jr&quot;</span>, <span class="st">&quot;AJrich&quot;</span>)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(x, <span class="st">&quot;Jr&quot;</span>)</span></code></pre></div>
+<pre><code>## [1]  TRUE FALSE FALSE  TRUE  TRUE</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">str_detect</span>(x, <span class="st">&quot;Jr&quot;</span>)]</span></code></pre></div>
+<pre><code>## [1] &quot;Jazz Chisholm Jr&quot; &quot;LaMonte Wade Jr&quot;  &quot;AJrich&quot;</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">str_detect</span>(x, <span class="st">&quot;Jr$&quot;</span>)]</span></code></pre></div>
+<pre><code>## [1] &quot;Jazz Chisholm Jr&quot; &quot;LaMonte Wade Jr&quot;</code></pre>
+</div>
+<div id="extract-matches---1" class="slide section level2">
+<h1>Extract Matches - 1</h1>
+<p>We can use the <span style="color:blue">str_extract()</span> function
+to check if a character vector matches a pattern. The following example
+was from the <a href="http://bit.ly/Harwardsentences">Harvard
+sentence</a>, which were designed to test VOIP systems. There are
+provided in the <span style="color:red">stringr</span> package.</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(sentences)</span></code></pre></div>
+<pre><code>## [1] 720</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sentences, <span class="at">n =</span> <span class="dv">4</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;The birch canoe slid on the smooth planks.&quot; 
+## [2] &quot;Glue the sheet to the dark blue background.&quot;
+## [3] &quot;It&#39;s easy to tell the depth of a well.&quot;     
+## [4] &quot;These days a chicken leg is a rare dish.&quot;</code></pre>
+<p>Suppose that we want to find all sentences that contain a color.</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;yellow&quot;</span>, <span class="st">&quot;green&quot;</span>, <span class="st">&quot;purple&quot;</span>, <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>color_match <span class="ot">&lt;-</span> <span class="fu">str_c</span>(colors, <span class="at">collapse =</span> <span class="st">&quot;|&quot;</span>)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>color_match</span></code></pre></div>
+<pre><code>## [1] &quot;red|orange|yellow|green|purple|blue&quot;</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>has_color <span class="ot">&lt;-</span> <span class="fu">str_subset</span>(sentences, color_match)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>matches <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(has_color, color_match)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(matches)</span></code></pre></div>
+<pre><code>## [1] &quot;blue&quot; &quot;blue&quot; &quot;red&quot;  &quot;red&quot;  &quot;red&quot;  &quot;blue&quot;</code></pre>
+</div>
+<div id="extract-matches---2" class="slide section level2">
+<h1>Extract Matches - 2</h1>
+<p>The <span style="color:blue">str_extract()</span> function only
+extracts the first match. We can use the <span style="color:blue">str_extract_all()</span> function to get all
+matches.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>more <span class="ot">&lt;-</span> sentences[<span class="fu">str_count</span>(sentences, color_match) <span class="sc">&gt;</span> <span class="dv">1</span>]</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>more</span></code></pre></div>
+<pre><code>## [1] &quot;It is hard to erase blue or red ink.&quot;          
+## [2] &quot;The green light in the brown box flickered.&quot;   
+## [3] &quot;The sky in the west is tinged with orange red.&quot;</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract_all</span>(more, color_match)</span></code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;blue&quot; &quot;red&quot; 
+## 
+## [[2]]
+## [1] &quot;green&quot; &quot;red&quot;  
+## 
+## [[3]]
+## [1] &quot;orange&quot; &quot;red&quot;</code></pre>
+<p>If we use <span style="color:orange">simplify = TRUE</span> function,
+<span style="color:blue">str_extract_all()</span> function will return a
+matrix with short matches expanded to the same length as the
+longest.</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract_all</span>(more, color_match, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>##      [,1]     [,2] 
+## [1,] &quot;blue&quot;   &quot;red&quot;
+## [2,] &quot;green&quot;  &quot;red&quot;
+## [3,] &quot;orange&quot; &quot;red&quot;</code></pre>
+</div>
+<div id="replaceing-matches" class="slide section level2">
+<h1>Replaceing Matches</h1>
+<p>The <span style="color:blue">str_replace()</span> and <span style="color:blue">str_replace_all()</span> functions allow us to
+replace matches with new strings.</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>languages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;python&quot;</span>, <span class="st">&quot;java,&quot;</span>, <span class="st">&quot;php&quot;</span>, <span class="st">&quot;javascript&quot;</span>, <span class="st">&quot;objective-c&quot;</span>, <span class="st">&quot;ruby&quot;</span>,</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot;perl&quot;</span>, <span class="st">&quot; sql&quot;</span>,<span class="st">&quot;kotlin&quot;</span>, <span class="st">&quot; r,&quot;</span>, <span class="st">&quot;matlab&quot;</span>,<span class="st">&quot; c#&quot;</span>, <span class="st">&quot; c++ &quot;</span>, <span class="st">&quot;c++,&quot;</span>, <span class="st">&quot;c++/&quot;</span>, <span class="st">&quot; c,&quot;</span>, <span class="st">&quot; c &quot;</span>, <span class="st">&quot;c/&quot;</span>)</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>languages <span class="ot">&lt;-</span> <span class="fu">toupper</span>(languages)</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>all_c1 <span class="ot">&lt;-</span> <span class="fu">str_c</span>(languages[<span class="fu">c</span>(<span class="dv">12</span><span class="sc">:</span><span class="dv">18</span>)], <span class="at">collapse =</span> <span class="st">&quot;|&quot;</span>)</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(languages, all_c1, <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;PYTHON&quot;      &quot;JAVA,&quot;       &quot;PHP&quot;         &quot;JAVASCRIPT&quot;  &quot;OBJECTIVE-C&quot;
+##  [6] &quot;RUBY&quot;        &quot;PERL&quot;        &quot; SQL&quot;        &quot;KOTLIN&quot;      &quot; R,&quot;        
+## [11] &quot;MATLAB&quot;      &quot;C&quot;           &quot; C++ &quot;       &quot;C++,&quot;        &quot;C++/&quot;       
+## [16] &quot;C&quot;           &quot;C&quot;           &quot;C&quot;</code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>all_c2 <span class="ot">&lt;-</span> <span class="fu">str_c</span>(<span class="fu">c</span>(<span class="st">&quot;C</span><span class="sc">\\</span><span class="st">+</span><span class="sc">\\</span><span class="st">+ &quot;</span>, <span class="st">&quot;C</span><span class="sc">\\</span><span class="st">+</span><span class="sc">\\</span><span class="st">+,&quot;</span>, <span class="st">&quot;C</span><span class="sc">\\</span><span class="st">+</span><span class="sc">\\</span><span class="st">+/&quot;</span>), <span class="at">collapse =</span> <span class="st">&quot;|&quot;</span>)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>all_c <span class="ot">&lt;-</span> <span class="fu">str_c</span>(<span class="fu">c</span>(all_c1, all_c2), <span class="at">collapse =</span> <span class="st">&quot;|&quot;</span>)</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(languages, all_c, <span class="st">&quot;C&quot;</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;PYTHON&quot;      &quot;JAVA,&quot;       &quot;PHP&quot;         &quot;JAVASCRIPT&quot;  &quot;OBJECTIVE-C&quot;
+##  [6] &quot;RUBY&quot;        &quot;PERL&quot;        &quot; SQL&quot;        &quot;KOTLIN&quot;      &quot; R,&quot;        
+## [11] &quot;MATLAB&quot;      &quot;C&quot;           &quot; C&quot;          &quot;C&quot;           &quot;C&quot;          
+## [16] &quot;C&quot;           &quot;C&quot;           &quot;C&quot;</code></pre>
+=======
+>>>>>>> 216dddb5b36d6e516062434d323adc979aac5674
 </div>
 <div id="readme" class="slide section level2">
 <h1>README</h1>
