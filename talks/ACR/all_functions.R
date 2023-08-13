@@ -116,28 +116,29 @@ get_individual <- function(URL){
     degree <- degree %>%
       paste(., collapse="; ")
     
-    # Extract the 5th paragraph within a 'div' element with class starting with 'wysiwyg'
-    # If no such paragraph is found, set profile to "0"
+    # Extract the paragraph within a 'div' element with class starting with 'wysiwyg'
+    # If no such paragraph is found, set profile to "NA"
     profile <- page %>%
       html_elements(xpath = "//div[starts-with(@class, 'wysiwyg')]") %>%
       html_elements(xpath = ".//p") %>%
       html_text() %>%
       .[5] %>%
-      if_else(length(.) == 0, "0", .)
+      { if (. == "" || length(.) == 0 || is.na(.)) NA_character_ else . }
     
-    # Extract the research details, excluding the degrees
+    # Extract the research details
+    # If no such paragraph is found, set research to "NA"
     research <- page %>%
       html_elements(xpath = "//div[starts-with(@class, 'wysiwyg')]") %>%
       html_elements(xpath = ".//li") %>%
       html_text() %>%
       .[-c(1:k)] %>%
       paste(., collapse=", ") %>%
-      if_else(length(.) == 0, "0", .)
+      { if (. == "" || length(.) == 0 || is.na(.)) NA_character_ else . }
     
   } else {
     # If no degrees found, set all fields to "0"
     k <- 0
-    degree <- "0"; profile <- "0"; research <- "0";
+    degree <- NA; profile <- NA; research <- NA;
   }
   
   # Combine the extracted name, degree, profile, and research into a data frame

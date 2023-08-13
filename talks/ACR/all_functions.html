@@ -761,28 +761,29 @@ Dayton.</p>
     degree &lt;- degree %&gt;%
       paste(., collapse=&quot;; &quot;)
     
-    # Extract the 5th paragraph within a &#39;div&#39; element with class starting with &#39;wysiwyg&#39;
-    # If no such paragraph is found, set profile to &quot;0&quot;
+    # Extract the paragraph within a &#39;div&#39; element with class starting with &#39;wysiwyg&#39;
+    # If no such paragraph is found, set profile to &quot;NA&quot;
     profile &lt;- page %&gt;%
       html_elements(xpath = &quot;//div[starts-with(@class, &#39;wysiwyg&#39;)]&quot;) %&gt;%
       html_elements(xpath = &quot;.//p&quot;) %&gt;%
       html_text() %&gt;%
       .[5] %&gt;%
-      if_else(length(.) == 0, &quot;0&quot;, .)
+      { if (. == &quot;&quot; || length(.) == 0 || is.na(.)) NA_character_ else . }
     
-    # Extract the research details, excluding the degrees
+    # Extract the research details
+    # If no such paragraph is found, set research to &quot;NA&quot;
     research &lt;- page %&gt;%
       html_elements(xpath = &quot;//div[starts-with(@class, &#39;wysiwyg&#39;)]&quot;) %&gt;%
       html_elements(xpath = &quot;.//li&quot;) %&gt;%
       html_text() %&gt;%
       .[-c(1:k)] %&gt;%
       paste(., collapse=&quot;, &quot;) %&gt;%
-      if_else(length(.) == 0, &quot;0&quot;, .)
+      { if (. == &quot;&quot; || length(.) == 0 || is.na(.)) NA_character_ else . }
     
   } else {
     # If no degrees found, set all fields to &quot;0&quot;
     k &lt;- 0
-    degree &lt;- &quot;0&quot;; profile &lt;- &quot;0&quot;; research &lt;- &quot;0&quot;;
+    degree &lt;- NA; profile &lt;- NA; research &lt;- NA;
   }
   
   # Combine the extracted name, degree, profile, and research into a data frame
