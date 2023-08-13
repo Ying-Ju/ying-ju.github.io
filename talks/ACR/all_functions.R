@@ -1,0 +1,151 @@
+# The CSV_files() function is designed to perform a series of tasks related to downloading, extracting, and combining CSV files from a given URL.
+CSV_files <- function(each_url){
+  # Get the file name
+  download_path <- sub("^.*/", "", each_url)
+  
+  # Download the file and save it to the working directory
+  GET(each_url, write_disk(download_path, overwrite=TRUE))
+  
+  # Unzip the Files
+  temp_dir <- tempdir() # the path to the current temporary directory
+  unzip(download_path, exdir = temp_dir)
+  
+  # List the CSV Files
+  csv_files <- list.files(temp_dir, pattern = "\\.csv$", full.names=TRUE)
+  
+  # Read the CSV Files
+  data_list <- lapply(csv_files, read.csv)
+  
+  # Combine the Data from multiple CSV files
+  combined_data <- bind_rows(data_list)
+  
+  # Optional: Clean Up
+  unlink(download_path)
+  
+  return(combined_data)
+}
+
+
+
+# The JSON_files function is designed to download a compressed JSON file (with a .gz extension) from a given URL, decompress it, and then read the JSON content into R.
+JSON_files <- function(each_link){
+  # Get the file name
+  download_path <- sub("^.*/", "", each_link)
+  
+  # Download the file and save it to the working directory
+  GET(each_link, write_disk(download_path, overwrite=TRUE))
+  
+  # Remove .gz in the end of the file name
+  decompressed_file <- sub("\\.gz$", "", download_path)
+  
+  # Decompress the Gzip File
+  gunzip(download_path, destname = decompressed_file, overwrite = TRUE)
+  
+  # Read the JSON File
+  instancesfile <- stream_in(file(decompressed_file))
+  
+  
+  return(instancesfile)
+}
+
+
+
+# The get_faculty() function extracts information about faculty members from a given URL.
+# Specifically, it retrieves the names, positions, and profile links of faculty members in the Department of Mathematics at the University of Dayton.
+get_faculty <- function(URL){
+  # Read the HTML content of the provided URL
+  page <- read_html(URL)
+  
+  # Extract faculty names using the specific xpath, which targets links with a class starting with 'profile-listing__copy-header'
+  faculty <- page %>%
+    html_elements(xpath = "//a[starts-with(@class, 'profile-listing__copy-header')]") %>%
+    html_text()
+  
+  # Extract faculty positions using the specific xpath, which targets paragraphs with a class starting with 'profile-listing__copy'
+  position <- page %>%
+    html_elements(xpath = "//p[starts-with(@class, 'profile-listing__copy')]") %>%
+    html_text()
+  
+  # Extract all links that include the "/directory/artssciences/mathematics/" pattern
+  # Then, make them full URLs by prefixing with the main university domain
+  all_links <- page %>%
+    html_elements(xpath = "//a") %>%
+    html_attr("href") %>%
+    .[str_detect(., "/directory/artssciences/mathematics/")] %>%
+    .[c(1:(2*length(faculty)))] %>%
+    unique() %>%
+    paste0("https://udayton.edu", .)
+  
+  # Combine faculty names, positions, and links into a data frame
+  df <- data.frame(faculty, position, all_links)
+  
+  # Introduce a random delay between 15 and 25 seconds to mimic human browsing and avoid potential rate-limiting
+  Sys.sleep(sample(c(15,25),1))
+  
+  # Return the data frame containing the extracted information
+  return(df)
+}
+
+
+
+# The get_individual() function extracts details such as the name, degree, profile, and research areas from a given URL of a faculty member in the Department of Mathematics at the University of Dayton.
+get_individual <- function(URL){
+  # Read the HTML content of the provided URL
+  page <- read_html(URL)
+  
+  # Extract the name by targeting the text inside the h2 element
+  name <- page %>%
+    html_element(xpath = "//h2") %>%
+    html_text()
+  
+  # Extract degrees by identifying list items within a div element with class starting with 'wysiwyg'
+  # Only include the list items that contain a period and comma, usually found in degree information
+  degree <- page %>%
+    html_elements(xpath = "//div[starts-with(@class, 'wysiwyg')]") %>%
+    html_elements(xpath = ".//li") %>%
+    html_text() %>%
+    .[str_detect(., "\\., ")]
+  
+  # Determine the length of the degree list
+  k <- length(degree)
+  
+  # If there are degrees found
+  if (k != 0) {
+    
+    # Concatenate the degrees into a single string, separated by semicolons
+    degree <- degree %>%
+      paste(., collapse="; ")
+    
+    # Extract the 5th paragraph within a 'div' element with class starting with 'wysiwyg'
+    # If no such paragraph is found, set profile to "0"
+    profile <- page %>%
+      html_elements(xpath = "//div[starts-with(@class, 'wysiwyg')]") %>%
+      html_elements(xpath = ".//p") %>%
+      html_text() %>%
+      .[5] %>%
+      if_else(length(.) == 0, "0", .)
+    
+    # Extract the research details, excluding the degrees
+    research <- page %>%
+      html_elements(xpath = "//div[starts-with(@class, 'wysiwyg')]") %>%
+      html_elements(xpath = ".//li") %>%
+      html_text() %>%
+      .[-c(1:k)] %>%
+      paste(., collapse=", ") %>%
+      if_else(length(.) == 0, "0", .)
+    
+  } else {
+    # If no degrees found, set all fields to "0"
+    k <- 0
+    degree <- "0"; profile <- "0"; research <- "0";
+  }
+  
+  # Combine the extracted name, degree, profile, and research into a data frame
+  df <- data.frame(name, degree, profile, research)
+  
+  # Introduce a random delay between 3 and 15 seconds to mimic human browsing
+  Sys.sleep(sample(c(3,15),1))
+  
+  # Return the data frame containing the extracted information
+  return(df)
+}
