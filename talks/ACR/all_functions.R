@@ -44,7 +44,6 @@ JSON_files <- function(each_link){
   # Read the JSON File
   instancesfile <- stream_in(file(decompressed_file))
   
-  
   return(instancesfile)
 }
 

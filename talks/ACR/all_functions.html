@@ -654,7 +654,7 @@ from a given URL.</p>
   # Combine the Data from multiple CSV files
   combined_data &lt;- bind_rows(data_list)
   
-  # Optional: Clean Up
+  # Optional: remove the .zip file in the folder
   unlink(download_path)
   
   return(combined_data)
@@ -681,7 +681,6 @@ it, and then read the JSON content into R.</p>
   
   # Read the JSON File
   instancesfile &lt;- stream_in(file(decompressed_file))
-  
   
   return(instancesfile)
 }</code></pre>
