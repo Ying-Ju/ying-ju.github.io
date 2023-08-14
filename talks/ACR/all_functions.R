@@ -1,5 +1,5 @@
-# The CSV_files() function is designed to perform a series of tasks related to downloading, extracting, and combining CSV files from a given URL.
-CSV_files <- function(each_url){
+# The get_CSV() function is designed to perform a series of tasks related to downloading, extracting, and combining CSV files from a given URL.
+get_CSV <- function(each_url){
   # Get the file name
   download_path <- sub("^.*/", "", each_url)
   
@@ -27,8 +27,8 @@ CSV_files <- function(each_url){
 
 
 
-# The JSON_files function is designed to download a compressed JSON file (with a .gz extension) from a given URL, decompress it, and then read the JSON content into R.
-JSON_files <- function(each_link){
+# The get_JSON() function is designed to download a compressed JSON file (with a .gz extension) from a given URL, decompress it, and then read the JSON content into R.
+get_JSON <- function(each_link){
   # Get the file name
   download_path <- sub("^.*/", "", each_link)
   

@@ -628,13 +628,13 @@ pre {
 font-size: 16px
 }
 </style>
-<div id="csv_files" class="section level2">
-<h2>CSV_files</h2>
-<p><a id="csv_files"></a></p>
-<p>The <code>CSV_files()</code> function is designed to perform a series
+<div id="get_csv" class="section level2">
+<h2>get_CSV</h2>
+<p><a id="getCSV"></a></p>
+<p>The <code>get_CSV()</code> function is designed to perform a series
 of tasks related to downloading, extracting, and combining CSV files
 from a given URL.</p>
-<pre class="r"><code>CSV_files &lt;- function(each_url){
+<pre class="r"><code>get_CSV &lt;- function(each_url){
   # Get the file name
   download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, each_url)
   
@@ -660,13 +660,13 @@ from a given URL.</p>
   return(combined_data)
 }</code></pre>
 </div>
-<div id="json_files" class="section level2">
-<h2>JSON_files</h2>
-<p><a id="json_files"></a></p>
-<p>The <code>JSON_files()</code> function is designed to download a
+<div id="get_json" class="section level2">
+<h2>get_JSON</h2>
+<p><a id="getJSON"></a></p>
+<p>The <code>get_JSON()</code> function is designed to download a
 compressed JSON file (with a .gz extension) from a given URL, decompress
 it, and then read the JSON content into R.</p>
-<pre class="r"><code>JSON_files &lt;- function(each_link){
+<pre class="r"><code>get_JSON &lt;- function(each_link){
   # Get the file name
   download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, each_link)
   
@@ -687,7 +687,7 @@ it, and then read the JSON content into R.</p>
 </div>
 <div id="get_faculty" class="section level2">
 <h2>get_faculty</h2>
-<p><a id="get_faculty"></a></p>
+<p><a id="getfaculty"></a></p>
 <p>The <code>get_faculty()</code> function extracts information about
 faculty members from a given URL.Specifically, it retrieves the names,
 positions, and profile links of faculty members in the Department of
@@ -728,7 +728,7 @@ Mathematics at the University of Dayton.</p>
 </div>
 <div id="get_individual" class="section level2">
 <h2>get_individual</h2>
-<p><a id="get_individual"></a></p>
+<p><a id="getindividual"></a></p>
 <p>The <code>get_individual()</code> function extracts details such as
 the name, degree, profile, and research areas from a given URL of a
 faculty member in the Department of Mathematics at the University of
