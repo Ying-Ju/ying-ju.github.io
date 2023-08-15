@@ -12,7 +12,7 @@
 <meta name="author" content="Tessa Chen" />
 
 
-<title>All Functions used</title>
+<title>get_individual Function</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -611,7 +611,7 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">All Functions used</h1>
+<h1 class="title toc-ignore">get_individual Function</h1>
 <h4 class="author">Tessa Chen</h4>
 
 </div>
@@ -627,108 +627,9 @@ font-size: 16px;
 pre {
 font-size: 16px
 }
+.author {
+display: none; }
 </style>
-<div id="get_csv" class="section level1">
-<h1>get_CSV</h1>
-<p><a id="get_CSV"></a></p>
-<p>The <code>get_CSV()</code> function is designed to perform a series
-of tasks related to downloading, extracting, and combining CSV files
-from a given URL.</p>
-<pre class="r"><code>get_CSV &lt;- function(each_url){
-  # Get the file name
-  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, each_url)
-  
-  # Download the file and save it to the working directory
-  GET(each_url, write_disk(download_path, overwrite=TRUE))
-  
-  # Unzip the Files
-  temp_dir &lt;- tempdir() # the path to the current temporary directory
-  unzip(download_path, exdir = temp_dir)
-  
-  # List the CSV Files
-  csv_files &lt;- list.files(temp_dir, pattern = &quot;\\.csv$&quot;, full.names=TRUE)
-  
-  # Read the CSV Files
-  data_list &lt;- lapply(csv_files, read.csv)
-  
-  # Combine the Data from multiple CSV files
-  combined_data &lt;- bind_rows(data_list)
-  
-  # Optional: remove the .zip file in the folder
-  unlink(download_path)
-  
-  return(combined_data)
-}</code></pre>
-</div>
-<div id="get_json" class="section level1">
-<h1>get_JSON</h1>
-<p><a id="get_JSON"></a></p>
-<p>The <code>get_JSON()</code> function is designed to download a
-compressed JSON file (with a .gz extension) from a given URL, decompress
-it, and then read the JSON content into R.</p>
-<pre class="r"><code>get_JSON &lt;- function(each_link){
-  # Get the file name
-  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, each_link)
-  
-  # Download the file and save it to the working directory
-  GET(each_link, write_disk(download_path, overwrite=TRUE))
-  
-  # Remove .gz in the end of the file name
-  decompressed_file &lt;- sub(&quot;\\.gz$&quot;, &quot;&quot;, download_path)
-  
-  # Decompress the Gzip File
-  gunzip(download_path, destname = decompressed_file, overwrite = TRUE)
-  
-  # Read the JSON File
-  instancesfile &lt;- stream_in(file(decompressed_file))
-  
-  return(instancesfile)
-}</code></pre>
-</div>
-<div id="get_faculty" class="section level1">
-<h1>get_faculty</h1>
-<p><a id="get_faculty"></a></p>
-<p>The <code>get_faculty()</code> function extracts information about
-faculty members from a given URL.Specifically, it retrieves the names,
-positions, and profile links of faculty members in the Department of
-Mathematics at the University of Dayton.</p>
-<pre class="r"><code>get_faculty &lt;- function(URL){
-  # Read the HTML content of the provided URL
-  page &lt;- read_html(URL)
-  
-  # Extract faculty names using the specific xpath, which targets links with a class starting with &#39;profile-listing__copy-header&#39;
-  faculty &lt;- page %&gt;%
-    html_elements(xpath = &quot;//a[starts-with(@class, &#39;profile-listing__copy-header&#39;)]&quot;) %&gt;%
-    html_text()
-  
-  # Extract faculty positions using the specific xpath, which targets paragraphs with a class starting with &#39;profile-listing__copy&#39;
-  position &lt;- page %&gt;%
-    html_elements(xpath = &quot;//p[starts-with(@class, &#39;profile-listing__copy&#39;)]&quot;) %&gt;%
-    html_text()
-  
-  # Extract all links that include the &quot;/directory/artssciences/mathematics/&quot; pattern
-  # Then, make them full URLs by prefixing with the main university domain
-  all_links &lt;- page %&gt;%
-    html_elements(xpath = &quot;//a&quot;) %&gt;%
-    html_attr(&quot;href&quot;) %&gt;%
-    .[str_detect(., &quot;/directory/artssciences/mathematics/&quot;)] %&gt;%
-    .[c(1:(2*length(faculty)))] %&gt;%
-    unique() %&gt;%
-    paste0(&quot;https://udayton.edu&quot;, .)
-  
-  # Combine faculty names, positions, and links into a data frame
-  df &lt;- data.frame(faculty, position, all_links)
-  
-  # Introduce a random delay between 15 and 25 seconds to mimic human browsing and avoid potential rate-limiting
-  Sys.sleep(sample(c(15,25),1))
-  
-  # Return the data frame containing the extracted information
-  return(df)
-}</code></pre>
-</div>
-<div id="get_individual" class="section level1">
-<h1>get_individual</h1>
-<p><a id="get_individual"></a></p>
 <p>The <code>get_individual()</code> function extracts details such as
 the name, degree, profile, and research areas from a given URL of a
 faculty member in the Department of Mathematics at the University of
@@ -794,7 +695,6 @@ Dayton.</p>
   # Return the data frame containing the extracted information
   return(df)
 }</code></pre>
-</div>
 
 
 
