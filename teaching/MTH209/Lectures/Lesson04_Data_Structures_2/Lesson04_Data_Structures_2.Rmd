@@ -1,0 +1,306 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 4: Basic Data Structures (Lists, Data Frames, Factors and Tables)" 
+author: |
+  | Ying-Ju Tessa Chen
+  | [ychen4@udayton.edu](mailto:ychen4@udayton.edu)
+  | University of Dayton
+bibliography: MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+## Basic Data Structures 
+
+<head>
+    <base target="_blank">
+</head>
+
+In this lesson, we will introduce the following data structures in R. 
+
+- Lists
+- Data frames
+- Factors and Tables
+
+**Note:** This lesson is based on the book: The Art of R Programming ([@matloff2011art]). 
+
+## Lists - 1
+
+Similar to vectors and matrices, one common operation with lists is indexing. Technically, a list is a vector. However, it is much flexible compared to the use of vectors and matrices. A list could contains elements of different types such as stings, numbers, vectors, and another list inside it. It can contain a matrix, a function, and a data frame, etc. as its elements. The following code chunk shows a simple example. 
+
+
+```{r list_v1}
+x <- list(Name = "Tessa", Programming_Skills = c("R", "Python", "Matlab"), Num_Students_2022F = 80, office = "SC 329E", Tenured = FALSE, UD_Working_Yr = 5)
+
+x
+```
+
+The component names are called *tags* in the R literature. In fact, including a name for each component is optional. We can see an example on the next slide. 
+
+
+## Lists - 2
+
+- Assign a tag for each component in a list
+
+```{r list_v2}
+list("Tessa", c("R", "Python", "Matlab"), 80, "SC 329E", FALSE, 5) -> list_tessa
+list_tessa
+names(list_tessa) <- c("Name", "Programming_Skills", "Num_Students_2022F", "office", "Tenured", "UD_Working_Yr")
+```
+
+## Lists - 3
+
+- The advantages of using tags in a list
+
+It is clearer and less error-prone to use names instead of numeric indices. 
+
+```{r list_adv}
+list_tessa$office
+list_tessa[[2]]
+list_tessa[[2]][3]
+```
+
+## Lists - 4
+
+```{r list_continue}
+A <- matrix(sample(1:100, 9), ncol=3)
+new_list <- list(list_tessa, A)
+new_list
+```
+
+**Question:** How to extract the value in the 2nd row and 1st column in the second component in the list?
+
+
+## Lists - 5
+
+Since lists are vectors, they can be created via <span Style="color:blue">vector()</span>. 
+
+```{r create_list0}
+y <- vector(mode="list") # create a vector with size 0
+z <- vector("list", 10) # create a vector with size 10
+y[["Method"]] <- "Decision Tree" 
+y[["Sensitivity"]] <- 0.85
+y[["Specificity"]] <- 0.89
+y
+``` 
+
+Another way to create a list. 
+
+```{r create_list2}
+w <- rep(list(NA), 2)
+w
+```
+
+## Lists - 6
+
+- List Indexing
+
+There are three ways to access an individual component of a list and return it in the data type of this component. Each of these is useful in different contexts. 
+
+```{r indexing1}
+y$Specificity
+y[["Specificity"]]
+y[[2]]
+```
+
+## Lists - 7
+
+An alternative to the 2nd and 3rd techniques listed is to use single brackets rather than double brackets. 
+
+```{r indexing2}
+y["Specificity"]
+y[2] # the 2 is the index of "Specificity" within the list y
+```
+
+## Lists - 8
+
+```{r indexing3}
+new_list[2]
+new_list[[2]]
+list_tessa[2]
+```
+
+**Question:** How to extract the third element in the 2nd component of the list *list_tessa*?
+
+
+## Lists - 9
+
+We should pay attention to the use of indices when subsetting values in a list. 
+
+```{r subsetting_list}
+class(new_list[[1]])
+class(new_list[[2]])
+```
+
+**Question:** Try the following commands and discuss the difference between them.
+
+  1. *new_list[[1:2]]* and *new_list[1:2]*
+
+  2. *new_list[[1]][1:2]* and *new_list[[2]][1:2]*
+
+  3. *new_list[[2]][1:2,]* and *new_list[[2]][,1:2]*
+
+
+## Data Frames - 1
+
+A data frame is like a matrix. It has a two-dimensional data structure. But it differs from a matrix since the data type of each column could be different. Technically, a data frame is a list, with the components that list being equal-length vectors. 
+
+- Creating Data Frames
+
+```{r create_d}
+kids <- c("Vicky", "Patrick", "Jasmine")
+ages <- c(14, 10, 8)
+# create the data frame using kids and ages
+df <- data.frame(kids, ages, stringsAsFactors = F)
+df
+```
+
+We can include columns directly in the data frame when creating it as well. 
+
+```{r another_d}
+data.frame(kids = c("Vicky", "Patrick", "Jasmine"), ages = c(14, 10, 8), stringsAsFactors = F)
+```
+
+## Data Frames - 2
+
+- Accessing Data Frames
+
+There are multiple ways to access a data frame. 
+
+```{r accessing}
+df[[1]] # list-like
+df$kids # component name 
+df[,1]  # matrix-like
+df[, "kids"] # matri-like with the column name
+```
+
+**Question:** consider four ways to access the first column of the data frame above, which way(s) would generally considered to be clear and safer than others?
+
+## Data Frames - 3
+
+- Checking Data Structures
+
+We can use <span Style="color:blue">str()</span> function to display the structure of an arbitrary R object. 
+
+```{r str}
+str(df)
+```
+
+- Other Matrix-Like Operations
+
+Many matrix operations apply to data frames as well. We will use a R built-in dataset <span Style="color:blue">ToothGrowth</span>. First, we use the <span Style="color:blue">head()</span> function to see the first six rows of the data. 
+
+```{r toothgrowth}
+head(ToothGrowth) 
+```
+
+## Data Frames - 4
+
+Use <span Style="color:blue">ToothGrowth</span> data to answer the following questions. 
+
+1. Find a data frame that contains observations from the 3rd row to 7th row in <span Style="color:blue">ToothGrowth</span>.
+
+2. Find a data frame that contains values from 3rd row to 7th row for the 3rd column in <span Style="color:blue">ToothGrowth</span>.
+
+3. Find a data frame that only contains observations such that their tooth length (*len*) are smaller than the mean tooth length of guinea pigs in <span Style="color:blue">ToothGrowth</span>. 
+
+## Factors & Tables - 1
+
+Since we have introduced factors in Lesson 2, we will focus the concepts about tables. Before we talk about how we could work with tables, let's see an example that demonstrates how we can rearrange the levels in a factor.  
+
+```{r factor_example}
+set.seed(2022)
+seasons <- factor(sample(c("Spring", "Summer", "Fall"), 1000, replace = T))
+levels(seasons)
+```
+
+Here, we can see that the order of levels in *seasons* is not *Spring*, *Summer*, *Fall*, which didn't reflect the time order.  
+
+```{r bar, fig.align='center', out.width="30%"}
+barplot(table(seasons), ylim=c(0, 350))
+```
+
+## Factors & Tables - 2
+
+Continue from the previous slide, we want to change the order of levels in *seasons*.
+
+```{r change_order, fig.align='center', out.width="28%"}
+seasons <- factor(seasons, labels = c("Spring", "Summer", "Fall"))
+barplot(table(seasons), ylim=c(0, 350))
+```
+
+Now, if we want to add another category *Winter* in *seasons*, an intuitive way is to combine the previous vector with the new vector. But quickly we find that the data type of the new object is changed to "character". 
+
+```{r add_category1}
+winters <- rep("Winter", 10)
+all_seasons <- c(seasons, winters)
+class(all_seasons)
+```
+
+## Factors & Tables - 3
+
+If we look into this further by checking the frequency distribution of the data, we find that the first three categories were changed to the characters of 1, 2, and 3. 
+
+```{r add_category2}
+table(all_seasons)
+```
+
+**Question:** How to deal with this issue?
+
+We should change the data type of *winters* to factor. 
+
+```{r add_category3}
+winters <- as.factor(winters)
+all_seasons <- c(seasons, winters)
+class(all_seasons)
+```
+
+We can add a new level to a factor object if needed. 
+
+```{r category4}
+levels(seasons) <- c(levels(seasons), "Winter")
+```
+
+## Factors & Tables - 4
+
+On the previous slides, we used the <span Style="color:blue">table()</span> function to find frequency distribution of a categorical variable. In fact, this function can be used to create a contingency table of two categorical variables. 
+
+```{r}
+set.seed(2022)
+Grade <- sample(c(LETTERS[1:4], "F"), 100, replace=T)
+Sex <- sample(c("Male", "Female"), 100, replace=T, prob=c(0.4, 0.6)) 
+table(Grade, Sex)
+```
+
+**Note:** Similar to data frames, most matrix/array operations can be used on tables. 
+
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+
