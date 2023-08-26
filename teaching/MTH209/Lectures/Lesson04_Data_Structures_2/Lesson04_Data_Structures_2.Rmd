@@ -1,33 +1,72 @@
 ---
 title: "MTH 209 Data Manipulation and Management"
-subtitle: "Lesson 4: Basic Data Structures (Lists, Data Frames, Factors and Tables)" 
-author: |
-  | Ying-Ju Tessa Chen
-  | [ychen4@udayton.edu](mailto:ychen4@udayton.edu)
-  | University of Dayton
-bibliography: MTH209.bib
-link-citations: yes
-output: 
-  slidy_presentation:
-    font_adjustment: -1
+subtitle: "Lesson 4: Basic Data Structures<br> (Lists, Data Frames, Factors and Tables)" 
+author: '<br>Ying-Ju Tessa Chen, PhD <br><br> Associate Professor <br> Department of Mathematics<br> University of Dayton <br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @ying-ju](https://twitter.com/ju_tessa) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` ying-ju](https://github.com/ying-ju/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)<br>'
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../Styles/fonts.css", "../Styles/modified_theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: magula
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../Styles/header.html"
 ---
-  
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      cache = TRUE,
-                      cache.lazy = TRUE,
-                      out.width = "100%",
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
                       warning = FALSE,
                       message = FALSE,
-                      progress = FALSE,
-                      verbose = TRUE)
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      fig.height = 2.5,
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+daytonred = '#E4002B'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+
+
+pacman::p_load(lubridate, janitor, magrittr,
+               tidyverse, # data analysis pkgs
+               countdown, fontawesome, RefManageR, 
+               xaringanExtra, # for slides
+               gifski, av, # for animations
+               rvest, # for scraping
+               scales # for the comma function
+               ) 
+
+BibOptions(check.entries = FALSE, bib.style = "authoryear", 
+           style = "markdown", dashed = TRUE)
+
+bib = ReadBib("../Styles/MTH209.bib") 
 ```
 
-## Basic Data Structures 
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
 
-<head>
-    <base target="_blank">
-</head>
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "16px")
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipable"))
+
+```
+
+# Learning Objectives 
 
 In this lesson, we will introduce the following data structures in R. 
 
@@ -35,37 +74,63 @@ In this lesson, we will introduce the following data structures in R.
 - Data frames
 - Factors and Tables
 
-**Note:** This lesson is based on the book: The Art of R Programming ([@matloff2011art]). 
+**Note:** This lesson is based on the book: The Art of R Programming. 
 
-## Lists - 1
+.left[.footnote[Matloff, Norman. The art of R programming: A tour of statistical software design. No Starch Press, 2011]]
 
-Similar to vectors and matrices, one common operation with lists is indexing. Technically, a list is a vector. However, it is much flexible compared to the use of vectors and matrices. A list could contains elements of different types such as stings, numbers, vectors, and another list inside it. It can contain a matrix, a function, and a data frame, etc. as its elements. The following code chunk shows a simple example. 
+---
+# Lists - 1
 
+.pull-left[.footnotesize[Similar to vectors and matrices, one common operation with lists is indexing. Technically, a list is a vector. However, it is much flexible compared to the use of vectors and matrices. A list could contains elements of different types such as stings, numbers, vectors, and another list inside it. It can contain a matrix, a function, and a data frame, etc. as its elements. The following code chunk shows a simple example. ]
 
-```{r list_v1}
-x <- list(Name = "Tessa", Programming_Skills = c("R", "Python", "Matlab"), Num_Students_2022F = 80, office = "SC 329E", Tenured = FALSE, UD_Working_Yr = 5)
+```{r list_v1_1}
+x <- list(Name = "Tessa", 
+          Programming_Skills = c("R", "Python", "Matlab"), 
+          Num_Students_2023F = 84, 
+          office = "SC 329E", 
+          Tenured = TRUE, 
+          UD_Working_Yr = 7)
+```
 
+]
+.pull-right[
+```{r list_v1_1_2}
 x
 ```
+]
 
-The component names are called *tags* in the R literature. In fact, including a name for each component is optional. We can see an example on the next slide. 
+---
+# Lists - 2
 
+.pull-left[.small[- Assign a tag for each component in a list
+<br>The component names are called *tags* in the R literature. In fact, including a name for each component is optional. We can see an example here.]
 
-## Lists - 2
-
-- Assign a tag for each component in a list
-
-```{r list_v2}
-list("Tessa", c("R", "Python", "Matlab"), 80, "SC 329E", FALSE, 5) -> list_tessa
-list_tessa
-names(list_tessa) <- c("Name", "Programming_Skills", "Num_Students_2022F", "office", "Tenured", "UD_Working_Yr")
+```{r list_v2_1}
+list("Tessa", 
+     c("R", "Python", "Matlab"), 
+     84, 
+     "SC 329E",
+     TRUE,
+     7) -> list_tessa
 ```
+]
+.pull-right[
+```{r list_v2_2}
+names(list_tessa) <- 
+  c("Name",
+    "Programming_Skills",
+    "Num_Students_2023F",
+    "office",
+    "Tenured",
+    "UD_Working_Yr")
+```
+]
 
-## Lists - 3
+---
+# Lists - 3
 
 - The advantages of using tags in a list
-
-It is clearer and less error-prone to use names instead of numeric indices. 
+<br>It is clearer and less error-prone to use names instead of numeric indices. 
 
 ```{r list_adv}
 list_tessa$office
@@ -73,20 +138,27 @@ list_tessa[[2]]
 list_tessa[[2]][3]
 ```
 
-## Lists - 4
+---
+# Lists - 4
 
-```{r list_continue}
+.pull-left[
+```{r list_continue_1}
 A <- matrix(sample(1:100, 9), ncol=3)
 new_list <- list(list_tessa, A)
-new_list
+new_list[[1]]
+```
+]
+.pull-right[
+```{r list_continue_2}
+new_list[[2]]
 ```
 
-**Question:** How to extract the value in the 2nd row and 1st column in the second component in the list?
+.small[**Question:** How to extract the value in the 2nd row and 1st column in the second component in the list?]]
 
+---
+# Lists - 5
 
-## Lists - 5
-
-Since lists are vectors, they can be created via <span Style="color:blue">vector()</span>. 
+.pull-left[Since lists are vectors, they can be created via <span Style="color:blue">vector()</span>. 
 
 ```{r create_list0}
 y <- vector(mode="list") # create a vector with size 0
@@ -97,6 +169,8 @@ y[["Specificity"]] <- 0.89
 y
 ``` 
 
+]
+.pull-right[
 Another way to create a list. 
 
 ```{r create_list2}
@@ -104,11 +178,13 @@ w <- rep(list(NA), 2)
 w
 ```
 
-## Lists - 6
+]
+
+---
+# Lists - 6
 
 - List Indexing
-
-There are three ways to access an individual component of a list and return it in the data type of this component. Each of these is useful in different contexts. 
+<br>There are three ways to access an individual component of a list and return it in the data type of this component. Each of these is useful in different contexts. 
 
 ```{r indexing1}
 y$Specificity
@@ -116,7 +192,8 @@ y[["Specificity"]]
 y[[2]]
 ```
 
-## Lists - 7
+---
+# Lists - 7
 
 An alternative to the 2nd and 3rd techniques listed is to use single brackets rather than double brackets. 
 
@@ -125,18 +202,25 @@ y["Specificity"]
 y[2] # the 2 is the index of "Specificity" within the list y
 ```
 
-## Lists - 8
+---
+# Lists - 8
 
-```{r indexing3}
+.pull-left[
+```{r indexing3_1}
 new_list[2]
+```
+]
+.pull-right[
+```{r indexing3_2}
 new_list[[2]]
 list_tessa[2]
 ```
+]
 
 **Question:** How to extract the third element in the 2nd component of the list *list_tessa*?
 
-
-## Lists - 9
+---
+# Lists - 9
 
 We should pay attention to the use of indices when subsetting values in a list. 
 
@@ -153,61 +237,77 @@ class(new_list[[2]])
 
   3. *new_list[[2]][1:2,]* and *new_list[[2]][,1:2]*
 
-
-## Data Frames - 1
+---
+# Data Frames - 1
 
 A data frame is like a matrix. It has a two-dimensional data structure. But it differs from a matrix since the data type of each column could be different. Technically, a data frame is a list, with the components that list being equal-length vectors. 
 
-- Creating Data Frames
+.pull-left[- Creating Data Frames
 
 ```{r create_d}
 kids <- c("Vicky", "Patrick", "Jasmine")
 ages <- c(14, 10, 8)
 # create the data frame using kids and ages
-df <- data.frame(kids, ages, stringsAsFactors = F)
+df <- data.frame(kids, ages,
+                 stringsAsFactors = F)
 df
 ```
 
-We can include columns directly in the data frame when creating it as well. 
+]
+
+.pull-right[We can include columns directly in the data frame when creating it as well. 
 
 ```{r another_d}
-data.frame(kids = c("Vicky", "Patrick", "Jasmine"), ages = c(14, 10, 8), stringsAsFactors = F)
+data.frame(kids = c("Vicky", 
+                    "Patrick", 
+                    "Jasmine"), 
+           ages = c(14, 10, 8), 
+           stringsAsFactors = F)
 ```
 
-## Data Frames - 2
+]
+
+---
+# Data Frames - 2
 
 - Accessing Data Frames
+<br>There are multiple ways to access a data frame. 
 
-There are multiple ways to access a data frame. 
-
-```{r accessing}
+.pull-left[
+```{r accessing_1}
 df[[1]] # list-like
 df$kids # component name 
+```
+]
+.pull-right[
+```{r accessing_2}
 df[,1]  # matrix-like
 df[, "kids"] # matri-like with the column name
 ```
+]
 
 **Question:** consider four ways to access the first column of the data frame above, which way(s) would generally considered to be clear and safer than others?
 
-## Data Frames - 3
+---
+# Data Frames - 3
 
-- Checking Data Structures
-
-We can use <span Style="color:blue">str()</span> function to display the structure of an arbitrary R object. 
+.pull-left[- Checking Data Structures
+<br>We can use <span Style="color:blue">str()</span> function to display the structure of an arbitrary R object. 
 
 ```{r str}
 str(df)
 ```
-
-- Other Matrix-Like Operations
-
-Many matrix operations apply to data frames as well. We will use a R built-in dataset <span Style="color:blue">ToothGrowth</span>. First, we use the <span Style="color:blue">head()</span> function to see the first six rows of the data. 
+]
+.pull-right[- Other Matrix-Like Operations
+<br>Many matrix operations apply to data frames as well. We will use a R built-in dataset <span Style="color:blue">ToothGrowth</span>. First, we use the <span Style="color:blue">head()</span> function to see the first six rows of the data. 
 
 ```{r toothgrowth}
 head(ToothGrowth) 
 ```
+]
 
-## Data Frames - 4
+---
+# Data Frames - 4
 
 Use <span Style="color:blue">ToothGrowth</span> data to answer the following questions. 
 
@@ -217,50 +317,59 @@ Use <span Style="color:blue">ToothGrowth</span> data to answer the following que
 
 3. Find a data frame that only contains observations such that their tooth length (*len*) are smaller than the mean tooth length of guinea pigs in <span Style="color:blue">ToothGrowth</span>. 
 
-## Factors & Tables - 1
+---
+# Factors & Tables - 1
 
-Since we have introduced factors in Lesson 2, we will focus the concepts about tables. Before we talk about how we could work with tables, let's see an example that demonstrates how we can rearrange the levels in a factor.  
+.pull-left[.small[Since we have introduced factors in Lesson 2, we will focus the concepts about tables. Before we talk about how we could work with tables, let's see an example that demonstrates how we can rearrange the levels in a factor.]  
 
 ```{r factor_example}
 set.seed(2022)
-seasons <- factor(sample(c("Spring", "Summer", "Fall"), 1000, replace = T))
+seasons <- factor(
+  sample(c("Spring", "Summer", "Fall"), 
+         1000, replace = T)
+  )
 levels(seasons)
 ```
+]
+.pull-right[.small[Here, we can see that the order of levels in *seasons* is not *Spring*, *Summer*, *Fall*, which didn't reflect the time order.  ]
 
-Here, we can see that the order of levels in *seasons* is not *Spring*, *Summer*, *Fall*, which didn't reflect the time order.  
-
-```{r bar, fig.align='center', out.width="30%"}
+```{r bar, fig.align='center', fig.height=4.5}
 barplot(table(seasons), ylim=c(0, 350))
 ```
+]
 
-## Factors & Tables - 2
+---
+# Factors & Tables - 2
 
-Continue from the previous slide, we want to change the order of levels in *seasons*.
+.pull-left[.small[Continue from the previous slide, we want to change the order of levels in *seasons*.]
 
-```{r change_order, fig.align='center', out.width="28%"}
-seasons <- factor(seasons, labels = c("Spring", "Summer", "Fall"))
+```{r change_order, fig.align='center', fig.height=4.5}
+seasons <- factor(seasons, 
+                  labels = c("Spring", "Summer", "Fall"))
 barplot(table(seasons), ylim=c(0, 350))
 ```
-
-Now, if we want to add another category *Winter* in *seasons*, an intuitive way is to combine the previous vector with the new vector. But quickly we find that the data type of the new object is changed to "character". 
+]
+.pull-right[.small[Now, if we want to add another category *Winter* in *seasons*, an intuitive way is to combine the previous vector with the new vector. But quickly we find that the data type of the new object is changed to "character". ]
 
 ```{r add_category1}
 winters <- rep("Winter", 10)
 all_seasons <- c(seasons, winters)
 class(all_seasons)
 ```
+]
 
-## Factors & Tables - 3
+---
+# Factors & Tables - 3
 
-If we look into this further by checking the frequency distribution of the data, we find that the first three categories were changed to the characters of 1, 2, and 3. 
+.pull-left[.small[If we look into this further by checking the frequency distribution of the data, we find that the first three categories were changed to the characters of 1, 2, and 3.] 
 
 ```{r add_category2}
 table(all_seasons)
 ```
 
 **Question:** How to deal with this issue?
-
-We should change the data type of *winters* to factor. 
+]
+.pull-right[.small[We should change the data type of *winters* to factor.] 
 
 ```{r add_category3}
 winters <- as.factor(winters)
@@ -268,15 +377,18 @@ all_seasons <- c(seasons, winters)
 class(all_seasons)
 ```
 
-We can add a new level to a factor object if needed. 
+.small[We can add a new level to a factor object if needed.]
 
 ```{r category4}
-levels(seasons) <- c(levels(seasons), "Winter")
+levels(seasons) <- 
+  c(levels(seasons), "Winter")
 ```
+]
 
-## Factors & Tables - 4
+---
+# Factors & Tables - 4
 
-On the previous slides, we used the <span Style="color:blue">table()</span> function to find frequency distribution of a categorical variable. In fact, this function can be used to create a contingency table of two categorical variables. 
+.small[On the previous slides, we used the <span Style="color:blue">table()</span> function to find frequency distribution of a categorical variable. In fact, this function can be used to create a contingency table of two categorical variables. ]
 
 ```{r}
 set.seed(2022)
@@ -285,20 +397,41 @@ Sex <- sample(c("Male", "Female"), 100, replace=T, prob=c(0.4, 0.6))
 table(Grade, Sex)
 ```
 
-**Note:** Similar to data frames, most matrix/array operations can be used on tables. 
+.small[**Note:** Similar to data frames, most matrix/array operations can be used on tables.] 
+
+---
+# Summary of Main Points
+
+By now, you should know 
+
+- Basic Data Structures: Lists, Data Frames, Factors and Tables
+
+- Recycle elements from a data object 
+
+- How to extract elements from a data object
 
 
-## README
+---
+# Supplementary Materials
 
-You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+Here are some useful supplementary materials for self-learning. 
 
-* A: Switches show of current versus all slides (helpful for printing all pages)
+.pull-left[
+.center[[<img src="https://d33wubrfki0l68.cloudfront.net/565916198b0be51bf88b36f94b80c7ea67cafe7c/7f70b/cover.png" height="250px">](https://adv-r.hadley.nz)]
+.small[
+* [Names and values](https://adv-r.hadley.nz/names-values.html)
+* [Matrices and arrays](http://adv-r.had.co.nz/Data-structures.html#matrices-and-arrays)
+* [Data frames](http://adv-r.had.co.nz/Data-structures.html#data-frames)
+]
+]
+.pull-right[
+.center[[<img src="https://d33wubrfki0l68.cloudfront.net/b88ef926a004b0fce72b2526b0b5c4413666a4cb/24a30/cover.png" height="250px">](https://r4ds.hadley.nz)]
+.small[
+* [Hierarchical data](https://r4ds.hadley.nz/rectangling.html)
+]
+]
 
-* B: Make fonts large
 
-* c: Show table of contents
-
-* S: Make fonts smaller
 
 
 
