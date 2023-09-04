@@ -78,7 +78,7 @@ xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "pan
 - Know where to get help
 
 ---
-# What is R?
+## What is R?
 
 [R](https://www.r-project.org/) is a statistical programming language. Developed by statisticians Ross Ihaka and Robert Gentleman, R is one of the most popular programming languages in the industry. It is used in almost everywhere, ranging from finance and banking to medicine and manufacturing. It can be used in disciplines like statistics, computer science, economics and economic modelling, cyber security, information systems, health care, engineering and so on.
 
@@ -97,7 +97,7 @@ updateR()
 ```
 
 ---
-# RStudio
+## RStudio
 
 [RStudio](https://www.rstudio.com/products/rstudio/) is an integrated development environment (IDE) for R. 
 
@@ -106,7 +106,7 @@ updateR()
 ```
 
 ---
-# What is R markdown?
+## What is R markdown?
 
 R Markdown is a file format for creating dynamic documents with R and RStudio. RMarkdown documents are written in Markdown which has easy-to-write plain text format with embedded R code.
 
@@ -125,7 +125,7 @@ In order to create a Rmarkdown document, we click <span Style="color:#3384FF">Fi
 ]
 
 ---
-# An Overview of R Markdown Documents
+## An Overview of R Markdown Documents
 
 .pull-left[In the following, we show an example of the header of a R markdown file. 
 
@@ -146,7 +146,7 @@ The further settings for presentations could be found at [R Markdown Cookbook](h
 ]
 
 ---
-# Typical R File Formats
+## Typical R File Formats
 
 .small[
 - `.R` or `.r`: This is the standard file extension for R scripts. 
@@ -165,8 +165,9 @@ The further settings for presentations could be found at [R Markdown Cookbook](h
 
 - `.Rprofile`: This is a script that runs every time R starts. It is often used to set session-wide options or load specific libraries on startup.
 ]
+
 ---
-# Some Useful Keyboard Shortcuts
+## Some Useful Keyboard Shortcuts
 
 .pull-left[
 .small[
@@ -203,7 +204,7 @@ See [Mac keyboard shortcuts](https://support.apple.com/en-us/HT201236) for more 
 ]
 
 ---
-# Where to Get Help
+## Where to Get Help
 
 1. To see documentation on any **function** in R, execute `?data.frame` etc.
 2. Google it! (Better way to learn coding!)

@@ -79,7 +79,7 @@ In this lesson, we will introduce the following data structures in R.
 .left[.footnote[Matloff, Norman. The art of R programming: A tour of statistical software design. No Starch Press, 2011]]
 
 ---
-# Vectors - 1
+## Vectors - 1
 
 The **vector** is the fundamental data type in R. In this session, We will focus on the first two topics below. The third topic will be introduced later this semester. 
 
@@ -88,7 +88,7 @@ The **vector** is the fundamental data type in R. In this session, We will focus
 3. Vectorization: When applying a function on vectors element-by-element
 
 ---
-# Vectors - 2
+## Vectors - 2
 
 .pull-left[
 - Adding and Deleting Vector Elements
@@ -114,7 +114,7 @@ x[-length(x)]
 ]
 
 ---
-# Vectors - 3
+## Vectors - 3
 
 .pull-left[
 - Recycling
@@ -139,7 +139,7 @@ c(1, 3, 4) %% c(4, 1, 5)
 ]
 
 ---
-# Vectors - 4
+## Vectors - 4
 
 .pull-left[
 - Generating Useful Vectors with the : Operator
@@ -162,7 +162,7 @@ We can use the <span Style="color:blue">:</span> operator to create a vector con
 ]
 
 ---
-# Vectors - 5
+## Vectors - 5
 
 .pull-left[
 - Generating Vector Sequences with seq()
@@ -186,7 +186,7 @@ seq(1, 10, 2)
 ]
 
 ---
-# Vectors - 6
+## Vectors - 6
 
 .pull-left[
 - Repeating Vector Constants with rep()
@@ -209,7 +209,7 @@ rep("Hello", 4)
 
 
 ---
-# Vectors - 7
+## Vectors - 7
 
 .pull-left[
 - Using any() and all()
@@ -233,7 +233,7 @@ any(x < 10, na.rm=T) # T means TRUE
 ]
 
 ---
-# Matrices and Arrays - 1
+## Matrices and Arrays - 1
 
 Matrix is a two dimensional rectangular data structure in R. A matrix is a vector with two attributes: the number of rows and the number of columns. 
 
@@ -249,7 +249,7 @@ A[m,1] & A[m,2] & \ldots & A[m,n]
 \right)$$
 
 ---
-# Matrices and Arrays - 2 
+## Matrices and Arrays - 2 
 
 - Creating Matrices
 .small[
@@ -275,7 +275,7 @@ matrix(c(1, 3, 2, 4, 5, 8), ncol=2,
 ]
 
 ---
-# Matrices and Arrays - 3
+## Matrices and Arrays - 3
 
 - General Matrix Operations
 .small[
@@ -296,7 +296,7 @@ A + A
 ]
 
 ---
-# Matrices and Arrays - 4
+## Matrices and Arrays - 4
 
 - Matrix Indexing
 .small[
@@ -321,7 +321,7 @@ A[, - c(1,3)]
 ]
 
 ---
-# Matrices and Arrays - 5
+## Matrices and Arrays - 5
 
 We can also assign values to submatrices. The following code chunks show an example based on A given on the previous slide. 
 
@@ -338,7 +338,7 @@ A
 ]
 
 ---
-# Matrices and Arrays - 6
+## Matrices and Arrays - 6
 
 - Filtering on Matrices 
 .small[
@@ -360,7 +360,7 @@ A[which(A[,2] >= 6), ]
 ]
 
 ---
-# Matrices and Arrays - 7
+## Matrices and Arrays - 7
 
 .pull-left[
 .small[
@@ -390,7 +390,7 @@ which(A < 20)
 
 
 ---
-# Matrices and Arrays - 8
+## Matrices and Arrays - 8
 
 .pull-left[
 - Adding and Deleting Matrix Rows and Columns
@@ -414,7 +414,7 @@ rbind(A, one)
 ]
 
 ---
-# Matrices and Arrays - 9
+## Matrices and Arrays - 9
 
 .pull-left[
 - Naming Matrix Rows and Columns
@@ -437,7 +437,7 @@ X
 ]
 
 ---
-# Matrices and Arrays - 10
+## Matrices and Arrays - 10
 
 .pull-left[
 - Higher-Dimension Arrays

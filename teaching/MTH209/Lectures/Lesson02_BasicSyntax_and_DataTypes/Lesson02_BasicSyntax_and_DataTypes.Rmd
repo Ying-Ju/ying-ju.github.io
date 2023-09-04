@@ -73,7 +73,7 @@ xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "pan
 - Basic Data Types
 
 ---
-# Basic Syntax
+## Basic Syntax
 
 We will introduce some basic syntax in R. 
 
@@ -82,7 +82,7 @@ We will introduce some basic syntax in R.
 - Assignment Operator
 - Parentheses, Brackets & Curly Brackets
 
-## Pound Sign in R
+### Pound Sign in R
 
 \# symbol is for adding comments and notes to your code.  In any line of your code, anything after it will not be executed. 
 
@@ -91,7 +91,7 @@ We will introduce some basic syntax in R.
 ```
 
 ---
-# Examples of Simple Algebra
+## Examples of Simple Algebra
 
 - Example of Addition
 
@@ -112,7 +112,7 @@ We will introduce some basic syntax in R.
 **Note:** you should find that 7/11 and 7 / 11 generate the same result.  This is because the blank spaces in the code is generally ignored.  
 
 ---
-# Assignment Operators: Equal Sign and Arrow
+## Assignment Operators: Equal Sign and Arrow
 
 .pull-left[
 ```{r equal, eval=FALSE}
@@ -150,7 +150,7 @@ In the first case, $x$ is an argument in the function <span Style="color:blue">m
 ]
 
 ---
-# Parentheses, Brackets & Curly Brackets
+## Parentheses, Brackets & Curly Brackets
 
 Parentheses, <mark style="background-color: lightblue">( )</mark>, are used to call functions; Brackets, <mark style="background-color: lightblue">[ ]</mark>, are used to obtain values in a data structure, Curly Brackets, <mark style="background-color: lightblue">{ }</mark>, are used to denote a block of code in a function or in a conditional statement.  
 
@@ -170,7 +170,7 @@ w[w < 50] # only obtain values that satisfy the condition
 **Note:** c() can concatenate more than just vectors.  We will talk about this later. 
 
 ---
-# Basic Data Types
+## Basic Data Types
 
 Here are some basic data types in R.
 
@@ -184,7 +184,7 @@ Here are some basic data types in R.
 We will focus on the use of the first five types. 
 
 ---
-# Character - 1
+## Character - 1
 
 A character object is used to store text, letters, or words (strings) in R.
 
@@ -199,7 +199,7 @@ nchar(x) # use nchar() to count the number of characters
 .left[.footnote[[R: Quotes](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Quotes.html)]]
 
 ---
-# Character - 2
+## Character - 2
 
 If we want to combine two strings into one string, we can use paste() or paste0() function. 
 
@@ -220,7 +220,7 @@ paste0(x,y)
 .center[These two functions could be very useful.]  
 
 ---
-# Character - 3
+## Character - 3
 
 Here we give one advanced example. 
 
@@ -234,14 +234,14 @@ allfiles3
 ```
 
 ---
-# What is wrong here?
+## What is wrong here?
 
 ```{r rstudio, echo=FALSE, fig.align = 'center', out.width="25%"}
    knitr::include_graphics('../Figures/datatype.jpg')
 ```
 
 ---
-# Factor - 1
+## Factor - 1
 
 A factor object is used to store categorical / qualitative variables. 
 
@@ -256,7 +256,7 @@ length(grade) # use length() to find the length of vectors
 
 ---
 
-# Factor - 2
+## Factor - 2
 
 - Question 1: Is factor the same as character in R?
   - No, they are not the same
@@ -265,7 +265,7 @@ length(grade) # use length() to find the length of vectors
   - Use <span Style="color:blue">as.character()</span> function
 
 ---
-# Numeric
+## Numeric
 
 A numeric object is used to store numeric data in R.
 
@@ -285,7 +285,7 @@ summary(x2)
 ```
 
 ---
-# Integer 
+## Integer 
 
 An integer object is used to store numeric data without decimals.
 
@@ -297,7 +297,7 @@ class(x3)
 ```
 
 ---
-# Logical
+## Logical
 
 A logic object contains only two values: TRUE or FALSE.
 
@@ -319,7 +319,7 @@ class(result)
 ]
 
 ---
-# Create an empty vector
+## Create an empty vector
 
 There are some situations that we may want to create an empty vector.  Here is a simple example. 
 
@@ -333,7 +333,7 @@ w <- rep(NA, 2)
 ```
 
 ---
-# Remark 
+## Remark 
 
 We can use `as.character()`, `as.integer()`, `as.numeric()`, `as.factor()` functions to transform the data type. 
 
