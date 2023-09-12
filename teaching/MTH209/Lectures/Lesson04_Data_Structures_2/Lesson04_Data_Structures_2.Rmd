@@ -199,7 +199,7 @@ An alternative to the 2nd and 3rd techniques listed is to use single brackets ra
 
 ```{r indexing2}
 y["Specificity"]
-y[2] # the 2 is the index of "Specificity" within the list y
+y[2] # the 2 is the index of "Sensitivity" within the list y
 ```
 
 ---
