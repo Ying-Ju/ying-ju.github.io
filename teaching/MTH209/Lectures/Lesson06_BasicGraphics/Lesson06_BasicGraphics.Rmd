@@ -165,9 +165,9 @@ par(mar=c(5,7,4,2))
 
 barplot(table(Friday$Age), 
         col = "lightblue", 
-        main = "Distribution of Purchases by Customer's Age", 
+        main = "Distribution of Customer's Age", 
         horiz = TRUE, 
-        xlab = "Number of Purchases",
+        xlab = "Number of Customers",
         ylab = "Age Group", las=1)
 ```
 
@@ -176,8 +176,8 @@ barplot(table(Friday$Age),
 ```{r bar2_hide, out.width="70%", eval=TRUE, echo=FALSE}
 par(mgp=c(4,1,0)) # change the margin line for the axis title, axis labels and axis line
 par(mar=c(5,7,4,2)) # set margin of the figure 
-barplot(table(Friday$Age), col = "lightblue", main = "Distribution of Purchases by Customer's Age", 
-        horiz = TRUE, xlab = "Number of Purchases",
+barplot(table(Friday$Age), col = "lightblue", main = "Distribution of Customer's Age", 
+        horiz = TRUE, xlab = "Number of Customers",
         ylab = "Age Group", las=1)
 ```
 ]
@@ -192,7 +192,7 @@ We can use RGB color code to assign colors.
 
 ```{r bar3, out.width="35%"}
 barplot(table(Friday$Age), col = "#69b3a2", 
-        main = "Distribution of Purchases by Customer's Age", 
+        main = "Distribution of Customer's Age", 
         xlab = "Age Group", ylab ="Number of Customers")
 ```
 
