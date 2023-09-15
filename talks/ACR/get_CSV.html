@@ -638,14 +638,14 @@ of tasks related to downloading, extracting, and combining CSV files
 from a given URL.</p>
 <pre class="r"><code>get_CSV &lt;- function(URL){
   # Get the file name
-  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, URL)
+  file_name &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, URL)
   
   # Download the file and save it to the working directory
-  GET(URL, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(file_name, overwrite=TRUE))
   
   # Unzip the Files
   temp_dir &lt;- tempdir() # the path to the current temporary directory
-  unzip(download_path, exdir = temp_dir)
+  unzip(file_name, exdir = temp_dir)
   
   # List the CSV Files
   csv_files &lt;- list.files(temp_dir, pattern = &quot;\\.csv$&quot;, full.names=TRUE)
@@ -657,7 +657,7 @@ from a given URL.</p>
   combined_data &lt;- bind_rows(data_list)
   
   # Optional: remove the .zip file in the folder
-  unlink(download_path)
+  unlink(file_name)
   
   return(combined_data)
 }</code></pre>

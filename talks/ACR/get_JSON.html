@@ -638,16 +638,16 @@ compressed JSON file (with a .gz extension) from a given URL, decompress
 it, and then read the JSON content into R.</p>
 <pre class="r"><code>get_JSON &lt;- function(URL){
   # Get the file name
-  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, URL)
+  file_name &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, URL)
   
   # Download the file and save it to the working directory
-  GET(URL, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(file_name, overwrite=TRUE))
   
   # Remove .gz in the end of the file name
-  decompressed_file &lt;- sub(&quot;\\.gz$&quot;, &quot;&quot;, download_path)
+  decompressed_file &lt;- sub(&quot;\\.gz$&quot;, &quot;&quot;, file_name)
   
   # Decompress the Gzip File
-  gunzip(download_path, destname = decompressed_file, overwrite = TRUE)
+  gunzip(file_name, destname = decompressed_file, overwrite = TRUE)
   
   # Read the JSON File
   instancesfile &lt;- stream_in(file(decompressed_file))

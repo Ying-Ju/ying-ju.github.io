@@ -1,14 +1,14 @@
 # The get_CSV() function is designed to perform a series of tasks related to downloading, extracting, and combining CSV files from a given URL.
 get_CSV <- function(URL){
   # Get the file name
-  download_path <- sub("^.*/", "", URL)
+  file_name <- sub("^.*/", "", URL)
   
   # Download the file and save it to the working directory
-  GET(URL, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(file_name, overwrite=TRUE))
   
   # Unzip the Files
   temp_dir <- tempdir() # the path to the current temporary directory
-  unzip(download_path, exdir = temp_dir)
+  unzip(file_name, exdir = temp_dir)
   
   # List the CSV Files
   csv_files <- list.files(temp_dir, pattern = "\\.csv$", full.names=TRUE)
@@ -20,7 +20,7 @@ get_CSV <- function(URL){
   combined_data <- bind_rows(data_list)
   
   # Optional: Clean Up
-  unlink(download_path)
+  unlink(file_name)
   
   return(combined_data)
 }
@@ -30,16 +30,16 @@ get_CSV <- function(URL){
 # The get_JSON() function is designed to download a compressed JSON file (with a .gz extension) from a given URL, decompress it, and then read the JSON content into R.
 get_JSON <- function(URL){
   # Get the file name
-  download_path <- sub("^.*/", "", URL)
+  file_name <- sub("^.*/", "", URL)
   
   # Download the file and save it to the working directory
-  GET(URL, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(file_name, overwrite=TRUE))
   
   # Remove .gz in the end of the file name
-  decompressed_file <- sub("\\.gz$", "", download_path)
+  decompressed_file <- sub("\\.gz$", "", file_name)
   
   # Decompress the Gzip File
-  gunzip(download_path, destname = decompressed_file, overwrite = TRUE)
+  gunzip(file_name, destname = decompressed_file, overwrite = TRUE)
   
   # Read the JSON File
   instancesfile <- stream_in(file(decompressed_file))
