@@ -651,7 +651,7 @@ from a given URL.</p>
   csv_files &lt;- list.files(temp_dir, pattern = &quot;\\.csv$&quot;, full.names=TRUE)
   
   # Read the CSV Files
-  data_list &lt;- lapply(csv_files, read.csv)
+  data_list &lt;- lapply(csv_files, read_csv)
   
   # Combine the Data from multiple CSV files
   combined_data &lt;- bind_rows(data_list)

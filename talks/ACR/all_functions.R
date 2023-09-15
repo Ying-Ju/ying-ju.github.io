@@ -14,7 +14,7 @@ get_CSV <- function(URL){
   csv_files <- list.files(temp_dir, pattern = "\\.csv$", full.names=TRUE)
   
   # Read the CSV Files
-  data_list <- lapply(csv_files, read.csv)
+  data_list <- lapply(csv_files, read_csv)
   
   # Combine the Data from multiple CSV files
   combined_data <- bind_rows(data_list)
