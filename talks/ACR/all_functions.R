@@ -1,10 +1,10 @@
 # The get_CSV() function is designed to perform a series of tasks related to downloading, extracting, and combining CSV files from a given URL.
-get_CSV <- function(each_url){
+get_CSV <- function(URL){
   # Get the file name
-  download_path <- sub("^.*/", "", each_url)
+  download_path <- sub("^.*/", "", URL)
   
   # Download the file and save it to the working directory
-  GET(each_url, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(download_path, overwrite=TRUE))
   
   # Unzip the Files
   temp_dir <- tempdir() # the path to the current temporary directory
@@ -28,12 +28,12 @@ get_CSV <- function(each_url){
 
 
 # The get_JSON() function is designed to download a compressed JSON file (with a .gz extension) from a given URL, decompress it, and then read the JSON content into R.
-get_JSON <- function(each_link){
+get_JSON <- function(URL){
   # Get the file name
-  download_path <- sub("^.*/", "", each_link)
+  download_path <- sub("^.*/", "", URL)
   
   # Download the file and save it to the working directory
-  GET(each_link, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(download_path, overwrite=TRUE))
   
   # Remove .gz in the end of the file name
   decompressed_file <- sub("\\.gz$", "", download_path)

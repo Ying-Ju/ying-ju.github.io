@@ -636,12 +636,12 @@ display: none; }
 <p>The <code>get_CSV()</code> function is designed to perform a series
 of tasks related to downloading, extracting, and combining CSV files
 from a given URL.</p>
-<pre class="r"><code>get_CSV &lt;- function(each_url){
+<pre class="r"><code>get_CSV &lt;- function(URL){
   # Get the file name
-  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, each_url)
+  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, URL)
   
   # Download the file and save it to the working directory
-  GET(each_url, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(download_path, overwrite=TRUE))
   
   # Unzip the Files
   temp_dir &lt;- tempdir() # the path to the current temporary directory

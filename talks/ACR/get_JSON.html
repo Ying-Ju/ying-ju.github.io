@@ -636,12 +636,12 @@ display: none; }
 <p>The <code>get_JSON()</code> function is designed to download a
 compressed JSON file (with a .gz extension) from a given URL, decompress
 it, and then read the JSON content into R.</p>
-<pre class="r"><code>get_JSON &lt;- function(each_link){
+<pre class="r"><code>get_JSON &lt;- function(URL){
   # Get the file name
-  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, each_link)
+  download_path &lt;- sub(&quot;^.*/&quot;, &quot;&quot;, URL)
   
   # Download the file and save it to the working directory
-  GET(each_link, write_disk(download_path, overwrite=TRUE))
+  GET(URL, write_disk(download_path, overwrite=TRUE))
   
   # Remove .gz in the end of the file name
   decompressed_file &lt;- sub(&quot;\\.gz$&quot;, &quot;&quot;, download_path)
