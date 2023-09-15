@@ -44,7 +44,10 @@ get_JSON <- function(URL){
   # Read the JSON File
   instancesfile <- stream_in(file(decompressed_file))
   
-  return(instancesfile)
+  # Optional: remove the file in the folder
+  unlink(decompressed_file)
+  
+  return(instancesfile$data)
 }
 
 

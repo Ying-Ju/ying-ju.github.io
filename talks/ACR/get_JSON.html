@@ -652,7 +652,10 @@ it, and then read the JSON content into R.</p>
   # Read the JSON File
   instancesfile &lt;- stream_in(file(decompressed_file))
   
-  return(instancesfile)
+  # Optional: remove the file in the folder
+  unlink(decompressed_file)
+  
+  return(instancesfile$data)
 }</code></pre>
 
 
