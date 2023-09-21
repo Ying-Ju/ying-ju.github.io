@@ -114,6 +114,26 @@ a:active {
   width: 38%;
 }
 
+.pull-right-2 ~ * {
+  clear: both;
+}
+
+
+.pull-left-3 {
+  float: left;
+  width: 33%;
+}
+
+.pull-middle-3 {
+  float: inline-block;
+  width: 34%;
+}
+
+.pull-right-3 {
+  float: right;
+  width: 33%;
+}
+
 
 img, video, iframe {
   max-width: 100%;
