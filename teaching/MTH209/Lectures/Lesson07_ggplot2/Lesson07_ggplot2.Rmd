@@ -855,13 +855,13 @@ colorcount <- ncol(mat)
 
 getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
 chorddiag(mat, type = "bipartite",
-          width = 600,
+          width = 580,
           height = 500,
           showTicks = FALSE, 
           groupnameFontsize = 12,
           groupnamePadding = 12,
           groupThickness = 0.05,
-          categorynamePadding = 100,
+          categorynamePadding = 50,
           chordedgeColor = "gray90",
           categoryNames = c("Type of Drive Train",
                             "Type of Car"),
@@ -880,13 +880,13 @@ colorcount <- ncol(mat)
 
 getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
 chorddiag(mat, type = "bipartite",
-          width = 600,
+          width = 580,
           height = 500,
           showTicks = FALSE, 
           groupnameFontsize = 12,
-          groupnamePadding = 12,
+          groupnamePadding = 10,
           groupThickness = 0.05,
-          categorynamePadding = 100,
+          categorynamePadding = 70,
           chordedgeColor = "gray90",
           categoryNames = c("Type of Drive Train",
                             "Type of Car"),
