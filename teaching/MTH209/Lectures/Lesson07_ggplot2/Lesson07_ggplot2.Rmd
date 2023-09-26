@@ -408,7 +408,8 @@ ggplot(mpg, aes(x = class)) +
 ```{r visual_count1_noshow, eval=FALSE, fig.align='center', out.width="85%"}
 ggplot(class_count, aes(x = class, y = n)) +
   geom_bar(stat = "identity") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 ]
@@ -416,7 +417,8 @@ ggplot(class_count, aes(x = class, y = n)) +
 ```{r visual_count1, echo=FALSE, fig.align='center', out.width="75%"}
 ggplot(class_count, aes(x = class, y = n)) +
   geom_bar(stat = "identity") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 
@@ -429,7 +431,8 @@ ggplot(class_count, aes(x = class, y = n)) +
 ```{r visual_summary_noshow, eval=FALSE, fig.align='center', out.width="75%"}
 ggplot(mpg, aes(displ, hwy)) + 
   geom_point(color = "grey") + 
-  stat_summary(fun.y = "mean", geom = "line", size = 1, linetype = "dashed") +
+  stat_summary(fun.y = "mean", geom = "line", 
+               size = 1, linetype = "dashed") +
   theme(text = element_text(size = 20))
 ```
 ]
@@ -439,7 +442,8 @@ ggplot(mpg, aes(displ, hwy)) +
 ```{r visual_summary, echo=FALSE, fig.align='center', out.width="75%"}
 ggplot(mpg, aes(displ, hwy)) + 
   geom_point(color = "grey") + 
-  stat_summary(fun.y = "mean", geom = "line", size = 1, linetype = "dashed") +
+  stat_summary(fun.y = "mean", geom = "line", 
+               size = 1, linetype = "dashed") +
   theme(text = element_text(size = 20))
 ```
 ]
@@ -456,7 +460,8 @@ ggplot(mpg, aes(displ, hwy)) +
 # bar chart of class, colored by drive (front, rear, 4-wheel)
 ggplot(mpg, aes(x = class, fill = drv)) + 
   geom_bar() +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 ]
@@ -465,7 +470,8 @@ ggplot(mpg, aes(x = class, fill = drv)) +
 # bar chart of class, colored by drive (front, rear, 4-wheel)
 ggplot(mpg, aes(x = class, fill = drv)) + 
   geom_bar() +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 
@@ -479,7 +485,8 @@ ggplot(mpg, aes(x = class, fill = drv)) +
 # position = "dodge": values next to each other
 ggplot(mpg, aes(x = class, fill = drv)) + 
   geom_bar(position = "dodge") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 .pull-right[
@@ -487,7 +494,8 @@ ggplot(mpg, aes(x = class, fill = drv)) +
 # position = "dodge": values next to each other
 ggplot(mpg, aes(x = class, fill = drv)) + 
   geom_bar(position = "dodge") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 
@@ -499,7 +507,8 @@ ggplot(mpg, aes(x = class, fill = drv)) +
 # position = "fill": percentage chart
 ggplot(mpg, aes(x = class, fill = drv)) + 
   geom_bar(position = "fill") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 .pull-right[
@@ -507,7 +516,8 @@ ggplot(mpg, aes(x = class, fill = drv)) +
 # position = "fill": percentage chart
 ggplot(mpg, aes(x = class, fill = drv)) + 
   geom_bar(position = "fill") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 
@@ -605,7 +615,8 @@ ggplot(mpg, aes(x = class, fill = drv)) +
   scale_y_continuous(breaks = seq(0, 1, by = .2), 
                      labels = scales::percent) + 
   labs(y = "Percent") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 ]
@@ -616,7 +627,8 @@ ggplot(mpg, aes(x = class, fill = drv)) +
   scale_y_continuous(breaks = seq(0, 1, by = .2), 
                      labels = scales::percent) + 
   labs(y = "Percent") +
-  theme(text = element_text(size = 20))
+  theme(axis.text.x = element_text(angle=30, hjust=1),
+        text = element_text(size = 20))
 ```
 ]
 
@@ -686,6 +698,11 @@ Similar to scales, coordinate systems are specified with functions that all star
 
 ]
 
+.footnotesize[Some useful functions:
+- Add text labels: .green[geom_text()]
+- Change fill color using colour schemes from [ColorBrewer](http://colorbrewer2.org): .green[scale_color_brewer()]
+- Apply .green[theme_void()] to remove axes, background, etc.]
+
 ---
 ## Coordinate Systems - 2
 
@@ -693,7 +710,7 @@ Similar to scales, coordinate systems are specified with functions that all star
 .pull-left[
 - zoom in with coord_cartesian
 
-```{r coord1, fig.align='center', out.width="75%"}
+```{r coord1, fig.align='center', out.width="70%"}
 ggplot(mpg, aes(x = displ, y = hwy)) + geom_point() +
   coord_cartesian(xlim = c(0, 5)) +
   theme(text = element_text(size = 20))
@@ -702,7 +719,7 @@ ggplot(mpg, aes(x = displ, y = hwy)) + geom_point() +
 .pull-right[
 - flip x and y axis with coord_flip
 
-```{r coord2, fig.align='center', out.width="75%"}
+```{r coord2, fig.align='center', out.width="70%"}
 ggplot(mpg, aes(x = class)) + geom_bar() + coord_flip() +
   theme(text = element_text(size = 20))
 ```
@@ -712,9 +729,10 @@ ggplot(mpg, aes(x = class)) + geom_bar() + coord_flip() +
 ---
 ## Coordinate Systems - 3
 
-.small[We can use .orange[geom_bar() + coord_polar()] to create a pie chart.
+.small[We can use .orange[geom_bar() + coord_polar()] to create a pie chart.]
 
 .pull-left[
+.small[
 ```{r pie_hide, fig.align='center', eval=FALSE}
 class_count$percent <- round(class_count$n/sum(class_count$n)*100,2)
 # Create a basic bar
@@ -735,6 +753,7 @@ pie
 ```
 ]
 ]
+
 .pull-right[
 
 ```{r pie_show, fig.align='center', out.width="90%", echo=FALSE}
@@ -759,15 +778,10 @@ pie <- pie + theme_void() +
 
 pie
 ```
+
 ]
 
-.small[
-Some useful functions:
 
-- Add text labels: .green[geom_text()]
-- Change fill color using colour schemes from [ColorBrewer](http://colorbrewer2.org): .green[scale_color_brewer()]
-- Apply .green[theme_void()] to remove axes, background, etc
-]
 
 ---
 ## Coordinate Systems - 4
@@ -829,11 +843,68 @@ donut
 ]
 
 ---
+## Interative Chord Diagram
+
+.pull-left[
+```{r chorddiag_noshow, eval=FALSE}
+library(chorddiag)
+mat <- table(mpg$drv, mpg$class)
+dimnames(mat) <- list(Drive = rownames(mat),
+                      Type = colnames(mat))
+colorcount <- ncol(mat)
+
+getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
+chorddiag(mat, type = "bipartite",
+          width = 600,
+          height = 500,
+          showTicks = FALSE, 
+          groupnameFontsize = 12,
+          groupnamePadding = 12,
+          groupThickness = 0.05,
+          categorynamePadding = 100,
+          chordedgeColor = "gray90",
+          categoryNames = c("Type of Drive Train",
+                            "Type of Car"),
+          tooltipUnit = "car(s)",
+          groupColors = getPalette(colorcount))
+```
+]
+
+.pull-right[
+```{r chorddiag, echo=FALSE, fig.align='center'}
+library(chorddiag)
+mat <- table(mpg$drv, mpg$class)
+dimnames(mat) <- list(Drive = rownames(mat),
+                      Type = colnames(mat))
+colorcount <- ncol(mat)
+
+getPalette <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
+chorddiag(mat, type = "bipartite",
+          width = 600,
+          height = 500,
+          showTicks = FALSE, 
+          groupnameFontsize = 12,
+          groupnamePadding = 12,
+          groupThickness = 0.05,
+          categorynamePadding = 100,
+          chordedgeColor = "gray90",
+          categoryNames = c("Type of Drive Train",
+                            "Type of Car"),
+          tooltipUnit = "car(s)",
+          groupColors = getPalette(colorcount))
+```
+
+]
+
+
+---
 
 ## Facets - 1
 
 .pull-left[.small[
-If we want to divide the information into multiple subplots, facets are ways to go. It allows us to view a separate plot for each case in a categorical variable. We can construct a plot with multiple facets by using the .green[facet_wrap()]. This will produce a “row” of subplots, one for each categorical variable (the number of rows can be specified with an additional argument).
+If we want to divide the information into multiple subplots, facets are ways to go. It allows us to view a separate plot for each case in a categorical variable. We can construct a plot with multiple facets by using the .green[facet_wrap()]. This will produce a “row” of subplots, one for each categorical variable (the number of rows can be specified with an additional argument).]
+
+.footnotesize[
 
 **Note:** 
 
@@ -858,12 +929,14 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 
 ## Facets - 2
 
-```{r facets2, fig.align='center', out.width="50%"}
+.small[
+```{r facets2, fig.align='center', out.width="40%"}
 ggplot(mpg, aes(x = displ, y = hwy)) +
   geom_point() +
   facet_grid(year ~ cyl) +
   theme(text = element_text(size = 20))
 ```
+]
 
 ---
 ## Labels & Annotations - 1
@@ -891,7 +964,7 @@ ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
 ]
 .pull-right[
 
-```{r labels2, fig.align='center', out.width="100%", echo=FALSE}
+```{r labels2, fig.align='center', out.width="75%", echo=FALSE}
 ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
   geom_point() +
   labs(title = "Fuel Efficiency by Engine Power",
@@ -926,7 +999,7 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 
 .pull-right[
 
-```{r label_points2, fig.align='center', out.width="100%", echo=FALSE}
+```{r label_points2, fig.align='center', out.width="80%", echo=FALSE}
 # a data table of each car that has best efficiency of its type
 best_in_class <- mpg %>%
   group_by(class) %>%
@@ -957,7 +1030,7 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 ]
 .pull-right[
 
-```{r ggrepel2, fig.align='right', out.width="100%", echo=FALSE}
+```{r ggrepel2, fig.align='right', out.width="80%", echo=FALSE}
 library(ggrepel)
 
 ggplot(mpg, aes(x = displ, y = hwy)) + 
@@ -996,7 +1069,7 @@ ggplot(mpg, aes(x=displ, y=hwy)) + geom_point() +
 ]
 
 .pull-right[
-```{r theme2, fig.align='center', out.width="100%", echo=FALSE}
+```{r theme2, fig.align='center', out.width="80%", echo=FALSE}
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_point() + 
   labs(title = "Fuel Efficiency by Engine Power",
        x = "Engine Displacement (Liters)",
@@ -1014,6 +1087,7 @@ ggplot(mpg, aes(x=displ, y=hwy)) + geom_point() +
 
 By now, you should know how to use .green[ggplot()] function to create basic graphical displays. In addition, we learned 
 
+.small[
 - Aesthetic Mappings
 - Specifying Geometric Shapes
 - Statistical Transformations
@@ -1024,7 +1098,7 @@ By now, you should know how to use .green[ggplot()] function to create basic gra
 - Facets
 - Labels & Annotations
 - Themes
-
+]
 
 ---
 # Supplementary Materials
