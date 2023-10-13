@@ -1,0 +1,361 @@
+---
+title: "MTH 411 Probability & Statistics"
+subtitle: "Harnessing Distribution Fitting: Transforming Industry Data into Actionable Insights" 
+author: '<br>Ying-Ju Tessa Chen, PhD <br><br> Associate Professor <br> Department of Mathematics<br> University of Dayton <br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @ying-ju](https://twitter.com/ju_tessa) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` ying-ju](https://github.com/ying-ju/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)<br>'
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../Styles/fonts.css", "../Styles/modified_theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: magula
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../Styles/header.html"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+daytonred = '#E4002B'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+
+
+pacman::p_load(lubridate, janitor, magrittr,
+               tidyverse, # data analysis pkgs
+               countdown, fontawesome, RefManageR, 
+               xaringanExtra, # for slides
+               gifski, av, # for animations
+               rvest, # for scraping
+               scales # for the comma function
+               ) 
+
+BibOptions(check.entries = FALSE, bib.style = "authoryear", 
+           style = "markdown", dashed = TRUE)
+
+bib = ReadBib("../Styles/MTH209.bib") 
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "16px")
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipable"))
+
+```
+
+
+## Introduction 
+
+- What is Distribution Fitting? 
+
+  - .red[Definition]: Distribution fitting is the process of selecting a statistical distribution that best fits a dataset.
+
+  - .blue[Purpose]: By understanding the underlying distribution of the data, we can make more informed decisions, predictions, and analyses.
+
+---
+## Introduction (Continue)
+
+- Why is it Important? 
+  - .blue[Predictive Power]: Understanding data distributions allows for better predictions. For example, understanding the distribution of machine breakdowns can help in predictive maintenance.
+  - .blue[Decision Making]: With a good fit, businesses can make decisions based on the likelihood of future events. For example, a retailer can determine the probability of stockouts.
+
+---
+## Introduction (Continue)
+
+- Real-life Analogy 
+  - .blue[Weather Forecasting]: Just as meteorologists use patterns and data to predict the weather, industries use distribution fitting to forecast business-related outcomes. Not always perfect, but better than guessing.
+
+- Importance in Industry 
+  - .blue[Tailored Solutions]: Different industries have unique challenges. By fitting distributions to their specific data, industries can tailor solutions to their unique challenges.
+  - .blue[Risk Management]: For sectors like finance, understanding distributions is crucial for risk assessment and management.
+
+
+---
+## Basics of Distribution Fitting 
+
+- Common Statistical Distributions 
+  - **Normal Distribution**: Often seen in natural phenomena. Used in quality control, stock market returns, etc. 
+
+  - **Exponential Distribution**: Represents time between events in a Poisson process. Useful for modeling time-to-failure data.
+  
+  - **Weibull Distribution**: Commonly used in reliability engineering. Can describe various shapes of data from exponential to bell-shaped.
+  
+  - **Poisson Distribution**: Represents the number of events in fixed intervals of time or space. Useful for modeling rare events.
+
+
+---
+## Basics of Distribution Fitting (Continue)
+
+- Methods of Fitting Distributions 
+  - **Method of Moments**: Matching sample moments (like mean and variance) with theoretical moments of a distribution.
+
+  - **Maximum Likelihood Estimation (MLE)**: Finds the parameters that maximize the likelihood of the observed data given a distribution.
+  - **Visual Aid**: Show a graph where the likelihood function is maximized.
+
+  - **Least Squares**: Minimizes the sum of the squared differences between observed and estimated values.
+
+---
+## Basics of Distribution Fitting (Continue)
+
+- Goodness of Fit Tests
+  - **Purpose**: After fitting, how do we know the chosen distribution is a good fit?
+  
+  - **Kolmogorov-Smirnov Test**: Compares the empirical distribution function of the sample data with the cumulative distribution function of the chosen distribution.
+  
+  - **Visual Aid**: Show a graph comparing the two functions.
+  
+  - **Anderson-Darling Test**: A variation of K-S test that gives more weight to the tails.
+  
+  - **Chi-Squared Test**: Compares the observed frequencies in certain intervals to the expected frequencies based on the chosen distribution.
+
+---
+## Basics of Distribution Fitting (Continue)
+
+- The Importance of Visualization
+  - **Histograms and Probability Plots**: Before fitting any distribution, visualizing data can give a good initial idea about its shape and potential distributions.
+  
+.pull-left[
+```{r, echo=FALSE, fig.align='center', out.width="75%"}
+# Generate sample data
+set.seed(123)
+data <- data.frame(x = rnorm(1000, mean=50, sd=10))
+
+# 1. Histogram with overlaid normal distribution curve
+mean_data <- mean(data$x)
+sd_data <- sd(data$x)
+
+hist_plot <- ggplot(data, aes(x=x)) + 
+  geom_histogram(aes(y=..density..), binwidth=2, fill="skyblue", color="black", alpha=0.6) +
+  stat_function(fun=dnorm, args=list(mean=mean_data, sd=sd_data), color="red", size=1.2) +
+  labs(title="Histogram with Fitted Normal Distribution", x="Value", y="Density") +
+  theme_minimal()
+
+# Print the plots
+print(hist_plot)
+```
+]
+
+.pull-right[
+
+```{r, echo=FALSE, fig.align='center', out.width="75%"}
+# 2. QQ plot
+qq_plot <- ggplot(data, aes(sample=x)) +
+  stat_qq(distribution=qnorm, dparams=list(mean=mean_data, sd=sd_data)) +
+  stat_qq_line(distribution=qnorm, dparams=list(mean=mean_data, sd=sd_data), color="red") +
+  labs(title="QQ Plot Against Normal Distribution", x="Theoretical Quantiles", y="Sample Quantiles") +
+  theme_minimal()
+print(qq_plot)
+
+```
+]
+
+  
+---
+## Industry Applications 
+
+- Quality Control and Manufacturing
+  
+  - .red[Process Monitoring]
+  - **Normal Distribution**: Many manufacturing processes produce data that follows a normal distribution. Control charts based on the normal distribution are used to monitor process stability.
+  - .green[Example]: Production of a particular component, where the objective is to maintain a specific diameter. Variations can be monitored using control charts.
+  
+  - .red[Reliability Engineering]
+  - **Weibull Distribution**: Commonly used to model the life of industrial products and to understand failure mechanisms.
+  - .green[Example]: Predicting the lifespan of a batch of light bulbs. Understanding when most failures occur can guide warranty decisions and maintenance schedules.
+
+---
+## Industry Applications (Continue)
+
+- Finance and Economics
+  
+  - .red[Stock Returns Modeling]
+  - **Normal and Log-normal Distributions**: While stock returns do not strictly follow a normal distribution, it's often used as a first approximation. Log-normal is used for modeling stock prices.
+  - .green[Example]: Predicting the likelihood of a stock's return falling within a certain range in the next month.
+  
+  - .red[Risk Management]
+  - **Value at Risk (VaR)**: A measure used to assess the risk of investments. Requires understanding the distribution of returns.
+  - .green[Example]: A portfolio manager needs to know the maximum potential loss over a given time period at a certain confidence level.
+
+---
+## Industry Applications (Continue)
+
+- Telecommunications 
+  
+  - .red[Call Arrivals]
+    - **Poisson Distribution**: Often used to model the number of call arrivals in a fixed period.
+    - .green[Example]: A call center planning its staffing based on the expected number of calls during peak hours.
+  
+  - .red[Call Center Staffing]
+    - **Erlang Distribution**: Useful for modeling the time a call center agent spends on calls.
+    - .green[Example]: Determining the number of agents needed during different shifts to ensure customer wait times are minimized.
+
+---
+## Industry Applications (Continue)
+  
+- Retail and E-commerce
+  
+  - .red[Demand Prediction]
+    
+  - **Normal Distribution**: Sometimes used to forecast demand, especially for products with consistent sales patterns.
+    
+  - .green[Example]: A retailer forecasting the demand for a popular product during the holiday season.
+  
+  - .red[Customer Lifetime Value Estimation]
+    
+  - Various distributions can be used based on purchasing patterns to predict how much a customer will spend over time.
+    
+  - .green[Example]: An e-commerce platform predicting the total revenue from a new user over the next two years.
+
+---
+## Case Study: Real Data Analysis 
+
+.red[Insurance Pricing & Risk Analysis]
+
+An insurance company has been witnessing variability in the charges it offers to its clients. The company aims to understand the underlying distribution of these charges to:
+
+- **Segment Customers**: Identify distinct customer segments based on their charges.
+- **Risk Assessment**: Understand potential outliers or high-risk clients who might claim more than the average.
+- **Product Tailoring**: Design insurance packages tailored to different charge brackets.
+- **Predictive Modeling**: Use the distribution as a foundation for predictive models that forecast future claims.
+
+---
+## Case Study: Real Data Analysis (Continue)
+
+To achieve these objectives, the company needs to:
+
+- Visualize the distribution of charges.
+- Fit appropriate statistical distributions to the data.
+- Evaluate the goodness of fit.
+
+---
+## Case Study: Real Data Analysis (Continue)
+
+- Fitting Distributions: We will fit the Log-normal, Gamma, and Weibull distribution to the `charges` data.
+
+```{r, echo=FALSE, fig.align='center', out.width="40%"}
+library(MASS)
+
+# Load the dataset
+insurance_data <- read.csv("insurance.csv")
+
+ggplot(insurance_data, aes(charges)) + 
+  geom_histogram(aes(y = ..density..), bins = 30, fill="skyblue", color="black", alpha=0.6) 
+
+# Fitting distributions 
+fit_lognorm <- fitdistr(insurance_data$charges, "lognormal")
+# Start values can sometimes help convergence. We can use mean and variance for that.
+start_values <- list(shape = mean(insurance_data$charges)^2 / var(insurance_data$charges),
+                     scale = var(insurance_data$charges) / mean(insurance_data$charges))
+fit_gamma <- tryCatch({
+  fitdistr(insurance_data$charges, "gamma", start = start_values)
+}, error = function(e) {
+  NULL
+})
+
+fit_weibull <- fitdistr(insurance_data$charges, "weibull")
+```
+
+---
+## Case Study: Real Data Analysis (Continue)
+
+- Visual Assessment: We'll overlay the fitted distributions over a histogram to visually assess the fit.
+
+```{r, echo=FALSE, fig.align='center', out.width="40%"}
+# Plotting histogram and fitted distributions
+# Generating data for the lines
+x_vals <- seq(min(insurance_data$charges), max(insurance_data$charges), length.out = 1000)
+lognorm_vals <- dlnorm(x_vals, meanlog = fit_lognorm$estimate["meanlog"], sdlog = fit_lognorm$estimate["sdlog"])
+weibull_vals <- dweibull(x_vals, shape = fit_weibull$estimate["shape"], scale = fit_weibull$estimate["scale"])
+gamma_vals <- if (!is.null(fit_gamma)) dgamma(x_vals, shape = fit_gamma$estimate["shape"], scale = fit_gamma$estimate["scale"]) else NULL
+
+# Plotting histogram and fitted distributions using ggplot
+plot <- ggplot(insurance_data, aes(x = charges)) + 
+  geom_histogram(aes(y = ..density..), bins = 30, fill="skyblue", color="black", alpha=0.6) +
+  geom_line(aes(x = x_vals, y = lognorm_vals, color = "Log-normal"), data = data.frame(x_vals, lognorm_vals), linewidth = 1) +
+  geom_line(aes(x = x_vals, y = weibull_vals, color = "Weibull"), data = data.frame(x_vals, weibull_vals), linewidth = 1) +
+  (if (!is.null(fit_gamma)) geom_line(aes(x = x_vals, y = gamma_vals, color = "Gamma"), data = data.frame(x_vals, gamma_vals), linewidth = 1)) +
+  labs(title = "Histogram of Insurance Charges with Fitted Distributions", x = "Charges", y = "Density") +
+  scale_color_manual(values = c("Log-normal" = "red", "Gamma" = "green", "Weibull" = "blue")) +
+  theme_minimal() +
+  theme(legend.title=element_blank())
+
+print(plot)
+```
+
+
+---
+## Case Study: Real Data Analysis (Continue)
+
+- Goodness-of-Fit Test: We'll use the Kolmogorov-Smirnov (KS) test to quantitatively assess the goodness of fit for each distribution.
+
+  $H_0:$ The sample is from the reference probability distribution
+
+  $H_a:$ The sample is not from the reference probability distribution
+  
+
+
+```{r, echo=FALSE}
+# Goodness-of-fit using Kolmogorov-Smirnov test
+ks_lognorm <- ks.test(insurance_data$charges, "plnorm", fit_lognorm$estimate[1], fit_lognorm$estimate[2])
+ks_gamma <- ks.test(insurance_data$charges, "pgamma", fit_gamma$estimate[1], fit_gamma$estimate[2])
+ks_weibull <- ks.test(insurance_data$charges, "pweibull", fit_weibull$estimate[1], fit_weibull$estimate[2])
+
+df <- data.frame(Lognormal = ks_lognorm$p.value, Gamma = ks_gamma$p.value, Weibull = ks_weibull$p.value)
+row.names(df) <- "p-value"
+knitr::kable(df)
+```
+
+The Kolmogorov-Smirnov test shows that we don't have evidence to conclude the insurance charges are not from a lognormal model with a 0.05 significance level. We have sufficient evidence to conclude that the insurance charges are not from a Gamma or Weibull distribution. 
+
+---
+## Challenges and Limitations 
+
+- Assumptions of Distributions 
+  - **Underlying Assumptions**: Every distribution comes with its own set of assumptions. For instance, the normal distribution assumes that the data is symmetric around the mean.
+  - **Misfit**: If the data does not adhere to these assumptions, fitting such a distribution can lead to incorrect analyses and decisions.
+  
+- Overfitting
+  - **Fitting Noise**: In the quest to get a perfect fit, one might end up fitting the noise in the data rather than the underlying pattern.    
+  - **Predictive Performance**: An overfitted distribution might perform poorly in predicting future observations.
+
+---
+## Challenges and Limitations (Continue)  
+
+- Limitations of Goodness-of-Fit Tests 
+  - **P-values**: A large dataset might result in significant p-values even for trivial differences between the observed and expected frequencies.
+  - **Subjectivity**: Deciding which test to use and interpreting its results can sometimes be subjective.
+
+- Real-world Complexities 
+  - **Multiple Influencing Factors**: Real-world data, especially in industries like finance and healthcare, might be influenced by a plethora of factors, making it challenging to fit a single distribution.   
+  - **Time-dependence**: In some scenarios, the underlying distribution might change over time, complicating the fitting process.
+
+
+
+---
+class: middle, center
+
+.Large[Questions?]
+
+
