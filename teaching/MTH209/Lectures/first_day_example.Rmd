@@ -33,3 +33,10 @@ paste(x,y,sep=", ")
 paste(x, ", ", y)
 paste0(x,y)
 ```
+
+## An example of showing a graph
+
+```{r plot}
+boxplot(Petal.Width ~ Species, data = iris)
+```
+This example shows boxplots.
