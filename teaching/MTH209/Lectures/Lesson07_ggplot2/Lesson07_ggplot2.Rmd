@@ -1106,16 +1106,16 @@ By now, you should know how to use .green[ggplot()] function to create basic gra
 Here are some useful supplementary materials for self-learning. 
 
 .pull-left[
-.center[[<img src="https://r4ds.hadley.nz/cover.jpg" height="250px">](https://r4ds.had.co.nz)]
+.center[[<img src="https://r4ds.hadley.nz/cover.jpg" height="250px">](https://r4ds.hadley.nz)]
 .small[
-* [Plots](https://r4ds.hadley.nz/base-r#plots)
+* [Data Visualization](https://r4ds.hadley.nz/data-visualize)
 ]
 ]
 .pull-right[
 .center[[<img src="../Figures/RPubs.png" height="250px">](https://RPubs.com)]
 .small[
-* [Basic Plots 1](https://rpubs.com/miguelpatricio/plots)
-* [Basic Plots 2](https://rpubs.com/Felix/7795)
+* [Visualizations with ggplot2 1](https://rpubs.com/chrisbrunsdon/UG_ggplot)
+* [Visualization with ggplot2 2](https://rpubs.com/Cisco_Self_Serve/318832)
 ]
 ]
 

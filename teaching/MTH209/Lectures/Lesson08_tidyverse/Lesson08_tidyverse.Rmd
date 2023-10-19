@@ -1,38 +1,75 @@
 ---
 title: "MTH 209 Data Manipulation and Management"
 subtitle: "Lesson 8: Data Manipulation with R Package tidyverse" 
-author: |
-  | Ying-Ju Tessa Chen
-  | [ychen4@udayton.edu](mailto:ychen4@udayton.edu)
-  | University of Dayton
-bibliography: MTH209.bib
-link-citations: yes
-output: 
-  slidy_presentation:
-    font_adjustment: -1
+author: '<br>Ying-Ju Tessa Chen, PhD <br><br> Associate Professor <br> Department of Mathematics<br> University of Dayton <br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @ying-ju](https://twitter.com/ju_tessa) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` ying-ju](https://github.com/ying-ju/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)<br>'
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../Styles/fonts.css", "../Styles/modified_theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: magula
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../Styles/header.html"
 ---
-  
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      cache = TRUE,
-                      cache.lazy = TRUE,
-                      out.width = "100%",
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
                       warning = FALSE,
                       message = FALSE,
-                      progress = FALSE,
-                      verbose = TRUE)
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+daytonred = '#E4002B'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+
+
+pacman::p_load(lubridate, janitor, magrittr,
+               tidyverse, # data analysis pkgs
+               countdown, fontawesome, RefManageR, 
+               xaringanExtra, # for slides
+               gifski, av, # for animations
+               rvest, # for scraping
+               scales # for the comma function
+               ) 
+
+BibOptions(check.entries = FALSE, bib.style = "authoryear", 
+           style = "markdown", dashed = TRUE)
+
+bib = ReadBib("../Styles/MTH209.bib") 
 ```
 
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
 
-## Overview - 1
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "16px")
 
-<head>
-    <base target="_blank">
-</head>
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipable"))
 
-In this session, we will talk about data manipulation using R package <span Style="Color:red">tidyverse</span>. This lecture is based on [R for Data Science](https://r4ds.had.co.nz/).
+```
 
-<span Style="Color:red">tidyverse</span> contains a collection of R packages that help us doing data management & exploration. The key packages in tidyverse are:
+## Learning Objectives
+
+In this session, we will talk about data manipulation using R package .red[tidyverse]. This lecture is based on [R for Data Science](https://r4ds.had.co.nz/).
+
+.red[tidyverse] contains a collection of R packages that help us doing data management & exploration. The key packages in tidyverse are:
 
   - dplyr: data manipulation
   - ggplot2: data visualization 
@@ -40,11 +77,12 @@ In this session, we will talk about data manipulation using R package <span Styl
   - readr: read data and write files
   - tibble: simple data frame
   - tidyr: data management
-  
-  
-## Overview - 2
+ 
+ 
+---
+## Basic Functions in dplyr
 
-In this session, we will focus on the following key functions in <span Style="Color:red">dplyr</span> using the dataset **flights** from the R package <span Style="color:red">nycflights13</span>.
+In this session, we will focus on the following key functions in .red[dplyr] using the dataset **flights** from the R package .red[nycflights13].
 
   - filter(): pick observations by their values
   - arrange(): reorder the rows
@@ -53,7 +91,6 @@ In this session, we will focus on the following key functions in <span Style="Co
   - group_by(): group data by existing variables
   - summarize(): collapse many values done to a single summary (with group_by)
 
-\
 
 All functions above work similarly. 
 
@@ -61,9 +98,10 @@ All functions above work similarly.
 2. The subsequent arguments describe what to do with the data frame using the variable names.
 3. The result is a new data frame (but we can save it back to the original data frame if needed).
 
+---
 ## Load packages and read the Flights Data
 
-First, we load the necessary packages, check conflict functions, and import the dataset **flights** from the R package <span Style="color:red">nycflights13</span>. 
+First, we load the necessary packages, check conflict functions, and import the dataset **flights** from the R package .red[nycflights13]. 
 
 ```{r loading_packages, cache=FALSE}
 library(tidyverse)
@@ -73,10 +111,11 @@ conflict_prefer("filter", "dplyr")
 df <- nycflights13::flights
 ```
 
+---
 ## Understand Our Data
 
-Now we need to understand the data and each variable before we move on. This dataset provides on-time data for all flights that departed NYC (i.e. JFK, LGA or EWR) in 2013 and there are 19 variables ([Flights Data](https://rdrr.io/cran/nycflights13/man/flights.html){target="_blank"}). 
-
+Now we need to understand the data and each variable before we move on. This dataset provides on-time data for all flights that departed NYC (i.e. JFK, LGA or EWR) in 2013 and there are 19 variables ([Flights Data](https://rdrr.io/cran/nycflights13/man/flights.html)). 
+.small[
   - year, month, day: Date of departure.
   - dep_time, arr_time: Actual departure and arrival times (format HHMM or HMM), local time zone.
   - sched_dep_time, sched_arr_time: Scheduled departure and arrival times (format HHMM or HMM), local time zone.
@@ -89,7 +128,9 @@ Now we need to understand the data and each variable before we move on. This dat
   - distance: Distance between airports, in miles.
   - hour, minute: Time of scheduled departure broken into hour and minutes.
   - time_hour: Scheduled date and hour of the flight as a POSIXct date. Along with origin, can be used to join flights data to weather data.
+]
 
+---
 ## Get a Glimpse of the Data
 
 We get a glimpse of the data. 
@@ -98,23 +139,26 @@ We get a glimpse of the data.
 glimpse(df)
 ```
 
+---
 ## filter() - 1
   
-<span Style="color:blue">filter()</span> is used when we want to subset observations based on a logical condition. For example, we can select all fights on December 25th using the following code. 
+.blue[filter()] is used when we want to subset observations based on a logical condition. For example, we can select all fights on December 25th using the following code. 
 
 ```{r filter_christmas}
 Christmas <- filter(df, month == 12, day == 25)
 ```
 
-<span Style="color:orange">Comparisons</span> - R provides the standard suite: <, <=, >, >=, != (not equal), and == (equal). If we would like to save the results to a variable as well as print them, we can wrap the assignment in parentheses
+.orange[Comparisons] - R provides the standard suite: <, <=, >, >=, != (not equal), and == (equal). 
 
 ```{r filter_firstday}
-(Jan1 <- filter(df, month == 1, day == 1))
+Jan1 <- filter(df, month == 1, day == 1)
+head(Jan1[,1:8])
 ```
 
+---
 ## filter() - 2
 
-<span Style="color:orange">Logical Operations</span> - R provides the following syntax: & is "and", | is "or", ! is "not". The following code finds all flights that departed in July or August. 
+.orange[Logical Operations] - R provides the following syntax: & is "and", | is "or", ! is "not". The following code finds all flights that departed in July or August. 
 
 ```{r filter_summer_departed}
 flights0708 <- filter(df, month == 7 | month == 8)
@@ -124,9 +168,10 @@ head(filter(df, month %in% c(7, 8)), c(5, 10))
 
 **Note:** 
 
-1. If we use <span Style="color:blue">filter(df, month == 7 | 8)</span>, it finds all months are equal 7 | 8, an expression that evaluates to **TRUE**. In a numeric context, TRUE becomes one, so this finds all fights in the data. 
-2. <span Style="color:blue">filter()</span> only includes rows where the condition is **TRUE** and it excludes both FALSE and NA values. 
+1. If we use .blue[filter(df, month == 7 | 8)], it finds all months are equal 7 | 8, an expression that evaluates to **TRUE**. In a numeric context, TRUE becomes one, so this finds all fights in the data. 
+2. .blue[filter()] only includes rows where the condition is **TRUE** and it excludes both FALSE and NA values. 
 
+---
 ## filter() - 3
 
 If we want to find flights that weren't delayed on both arrival and departure by more than 1 hour, we could use either of the following codes. 
@@ -139,35 +184,37 @@ filter(df, !(arr_delay > 60 | dep_delay > 60))
 filter(df, arr_delay <= 60, dep_delay <= 60)
 ```
 
+---
 ## arrange() - 1
 
-<span Style="color:blue">arrange()</span> is used when we want to sort a dataset by a variable. If more variables are specified for sorting a dataset, the variables entered first taking priority over those come later. The following code chunk gives an example that sorts the flights by dates.  
+.blue[arrange()] is used when we want to sort a dataset by a variable. If more variables are specified for sorting a dataset, the variables entered first taking priority over those come later. The following code chunk gives an example that sorts the flights by dates.  
 
 ```{r arrange_dates}
 arrange(df, year, month, day)
 ```
 
+---
 ## arrange() - 2
 
 **Note:** 
 1. We can save the data frame back to the original data frame after sorting the data.
-2. Use <span Style=:color:blue>desc()</span> for sorting data via descending order. The following code chunk arranges the Flights Data by arrival delay in descending order.
+2. Use .blue[desc()] for sorting data via descending order. The following code chunk arranges the Flights Data by arrival delay in descending order.
 3. Missing values are always sorted at the end.
 
 ```{r arrange_arr_delay}
 df <- arrange(df, desc(arr_delay))
 ```
 
-We can use the <span Style="color:blue">tail()</span> function to read the last part of the data. 
+We can use the .blue[tail()] function to read the last part of the data. Below, we display the last 4 rows of 8 columns in the data. 
 
 ```{r arrange_arr_delay_check}
-tail(df, 5)
+tail(df[, 1:8], n = 4)
 ```
 
-
+---
 ## select()
 
-<span Style="color:blue">select()</span> is used when we would like to obtain several variables in the data. For example, we can use the following code chunk to select the Flights Data with only a few variables. 
+.blue[select()] is used when we would like to obtain several variables in the data. For example, we can use the following code chunk to select the Flights Data with only a few variables. 
 
 ```{r select1, eval=FALSE}
 # select specific columns
@@ -183,8 +230,8 @@ select(df, -(year:day))
 **Note:**
 
 1. We can use a minus sign - to drop variables. 
-2. There are several helper functions we can use within <span Style="color:blue">select()</span>. See <span Style="color:blue">?select</span> for the information. 
-3. <span Style="color:blue">select()</span> can be used with the <span Style="color:blue">everything()</span> function when we have a handful of variables we would like to move to the start of the data frame. 
+2. There are several helper functions we can use within .blue[select()]. See .blue[?select] for the information. 
+3. .blue[select()] can be used with the .blue[everything()] function when we have a handful of variables we would like to move to the start of the data frame. 
 
 
 ```{r select2, eval=FALSE}
@@ -192,12 +239,12 @@ select(df, -(year:day))
 select(df, carrier, origin, dest, distance, everything())
 ```
 
-
+---
 ## mutate() - 1
 
-<span Style="color:blue">mutate()</span> is used when we would like to add a new variable / column using the other variables in the data. 
+.blue[mutate()] is used when we would like to add a new variable / column using the other variables in the data. 
 
-**Note:**  <span Style="color:blue">mutate()</span> always adds new columns at the end of the data. 
+**Note:**  .blue[mutate()] always adds new columns at the end of the data. 
 
 First, we start by creating a smaller dataset with a few variables and create two variables using varaibles in the dataset. 
 
@@ -209,12 +256,13 @@ df1 <- mutate(df1,
        speed = distance / air_time * 60,
        hours = air_time / 60,
        gain_per_hour = gain / hours)
-head(df1, c(5, 11))
+head(df1, c(6, 11))
 ```
 
+---
 ## mutate() - 2
 
-If we only want to keep the new variables, use <span Style="color:blue">transmute()</span>. 
+If we only want to keep the new variables, use .blue[transmute()]. 
 
 ```{r transmute}
 transmute(df1, 
@@ -224,21 +272,22 @@ transmute(df1,
        gain_per_hour = gain / hours)
 ```
 
-**Note:** There are many functions for creating new variables that we can use with <span Style="color:blue">mutate()</span>. The key property is that the function must be vectorized, which means it must take a vector of values as input and returns a vector with the same number of values as output. 
+**Note:** There are many functions for creating new variables that we can use with .blue[mutate()]. The key property is that the function must be vectorized, which means it must take a vector of values as input and returns a vector with the same number of values as output. 
 
-
+---
 
 ## summarize() - 1
 
-<span Style="color:blue">summarize()</span> collapses a data frame to a single row. For example, we can summarize the average departure delays using the following code chunk.
+.blue[summarize()] collapses a data frame to a single row. For example, we can summarize the average departure delays using the following code chunk.
 
 ```{r summarize}
 summarize(df, delay = mean(dep_delay, na.rm=T))
 ```
 
+---
 ## group_by() & summarize() - 1
 
-In general, <span Style="color:blue">summarize()</span> function is used together with <span Style="color:blue">group_by()</span> as we group rows for some purposes. <span Style="color:blue">group_by()</span> is used to group rows by one or more variables, giving priority to the variable entered first. 
+In general, .blue[summarize()] function is used together with .blue[group_by()] as we group rows for some purposes. .blue[group_by()] is used to group rows by one or more variables, giving priority to the variable entered first. 
 
 ```{r groupby1}
 group_by(df, year, month, day)
@@ -246,6 +295,7 @@ group_by(df, year, month, day)
 
 The result shows the original data but indicates groups: year, month, day, in our example. 
 
+---
 ## group_by() & summarize() - 2
 
 For example, we can study the average departure / arrival delays for each day. 
@@ -259,12 +309,14 @@ summarize(by_day,
 ```
 
 
+---
 ## Combining Multiple Operations with the Pipe - 1
 
-In other to handle the data processing well in data science, it is essential to know the use of pipes. Pipes are great tool for presenting a sequence of multiple operations and therefore, pipes increase readability of the code. The pipe, %>%, is from the package <span Style="color:red">magrittr</span> and it is loaded automatically when tidyverse is loaded. 
+In other to handle the data processing well in data science, it is essential to know the use of pipes. Pipes are great tool for presenting a sequence of multiple operations and therefore, pipes increase readability of the code. The pipe, **%>%**, is from the package .red[magrittr] and it is loaded automatically when tidyverse is loaded. 
 
-The logic when using pipe: <span Style="color:orange">object %>% function1 %>% function 2....</span> 
+The logic when using pipe: .orange[object %>% function1 %>% function 2....] 
 
+.pull-left[
 If we want to group the Flights Data by the destination and then find the number of flights, the average distance, the average arrival delay at each destination, and filter to remove Honolulu airport (HNL), we may use the following code chunk to achieve this. 
 
 ```{r groupby3}
@@ -276,6 +328,8 @@ delay <- summarize(by_dest,
 delay <- filter(delay, count > 20, dest != "HNL")
 ```
 
+]
+.pull-right[
 The following code chunk does the same task with the pipe, %>% and it makes the code easier to read. 
 
 ```{r pipe}
@@ -288,12 +342,14 @@ delay <- df %>%
     ) %>%
   filter(count > 20, dest != "HNL")
 ```
+]
 
+---
 ## Useful Summary Functions - 1
 
-- Measures of location for a quantitative variable: <span Style="color:blue"> mean()</span>, <span Style="color:blue"> median()</span>
+- Measures of location for a quantitative variable: .blue[ mean()], .blue[ median()]
 
-- Measure of spread for a quantitative variable: <span Style="color:blue">sd()</span>, <span Style="color:blue"> IQR()</span>, <span Style="color:blue">mad()</span>
+- Measure of spread for a quantitative variable: .blue[sd()], .blue[ IQR()], .blue[mad()]
 
 Here, $MAD = median(|x_i-\bar{x}|)$ is called the median absolute deviation which may be more useful if we have outliers. 
 
@@ -312,9 +368,10 @@ not_cancelled_summary <- not_cancelled %>%
 head(not_cancelled_summary, 5)
 ```
 
+---
 ## Useful Summary Functions - 2
 
-- Measures of rank: <span Style="color:blue">min()</span>, <span Style="color:blue">quantile()</span>, <span Style="color:blue">max()</span>
+- Measures of rank: .blue[min()], .blue[quantile()], .blue[max()]
 
 ```{r summary2}
 not_cancelled %>%
@@ -325,9 +382,10 @@ not_cancelled %>%
   )
 ```
 
+---
 ## Useful Summary Functions - 3
 
-- Measures of position: <span Style="color:blue">first()</span>, <span Style="color:blue">nth(x, 2)</span>, <span Style="color:blue">last()</span>
+- Measures of position: .blue[first()], .blue[nth(x, 2)], .blue[last()]
 
 The following code chunk finds the first and last departure for each day
 
@@ -340,9 +398,10 @@ not_cancelled %>%
   )
 ```
 
+---
 ## Useful Summary Functions - 4
 
-- Counts: You have seen <span Style="color:blue">n()</span>, which takes no arguments, and returns the size of the current group. To count the nubmer of non-missing values, we can use <span Style="color:blue">sum(is.na(x))</span>. To count the number of distinct values, use <span Style="color:blue">n_distinct()</span>.
+- Counts: You have seen .blue[n()], which takes no arguments, and returns the size of the current group. To count the nubmer of non-missing values, we can use .blue[sum(is.na(x))]. To count the number of distinct values, use .blue[n_distinct()].
 
 ```{r counts1}
 not_cancelled %>%
@@ -351,9 +410,10 @@ not_cancelled %>%
   arrange(desc(carriers))
 ```
 
+---
 ## Useful Summary Functions - 5
 
-We can use <span Style="color:blue">count()</span> directly if all we want is a count. 
+We can use .blue[count()] directly if all we want is a count. 
 
 ```{r counts2}
 not_cancelled_count <- not_cancelled %>% 
@@ -369,11 +429,12 @@ not_cancelled_weight <- not_cancelled %>%
 head(not_cancelled_weight, 4)
 ```
 
+---
 ## Useful Summary Functions - 6
 
 - Counts and proportions of logical values
 
-When used with numeric functions, TRUE is converted to 1 and FALSE to 0. Thus, <span Style="color:blue">sum()</span> gives the number of TRUEs and <span Style="color:blue">mean()</span> gives the proportion in the variable. For example, we can check how many flights left before 5AM using the following code chunk. 
+When used with numeric functions, TRUE is converted to 1 and FALSE to 0. Thus, .blue[sum()] gives the number of TRUEs and .blue[mean()] gives the proportion in the variable. For example, we can check how many flights left before 5AM using the following code chunk. 
 
 ```{r counts4}
 not_cancelled %>%
@@ -381,6 +442,7 @@ not_cancelled %>%
   summarize(n_early = sum(dep_time < 500))
 ```
 
+---
 ## Useful Summary Functions - 7
 
 Or what proportion of flights are delayed by more than one hour?
@@ -391,6 +453,7 @@ not_cancelled %>%
   summarize(hour_perc = mean(arr_delay > 60))
 ```
 
+---
 ## Grouping by Multiple Variables - 1 
 
 Here we show some examples to demonstrate how to group the data by multiple variables. 
@@ -406,9 +469,10 @@ head(per_month, 3)
 per_year
 ```
 
+---
 ## Ungrouping
 
-If we need to remove grouping, and return to operations on ungrouped data, use <span Style="color:blue">ungroup()</span>.
+If we need to remove grouping, and return to operations on ungrouped data, use .blue[ungroup()].
 
 ```{r ungroup}
 daily <- df %>% group_by(year, month, day)
@@ -417,10 +481,10 @@ daily %>%
   summarize(flights=n()) # all flights
 ```
 
-
+---
 ## Grouped Mutates and Filters - 1
 
-We can also do convenient operations with <span Style="color:blue">mutate()</span> and <span Style="color:blue">filter()</span>.
+We can also do convenient operations with .blue[mutate()] and .blue[filter()].
 
 The following code chunk finds the worst members of each group. 
 ```{r worst_member}
@@ -429,6 +493,7 @@ df1 %>%
   filter(rank(desc(arr_delay)) < 10)
 ```
 
+---
 ## Grouped Mutates and Filters - 2
 
 The following code chunk finds all groups bigger than a threshold. 
@@ -440,6 +505,7 @@ popular_dests <- df %>%
 popular_dests
 ```
 
+---
 ## Grouped Mutates and Filters - 3
 
 The following code chunk standardizes to compute per group metrics. 
@@ -451,40 +517,43 @@ popular_dests %>%
   select(year:day, arr_delay, prop_delay)
 ``` 
 
+---
 ## Some Useful Functions
 
-- <span Style="color:blue">drop_na()</span>: drops rows contain a missing value. 
+- .blue[drop_na()]: drops rows contain a missing value. 
 
-|       **Usage**: <span Style="color:blue">drop_na(data, ...)<span>
-
-
-- <span Style="color:blue">rename()</span>: renames columns 
-
-|       **Usage**: <span Style="color:blue">rename(.data, ...)<span>
+  - **Usage**: .blue[drop_na(data, ...)]
 
 
-- <span Style="color:blue">recode()</span>: replaces numeric values based on their position, and replaces character values by their name. Usage: <span Style="color:orange">.default</span>, if supplied, gives all cases not matched a new value. <span Style="color:orange">.missing</span> replaces the missing values by the specified new value.
+- .blue[rename()]: renames columns 
 
-|       **Usage**: <span Style="color:blue">recode(.x, ..., .default = NULL, .missing = NULL)<span>
-
-- <span Style="color:blue">case_when()</span>: a general vectorised if
-
-|       **Usage**: <span Style="color:blue">case_when(...)<span>
+  - **Usage**: .blue[rename(.data, ...)]
 
 
+- .blue[recode()]: replaces numeric values based on their position, and replaces character values by their name. Usage: .orange[.default], if supplied, gives all cases not matched a new value. .orange[.missing] replaces the missing values by the specified new value.
+
+  - **Usage**: .blue[recode(.x, ..., .default = NULL, .missing = NULL)]
+
+- .blue[case_when()]: a general vectorised if
+
+  - **Usage**: .blue[case_when(...)]
+
+---
 ## drop_na() function
 
-We can use the <span Style="color:blue">drop_na()<span> function to drop rows containing missing values. 
+We can use the .blue[drop_na()] function to drop rows containing missing values. 
 
 ```{r drop_na}
 nrow(df)
-df <- df %>% drop_na()
+df <- df %>% 
+  drop_na()
 nrow(df)
 ```
 
+---
 ## rename() function
 
-We can use the <span Style="color:blue">rename()<span> function to rename column names. This function makes the task much easier since we can rename a variable directly without knowing which column that variable is. 
+We can use the .blue[rename()] function to rename column names. This function makes the task much easier since we can rename a variable directly without knowing which column that variable is. 
 
 ```{r rename}
 df <- df %>% rename(
@@ -499,10 +568,10 @@ df <- df %>% rename(
 colnames(df)
 ```
 
-
+---
 ## recode() function
 
-We might want to recode specific values in an R data frame sometimes. The <span Style="color:blue">recode()(</span> function from the <span Style="color:red">dplyr package</span> makes this simple to accomplish.
+We might want to recode specific values in an R data frame sometimes. The .blue[recode()(] function from the .red[dplyr package] makes this simple to accomplish.
 
 ```{r recode1}
 df$month <- recode(df$month, 
@@ -520,10 +589,12 @@ x  <- c(12, 31, 0, 34, 8, 5, 7, 16, 8)
 x <- x %>% recode(`0` = 1314)
 x
 ```
+
+---
 ## case_when() function
 
 
-We can use <span Style="color:blue">case_when()(</span> function to create a new variable with the <span Style="color:blue">mutate()(</span> function together. 
+We can use .blue[case_when()(] function to create a new variable with the .blue[mutate()(] function together. 
 
 ```{r case_when}
 df <- df %>% mutate(arr_status = case_when(
@@ -537,19 +608,42 @@ df <- df %>% mutate(arr_status = case_when(
 count(df, arr_status)
 ```
 
+---
+# Summary of Main Points
+
+By now, you should know how to utilize basic functions in the r package .red[dplyr] for data manipulation and analysis. 
+
+.small[
+- filter
+- arrange
+- select
+- mutate
+- group_by
+- summarize
+]
+
+---
+# Supplementary Materials
+
+Here are some useful supplementary materials for self-learning. 
+
+.pull-left[
+.center[[<img src="https://r4ds.hadley.nz/cover.jpg" height="250px">](https://r4ds.hadley.nz)]
+.small[
+* [Data Visualization](https://r4ds.hadley.nz/data-visualize)
+]
+]
+.pull-right[
+.center[[<img src="../Figures/RPubs.png" height="250px">](https://RPubs.com)]
+.small[
+* [Visualizations with ggplot2 1](https://rpubs.com/chrisbrunsdon/UG_ggplot)
+* [Visualization with ggplot2 2](https://rpubs.com/Cisco_Self_Serve/318832)
+]
+]
 
 
-## README
 
-You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
 
-* A: Switches show of current versus all slides (helpful for printing all pages)
-
-* B: Make fonts large
-
-* c: Show table of contents
-
-* S: Make fonts smaller
 
 
 
