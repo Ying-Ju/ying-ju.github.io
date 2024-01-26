@@ -144,7 +144,7 @@ class: center, middle, inverse, title-slide
 ## Learning Objectives
 
 -	Measures of Central Tendency: mean, median, mode
--	Measures of Spread: range, variance, standard deviation
+-	Measures of Spread: range, variance, standard deviation, IQR
 -	Non-Parametric Statistics and Their Significance
 -	Skewness and Kurtosis
 -	Measures of Relationship: correlation and covariance
@@ -198,7 +198,11 @@ Measures of spread provide insights into the variability or dispersion within a 
   - `Calculation`: Range = Maximum value - Minimum value
   - `Usage`: Simplest measure of spread; however, it is sensitive to outliers.
     - `Example`: In a dataset of temperatures over a week, the range is the difference between the highest and lowest recorded temperatures.
-
+    
+**Interquartile Range (IQR)**
+  - `Definition`: The IQR is the difference between the 75th percentile (upper quartile) and the 25th percentile (lower quartile) in a dataset. (IQR = Q3 - Q1)
+  - `Usage`: Unlike range, the IQR is not affected by outliers. It is often used in conjunction with box plots to identify outliers. Data points that fall below Q1 - 1.5IQR or above Q3 + 1.5IQR are typically considered outliers. The IQR is useful for comparing the spread of different datasets. 
+    
 ---
 ### Measures of spread (Continued)
 
