@@ -1,0 +1,685 @@
+---
+title: | 
+    Comparing Classifier Performance with Baselines
+author: 'Ying-Ju Tessa Chen, PhD <br>[`r icons::icon_style(icons::fontawesome("google"), fill = "white")` Scholar](https://scholar.google.com/citations?user=nfXnYKcAAAAJ&hl=en&oi=ao) &nbsp; |  &nbsp;
+[`r icons::icon_style(icons::fontawesome("github"), fill = "white")` @ying-ju](https://github.com/ying-ju) &nbsp; | &nbsp;
+[`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)</br> <br>
+<u><b><font color="white">Joint work with:</b></u><br>
+Fadel Megahed, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Miami University](https://miamioh.edu/fsb/directory/?up=/directory/megahefm)<br/>
+Allison Jones-Farmer, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Miami University](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2)<br/>
+Steven E. Rigdon, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Saint Louis University](https://www.slu.edu/public-health-social-justice/faculty/rigdon-steven.php)<br/>
+Martin Krzywinski, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Canada&apos;s Michael Smith Genome Sciences Centre](https://mk.bcgsc.ca/)<br/>
+Naomi Altman, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` The Pennsylvania State University](https://science.psu.edu/stat/people/nsa1)<br><br/>'
+date: 'April 11, 2024 | Pi Mu Epsilon Banquet | Dayton OH'
+output:
+  xaringan::moon_reader:
+    self_contained: false
+    css: [default, "styles/fonts.css", "styles/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    seal: true
+header-includes:  
+  - "styles/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      #fig.height = 3,
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(tidyverse, magrittr, lubridate, janitor, caret, # data analysis pkgs
+               DataExplorer, scales, plotly, calendR, pdftools, RColorBrewer,# plots
+               #tmap, sf, urbnmapr, tigris, # maps
+               #gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown,
+               basemodels, 
+               knitr, kableExtra)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+## Outline 
+
+- Introduction
+- Understand Baselines
+- Performance Metrics
+- Analyzing the Distribution of Baselines
+- Showcase: Beyond the Basics
+
+---
+## Introduction
+
+- `Brief overview:` Explore the pivotal role of baselines in machine learning by comparing classifier performance, highlighting the path to more accurate, sensitive, and specific model evaluations.
+
+- `Objective:` By the end of this talk, you will:
+    - Be familiar with some commonly used baselines for classification problems.
+    - Understand the key performance metrics used in classifier evaluation.
+    - Learn how these concepts aid in comprehensive model evaluations.
+
+---
+## Understand Baselines
+
+Baselines are typically generated independently for each dataset using very simple models.
+- `Goal:` Set the minimum level of acceptable performance and help with comparing relative improvements in performance of other models.
+
+
+**Regression**
+- `Baseline:` mean of the response variable $Y$ to estimate the response of all observations. 
+- `Performance Metric:` $R^2$ is interpreted as the fraction of observed variance relative to this baseline that is explained by the regression model using at least one predictor.
+  
+**Classification**
+- `Uniform Random Predictions:` Sampled with equal probability for each class. 
+- `Proportional Random Predictions:` Sampled with probabilities matching the distribution of class labels in the training dataset.
+- `Most Frequent Predictions:` Always predict the most frequently observed class in the training dataset.
+
+---
+### Example of Commonly Used Baseline Classifiers
+
+Three baseline classifiers applied to an imbalanced dataset with 10 diseased and 30 normal cells.
+
+```{r, echo=FALSE, fig.height = 3}
+colorPal = brewer.pal(n = 3, 'Dark2')
+
+set.seed(6)
+M <- 30
+m <- 10
+cell_train <- data.frame(State = c(rep("normal", M), 
+                                   rep("diseased", m)))
+cell_train$State <- sample(cell_train$State, (M+m), replace=F)
+cell_train$State <- as.factor(cell_train$State)
+
+result_uniform <- dummy_classifier(cell_train$State, strategy = "uniform", random_state = 2024)
+result_proportional <- dummy_classifier(cell_train$State, strategy = "proportional", random_state = 2024)
+result_constant <- dummy_classifier(cell_train$State, strategy = "most_frequent")
+
+
+cell_train$uniform <- factor(predict_dummy_classifier(result_uniform, cell_train), levels = levels(cell_train$State))
+cell_train$proportional <- factor(predict_dummy_classifier(result_proportional, cell_train), levels = levels(cell_train$State))
+cell_train$constant <- factor(predict_dummy_classifier(result_constant, cell_train), levels = levels(cell_train$State))
+
+cell_train$Index <- 1:nrow(cell_train)
+
+p1 <- cell_train %>% 
+  ggplot(aes(x=Index, y=uniform, color=State)) +
+  geom_point(size=1) +
+  theme_classic() +
+  scale_color_manual(values = c("normal" = "#A0A0A0", 
+                                "diseased" = "red")) +
+  labs(title = "Uniform Random Predictions") +
+  ylab("Predicted Class") +
+  theme(legend.position = "top", 
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        plot.title = element_text(hjust = 0.5, size = 7),
+        plot.margin=unit(c(5.5, 12.5, 5.5, 12.5), "points"))
+
+p2 <- cell_train %>% 
+  ggplot(aes(x=Index, y=proportional, color=State)) +
+  geom_point(size=1) +
+  theme_classic() +
+  scale_color_manual(values = c("normal" = "#A0A0A0", 
+                                "diseased" = "red")) +
+  labs(title = "Proportional Random Predictions") +
+  ylab("Predicted Class") +
+  theme(legend.position = "top", 
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        plot.title = element_text(hjust = 0.5, size = 7),
+        plot.margin=unit(c(5.5, 12.5, 5.5, 12.5), "points"))
+
+p3 <- cell_train %>% 
+  ggplot(aes(x=Index, y=constant, color=State)) +
+  geom_point(size=1) +
+  theme_classic() +
+  scale_color_manual(values = c("normal" = "#A0A0A0", 
+                                "diseased" = "red")) +
+  labs(title = "Most Frequent Random Predictions") +
+  ylab("Predicted Class") +
+  theme(legend.position = "top", 
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        plot.title = element_text(hjust = 0.5, size = 7),
+        plot.margin=unit(c(5.5, 12.5, 5.5, 12.5), "points")) +
+  scale_y_discrete(drop = FALSE)
+
+Figure1 <- ggpubr::ggarrange(p1, p2, p3, nrow=1, ncol=3, common.legend=TRUE,
+                             legend = "top")
+Figure1
+```
+
+---
+## Performance Metrics 
+```{r}
+
+# Define the matrix as a data frame for clarity in R Markdown
+confusion_matrix <- data.frame(
+  ` ` = c("Actual Positive (P)", "Actual Negative (N)"),
+  `Predicted Positive (PP)` = 
+    c("True Positive (TP), Hit", "False Positive (FP), False Alarm, Overestimation"),
+  `Predicted Negative (PN)` = 
+    c("False Negative (FN), Miss, Underestimation", "True Negative (TN), Correct Rejection")
+)
+
+# Render the table with kable and kableExtra for HTML
+kable(confusion_matrix, col.names = c("", "Predicted Positive (PP)", "Predicted Negative (PN)"),
+      "html", escape = FALSE, align = c('l', 'l', 'l')) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F, font_size = 18) %>%
+  row_spec(0, bold = T, italic = T) %>%
+  add_header_above(c(" " = 1, "Predicted Condition" = 2), font_size = 18)
+
+```
+
+<br>
+
+```{r}
+# Define the data frame for performance metrics
+performance_metrics <- data.frame(
+  Metric = c("Accuracy", "Precision", "Recall (Sensitivity)", "Specificity", "F1 Score"),
+  Description = c("Overall correctness of the model", 
+                  "Correctly predicted positive observations to the total predicted positives", 
+                  "Correctly predicted positive observations to all observations in actual class", 
+                  "Correctly predicted negative observations to all observations in actual negative class",
+                  "Weighted average of Precision and Recall"),
+  Formula = c("TP+TN / (TP+TN+FP+FN)", 
+              "TP / (TP+FP)", 
+              "TP / (TP+FN)", 
+              "TN / (TN+FP)",
+              "2 * (Recall * Precision) / (Recall + Precision)")
+)
+
+# Render the table with kable and kableExtra for HTML
+kable(performance_metrics, "html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>%
+  column_spec(1, bold = T) %>%
+  column_spec(2, width = "45%") %>%
+  column_spec(3, width = "35%")
+```
+
+---
+### Comparing Performance Metrics: Balanced vs. Imbalanced Data
+
+Performance metrics of various baselines.
+a, A balanced dataset (50 normal and 50 diseased
+cells). 
+b, An imbalanced dataset (90 normal and
+10 diseased cells).
+
+```{r, fig.height = 3}
+n <- 100
+M <- n*0.5
+m <- n*0.5
+
+set.seed(1234)
+cell_train1 <- data.frame(State = c(rep("normal", M), 
+                                    rep("diseased", m)), 
+                          X = 1:n)
+cell_train1$State <- sample(cell_train1$State, n, replace=F)
+cell_train1$State <- as.factor(cell_train1$State)
+
+model1 <- train(State~., data = cell_train1,
+                method = dummyClassifier, 
+                strategy = "uniform", random_state = 2023)
+
+model2 <- train(State~., data = cell_train1,
+                method = dummyClassifier, 
+                strategy = "proportional", random_state = 2023)
+
+model3 <- train(State~., data = cell_train1,
+                method = dummyClassifier, 
+                strategy = "constant", 
+                constant = "normal")
+
+# Make predictions using the trained dummy classifier
+
+classifier1 <- predict(model1, cell_train1)
+classifier2 <- predict(model2, cell_train1)
+classifier3 <- predict(model3, cell_train1)
+
+
+# Evaluate the performance of the dummy classifier
+
+classifier_confusion_matrix1 <- caret::confusionMatrix(classifier1, cell_train1$State)
+classifier_confusion_matrix2 <- caret::confusionMatrix(classifier2, cell_train1$State)
+classifier_confusion_matrix3 <- caret::confusionMatrix(classifier3, cell_train1$State)
+
+Metric <- rep(c("Accuracy", "Sensitivity", "Specificity", "Precision", "F1", "MCC"), 3)
+Perform_Metric <- data.frame(Metric = Metric, 
+                             Value = rep(NA, length(Metric)), 
+                             Strategy = rep(c("Uniform", "Proportional", "Most Frequent"), each=6))
+
+Perform_Metric[Perform_Metric$Strategy == "Uniform", "Value"] <- 
+  c(classifier_confusion_matrix1$overall["Accuracy"],
+    classifier_confusion_matrix1$byClass[c("Sensitivity", "Specificity", "Precision", "F1")],
+    mltools::mcc(classifier1, cell_train1$State))
+
+Perform_Metric[Perform_Metric$Strategy == "Proportional", "Value"] <- 
+  c(classifier_confusion_matrix2$overall["Accuracy"],
+    classifier_confusion_matrix2$byClass[c("Sensitivity", "Specificity", "Precision", "F1")],
+    mltools::mcc(classifier2, cell_train1$State))
+
+Perform_Metric[Perform_Metric$Strategy == "Most Frequent", "Value"] <- 
+  c(classifier_confusion_matrix3$overall["Accuracy"],
+    classifier_confusion_matrix3$byClass[c("Sensitivity", "Specificity", "Precision", "F1")],
+    mltools::mcc(classifier3, cell_train1$State))
+
+Perform_Metric$Strategy <- factor(Perform_Metric$Strategy, levels = c("Uniform", "Proportional", "Most Frequent"))
+Perform_Metric$Metric <- factor(Perform_Metric$Metric, levels = c("Accuracy", "Sensitivity", "Specificity", "Precision", "F1", "MCC"))
+
+set.seed(2023)
+
+p4 <- Perform_Metric %>% ggplot(aes(x = Value, y = Metric, color = Strategy)) +
+  geom_point(size=1, position=position_jitter(h=0.1)) +
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "darkgrey") +
+  theme_classic() +
+  scale_color_manual(values = colorPal[1:3]) +
+  labs(title = "Figure 2a: Balanced Data") +
+  xlab("Performance Metric") +
+  xlim(c(-0.2, 1))+
+  theme(legend.position = "top", 
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        plot.title = element_text(hjust = 0.5, size = 7),
+        plot.margin=unit(c(5.5, 12.5, 5.5, 12.5), "points"),
+        axis.text.x = element_text(angle = 30, vjust = 0.5)) 
+
+n <- 100
+M <- n*0.9
+m <- n*0.1
+
+set.seed(5678)
+cell_train2 <- data.frame(State = c(rep("normal", M), 
+                                    rep("diseased", m)),
+                          X = 1:n)
+cell_train2$State <- sample(cell_train2$State, n, replace=F)
+cell_train2$State <- as.factor(cell_train2$State)
+
+
+model4 <- train(State~., data = cell_train2,
+                method = dummyClassifier, 
+                strategy = "uniform", random_state = 2023)
+
+model5 <- train(State~., data = cell_train2,
+                method = dummyClassifier, 
+                strategy = "proportional", random_state = 2023)
+
+model6 <- train(State~., data = cell_train2,
+                method = dummyClassifier, 
+                strategy = "most_frequent")
+
+# Make predictions using the trained dummy classifier
+
+classifier4 <- predict(model4, cell_train2)
+classifier5 <- predict(model5, cell_train2)
+classifier6 <- predict(model6, cell_train2)
+
+
+# Evaluate the performance of the dummy classifier
+
+classifier_confusion_matrix4 <- caret::confusionMatrix(classifier4, cell_train2$State)
+classifier_confusion_matrix5 <- caret::confusionMatrix(classifier5, cell_train2$State)
+classifier_confusion_matrix6 <- caret::confusionMatrix(classifier6, cell_train2$State)
+
+Perform_Metric_imbalanced <- data.frame(Metric = Metric, 
+                                        Value = rep(NA, length(Metric)), 
+                                        Strategy = rep(c("Uniform", "Proportional", "Most Frequent"), each=6))
+
+Perform_Metric_imbalanced[Perform_Metric_imbalanced$Strategy == "Uniform", "Value"] <- 
+  c(classifier_confusion_matrix4$overall["Accuracy"],
+    classifier_confusion_matrix4$byClass[c("Sensitivity", "Specificity", "Precision", "F1")],
+    mltools::mcc(classifier4, cell_train2$State))
+
+Perform_Metric_imbalanced[Perform_Metric_imbalanced$Strategy == "Proportional", "Value"] <- 
+  c(classifier_confusion_matrix5$overall["Accuracy"],
+    classifier_confusion_matrix5$byClass[c("Sensitivity", "Specificity", "Precision", "F1")],
+    mltools::mcc(classifier5, cell_train2$State))
+
+Perform_Metric_imbalanced[Perform_Metric_imbalanced$Strategy == "Most Frequent", "Value"] <- 
+  c(classifier_confusion_matrix6$overall["Accuracy"],
+    classifier_confusion_matrix6$byClass[c("Sensitivity", "Specificity", "Precision", "F1")],
+    mltools::mcc(classifier6, cell_train2$State))
+
+Perform_Metric_imbalanced$Strategy <- factor(Perform_Metric_imbalanced$Strategy, levels = c("Uniform", "Proportional", "Most Frequent"))
+Perform_Metric_imbalanced$Metric <- factor(Perform_Metric_imbalanced$Metric, levels = c("Accuracy", "Sensitivity", "Specificity", "Precision", "F1", "MCC"))
+
+set.seed(2023)
+
+p5 <- Perform_Metric_imbalanced %>% 
+  ggplot(aes(x = Value, y = Metric, color = Strategy)) +
+  geom_point(size=1, position=position_jitter(h=0.1))+
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "darkgrey") +
+  theme_classic() +
+  scale_color_manual(values = colorPal[1:3]) +
+  labs(title = "Figure 2b: Imbalanced Data") +
+  xlab("Performance Metric") +
+  xlim(c(-0.2, 1))+
+  theme(legend.position = "top", 
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        plot.title = element_text(hjust = 0.5, size = 7),
+        plot.margin=unit(c(5.5, 12.5, 5.5, 12.5), "points"),
+        axis.text.x = element_text(angle = 30, vjust = 0.5)) 
+
+Figure2 <- ggpubr::ggarrange(p4, p5, nrow=1, ncol=2, common.legend=TRUE,
+                             legend = "top")
+Figure2
+```
+
+
+---
+## Distribution of Baselines
+
+```{r, fig.height = 3.5}
+colorPal <- c('#25aae1', '#fbac30')
+df <- readRDS("simulation.RDS")
+df_summary = df %>% 
+  group_by(pred_approach, metric) %>% 
+  summarise(
+    med = median(value, na.rm=T),
+    p95 = quantile(value, 0.95,  na.rm=T),
+    std = sd(value, na.rm=T)
+  )
+df <- df %>% rename(
+  Approach = pred_approach
+)
+
+df_summary <- df_summary %>% rename(
+  Approach = pred_approach
+)
+
+df$metric <- stringr::str_to_title(df$metric)
+df$metric <- factor(df$metric, 
+                    levels = c("Accuracy", "Sensitivity", 
+                               "Specificity", "Precision", "F1"))
+
+df_summary$metric <- stringr::str_to_title(df_summary$metric)
+df_summary$metric <- factor(df_summary$metric, 
+                            levels = c("Accuracy", "Sensitivity", 
+                                       "Specificity", "Precision", "F1"))
+
+p <- df %>% 
+  ggplot(aes(x = value, fill = Approach)) + 
+  geom_histogram(position = "identity", alpha = 0.6, 
+                 binwidth = 0.025) +   # alpha for transparency
+  facet_grid(metric ~ ., switch = "y") +  # Only divide by metric (rows)
+  theme_classic(base_size = 9) +
+  scale_fill_manual(values = colorPal[1:2]) +
+  theme(legend.position = "top",  # Move legend to the top
+        axis.text.y = element_blank(),
+        strip.background = element_blank(),
+        strip.placement = "outside",
+        strip.text.y = element_text(angle = 0, 
+                                    hjust = 0.5)) +  # Remove y-axis values
+  geom_vline(
+    data = df_summary,
+    aes(xintercept = med, color = Approach),  
+    linewidth = 1.5
+  ) +
+  scale_color_manual(values = colorPal[1:2]) +
+  guides(fill = guide_legend(override.aes = list(linetype = 0))) +
+  labs(x = "", y=NULL)
+p
+```
+
+.footnote[Distribution of uniform and proportional baseline performance metrics for an imbalanced dataset. Based on 10,000 iterations of a dataset with 100 observations (90 normal and 10 diseased cells).
+Vertical lines show medians. The distribution for some metrics can be enumerated and/or approximated.]
+---
+## Showcase: Beyond the Basics
+
+- Consider the study where the health of 2,126 fetuses was classified as normal, suspect, or pathological based on several measurable predictor variables. .footnote[Bernardes, J., A. Garrido, and L. Pereira-Leite. "SisPorto 2.0: A program for automated analysis of cardiotocograms." J. Matern. Fetal. Med. 9, no. 5 (2000): 311-318.] 
+
+- The fetuses’ health was predicted using linear discriminant analysis (LDA), while a trained obstetrician determined the ground truth health class. 
+    - LDA aims to find a linear combination of features that separates two or more classes of objects or events with the highest possible accuracy.
+    - LDA incorporates the costs of misclassification as well as the prior probabilities of category membership and determines the classification rules to minimize the cost.
+  - `Advantages:` It is relatively simple to understand and implement, performs well even on small datasets, and is particularly effective when the classes exhibit a gaussian distribution.
+
+---
+### Confusion matrix for fetal health classification
+
+<table>
+<thead>
+<tr>
+<th colspan="2"></th>
+<th colspan="3" style="text-align:center;">Predicted with LDA</th>
+<th></th>
+</tr>
+<tr>
+<td colspan="2"></td>
+<td>Normal</td>
+<td>Suspect</td>
+<td>Pathological</td>
+<td>Total</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="3" style="vertical-align:middle;"><strong>Ground Truth</strong></td>
+<td>Normal</td>
+<td>1,584</td>
+<td>53</td>
+<td>18</td>
+<td>1,655</td>
+</tr>
+<tr>
+<td>Suspect</td>
+<td>146</td>
+<td>139</td>
+<td>10</td>
+<td>295</td>
+</tr>
+<tr>
+<td>Pathological</td>
+<td>24</td>
+<td>53</td>
+<td>99</td>
+<td>176</td>
+</tr>
+<tr>
+<td></td>
+<td>Total</td>
+<td>1,754</td>
+<td>245</td>
+<td>127</td>
+<td>2,126</td>
+</tr>
+</tbody>
+</table>
+
+<br>
+- Sensitivity:
+    - normal: 1584/1655 = 0.957
+    - suspect: 139/295 = 0.471
+    - pathological: 99/176 = 0.562 
+    
+---
+### Two baselines and LDA sensitivity for each fetal health class.
+
+.footnote[Vertical lines show medians.]
+
+```{r, fig.height=3.5}
+result <- readRDS("LDA_result.RDS")
+
+par( mfrow=c(3,1))
+par(mar=c(5,7.5,0.5,2))
+# Add histograms
+hist(result$V1, col="#fbac30", border="#fbac30",  
+     xlim = c(0,1), ylim = c(0, 2500),
+     xlab = "", main = "", xaxt="n", yaxt="n", ylab = "")
+hist(result$V4, col="#25aae1", border="#25aae1",  add=TRUE)
+
+# Manually add the y-axis label using mtext
+mtext("Normal", side=2, line=0, las=1, cex=1)
+
+# Add median lines
+abline(v=median(result$V1), col="#fbac30", lwd=2)
+abline(v=median(result$V4), col="#25aae1", lwd=2)
+abline(v = 0.957, col = "#eb0163", lwd=2)
+
+# Add text annotations to the left of the histograms
+text(min(result$V1)-0.1, 1500, "Proportional \n baseline", col="black", adj=c(0,1))
+text(min(result$V4)-0.1, 1500, "Uniform \n baseline", col="black", adj=c(0,1))
+text(0.9, 1500, "LDA", col="black", adj=c(0,1))
+
+# Add the modified x-axis with medians
+xticks <- c(seq(0, 1, 0.1), 0.334, 0.778, 0.957)
+labels <- c(rep("", 11), "0.334", "0.778", "0.957")
+axis(1, at=xticks, labels=labels, cex.axis=0.75)
+
+par(mar=c(5,7.5,0.5,2))
+# Add histograms
+hist(result$V2, col="#fbac30", border="#fbac30",  
+     xlim = c(0,1), ylim = c(0, 2500), ylab="",
+     xlab = "", main = "", xaxt="n", yaxt="n")
+hist(result$V5, col="#25aae1", border="#25aae1",  add=TRUE)
+
+mtext("Suspect", side=2, line=0, las=1, cex=1)
+
+# Add median lines
+abline(v=median(result$V2), col="#fbac30", lwd=2)
+abline(v=median(result$V5), col="#25aae1", lwd=2)
+abline(v = 0.471, col = "#eb0163", lwd=2)
+
+# Add the modified x-axis with medians
+xticks <- c(seq(0, 1, 0.1), 0.139, 0.332, 0.471)
+labels <- c(rep("", 11), "0.139", "0.332", "0.471")
+axis(1, at=xticks, labels=labels, cex.axis=0.7)
+
+par(mar=c(5,7.5,1,2))
+# Add histograms
+hist(result$V3, col="#fbac30", border="#fbac30",  
+     xlim = c(0,1), ylim = c(0, 2500), ylab="",
+     xlab = "", main = "", xaxt="n", yaxt="n", cex.lab=.5)
+hist(result$V6, col="#25aae1", border="#25aae1",  add=TRUE)
+
+mtext("Pathological", side=2, line=0, las=1, cex=1)
+mtext("Sensitivity", side=1, line=2.5, cex=1)
+
+# Add median lines
+abline(v=median(result$V3), col="#fbac30", lwd=2)
+abline(v=median(result$V6), col="#25aae1", lwd=2)
+abline(v = 0.562, col = "#eb0163", lwd=2)
+
+# Add the modified x-axis with medians
+xticks <- c(seq(0, 1, 0.1), 0.080, 0.335, 0.562)
+labels <- c("0", "", "0.2", "", "0.4", "", "0.6", "", "0.8", "", "1", 
+            "0.08", "0.335", "0.562")
+axis(1, at=xticks, labels = labels, cex.axis=0.75)
+
+par(mfrow=c(1,1), mar=c(5,4,4,2) + 0.1)
+
+```
+
+---
+## Discussion and Concluding Remark
+
+**Importance of Correct Baseline:**
+
+- Accounts for expected class distribution and sampling variability.
+- Essential for dealing with class imbalance.
+
+**Choosing the Baseline:**
+
+- Selection should be judicious, especially in the presence of class imbalance.
+- The exact baseline value can be derived from a specific percentile of the baseline model's sampling distribution (For example, 95th percentile)
+
+---
+### Discussion and Concluding Remark (Continued)
+
+**Appropriate Baseline Selection:**
+
+- The proportional baseline is most suitable when sample class proportions reflect the population accurately.
+- For rare diseases, the most frequent baseline may be preferred.
+- Forgoing testing in cases where disease prevalence is low and testing is costly can act as an implicit most-frequent model application.
+
+**Risks of Not Using a Baseline:**
+
+- Absence of a baseline, typical fixed reference values (for example, even chance) can easily result in misleading performance assessments (and training), class distribution and sampling variability. ]
+
+---
+
+> `All animals are equal, but some animals are more equal than others. - George Orwell`
+
+<br><br>
+
+```{r, out.width = "450px"}
+include_graphics("./figs/animals2.png")
+```
+
+
+
+---
+## Reference 
+
+- Megahed, Fadel M., Ying-Ju Chen, L. Allison Jones-Farmer, Steven E. Rigdon, Martin Krzywinski, and Naomi Altman. "Comparing classifier performance with baselines." [Nature Methods](https://www.nature.com/articles/s41592-024-02234-5) (2024).
+
+- [App](http://rstudio.fsb.miamioh.edu:3838/megahefm/metric_interpretation/) for the study. 
+
+- [Supplementary](https://fmegahed.github.io/research/classification/metrics_variability.html)
+
+- R package [basemodels](https://cran.r-project.org/web/packages/basemodels/index.html)
+
+---
+## Thank You!
+
+.pull-left[
+<br>
+<br>
+- Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+]
+
+
+.pull-right[
+
+```{r tessa, echo=FALSE, out.width="60%", fig.height=5}
+knitr::include_graphics("./figs/Tessa_grey_G.gif")
+```
+]
+
+
+---
+class: center, middle, inverse, title-slide
+
+.title[
+# <p>Comparing Classifier Performance with Baselines</p>
+]
+.author[
+### Ying-Ju Tessa Chen, PhD <br>[`r icons::icon_style(icons::fontawesome("google"), fill = "white")` Scholar](https://scholar.google.com/citations?user=nfXnYKcAAAAJ&hl=en&oi=ao) &nbsp; |  &nbsp; [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` @ying-ju](https://github.com/ying-ju) &nbsp; | &nbsp; [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)</br><br><u><b><font color="white">Joint work with:</b></u><br>Fadel Megahed, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Miami University](https://miamioh.edu/fsb/directory/?up=/directory/megahefm)<br/>Allison Jones-Farmer, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Miami University](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2)<br/>Steven E. Rigdon, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Saint Louis University](https://www.slu.edu/public-health-social-justice/faculty/rigdon-steven.php)<br/>Martin Krzywinski, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` Canada's Michael Smith Genome Sciences Centre](https://mk.bcgsc.ca/)<br/>Naomi Altman, PhD &nbsp; [`r icons::icon_style(icons::fontawesome("link", style = "solid"), fill = "white")` The Pennsylvania State University](https://science.psu.edu/stat/people/nsa1)<br><br/>
+]
+.date[
+### April 11, 2024 | Pi Mu Epsilon Banquet | Dayton OH
+]
