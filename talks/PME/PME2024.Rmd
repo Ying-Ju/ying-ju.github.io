@@ -169,7 +169,7 @@ p3 <- cell_train %>%
   theme_classic() +
   scale_color_manual(values = c("normal" = "#A0A0A0", 
                                 "diseased" = "red")) +
-  labs(title = "Most Frequent Random Predictions") +
+  labs(title = "Most Frequent Predictions") +
   ylab("Predicted Class") +
   theme(legend.position = "top", 
         axis.title = element_text(size = 7),
@@ -186,14 +186,13 @@ Figure1
 ---
 ## Performance Metrics 
 ```{r}
-
 # Define the matrix as a data frame for clarity in R Markdown
 confusion_matrix <- data.frame(
   ` ` = c("Actual Positive (P)", "Actual Negative (N)"),
   `Predicted Positive (PP)` = 
-    c("True Positive (TP), Hit", "False Positive (FP), False Alarm, Overestimation"),
+    c("True Positive (TP)", "False Positive (FP)"),
   `Predicted Negative (PN)` = 
-    c("False Negative (FN), Miss, Underestimation", "True Negative (TN), Correct Rejection")
+    c("False Negative (FN)", "True Negative (TN)")
 )
 
 # Render the table with kable and kableExtra for HTML
@@ -463,10 +462,10 @@ Vertical lines show medians. The distribution for some metrics can be enumerated
 
 - Consider the study where the health of 2,126 fetuses was classified as normal, suspect, or pathological based on several measurable predictor variables. .footnote[Bernardes, J., A. Garrido, and L. Pereira-Leite. "SisPorto 2.0: A program for automated analysis of cardiotocograms." J. Matern. Fetal. Med. 9, no. 5 (2000): 311-318.] 
 
-- The fetuses’ health was predicted using linear discriminant analysis (LDA), while a trained obstetrician determined the ground truth health class. 
+- The fetuses' health was predicted using linear discriminant analysis (LDA), while a trained obstetrician determined the ground truth health class. 
     - LDA aims to find a linear combination of features that separates two or more classes of objects or events with the highest possible accuracy.
     - LDA incorporates the costs of misclassification as well as the prior probabilities of category membership and determines the classification rules to minimize the cost.
-  - `Advantages:` It is relatively simple to understand and implement, performs well even on small datasets, and is particularly effective when the classes exhibit a gaussian distribution.
+  - `Advantages:` It is relatively simple to understand and implement, performs well even on small datasets, and is particularly effective when the classes exhibit a Gaussian distribution.
 
 ---
 ### Confusion matrix for fetal health classification
@@ -527,7 +526,7 @@ Vertical lines show medians. The distribution for some metrics can be enumerated
     - pathological: 99/176 = 0.562 
     
 ---
-### Two baselines and LDA sensitivity for each fetal health class.
+### Two baselines and LDA sensitivity for each fetal health class
 
 .footnote[Vertical lines show medians.]
 
@@ -615,7 +614,7 @@ par(mfrow=c(1,1), mar=c(5,4,4,2) + 0.1)
 **Choosing the Baseline:**
 
 - Selection should be judicious, especially in the presence of class imbalance.
-- The exact baseline value can be derived from a specific percentile of the baseline model's sampling distribution (For example, 95th percentile)
+- The exact baseline value can be derived from a specific percentile of the baseline model's sampling distribution (For example, 95th percentile).
 
 ---
 ### Discussion and Concluding Remark (Continued)
@@ -628,7 +627,7 @@ par(mfrow=c(1,1), mar=c(5,4,4,2) + 0.1)
 
 **Risks of Not Using a Baseline:**
 
-- Absence of a baseline, typical fixed reference values (for example, even chance) can easily result in misleading performance assessments (and training), class distribution and sampling variability. ]
+- Absence of a baseline, typical fixed reference values (for example, even chance) can easily result in misleading performance assessments (and training), class distribution and sampling variability.
 
 ---
 
@@ -643,7 +642,7 @@ include_graphics("./figs/animals2.png")
 
 
 ---
-## Reference 
+## References 
 
 - Megahed, Fadel M., Ying-Ju Chen, L. Allison Jones-Farmer, Steven E. Rigdon, Martin Krzywinski, and Naomi Altman. "Comparing classifier performance with baselines." [Nature Methods](https://www.nature.com/articles/s41592-024-02234-5) (2024).
 

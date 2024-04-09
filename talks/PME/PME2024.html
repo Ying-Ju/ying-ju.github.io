@@ -14,7 +14,7 @@
     <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
     <link href="libs/panelset/panelset.css" rel="stylesheet" />
     <script src="libs/panelset/panelset.js"></script>
-    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"x582e9408219445a9b3cdd0e4cd8348e","expires":14}</script>
+    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"x910596b485d4a6e939685415baf902d","expires":14}</script>
     <script src="libs/himalaya/himalaya.js"></script>
     <script src="libs/js-cookie/js.cookie.js"></script>
     <link href="libs/editable/editable.css" rel="stylesheet" />
@@ -116,13 +116,13 @@ Three baseline classifiers applied to an imbalanced dataset with 10 diseased and
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Actual Positive (P) &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; True Positive (TP), Hit &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; False Negative (FN), Miss, Underestimation &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; True Positive (TP) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; False Negative (FN) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Actual Negative (N) &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; False Positive (FP), False Alarm, Overestimation &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; True Negative (TN), Correct Rejection &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; False Positive (FP) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; True Negative (TN) &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -190,10 +190,10 @@ Vertical lines show medians. The distribution for some metrics can be enumerated
 
 - Consider the study where the health of 2,126 fetuses was classified as normal, suspect, or pathological based on several measurable predictor variables. .footnote[Bernardes, J., A. Garrido, and L. Pereira-Leite. "SisPorto 2.0: A program for automated analysis of cardiotocograms." J. Matern. Fetal. Med. 9, no. 5 (2000): 311-318.] 
 
-- The fetuses’ health was predicted using linear discriminant analysis (LDA), while a trained obstetrician determined the ground truth health class. 
+- The fetuses' health was predicted using linear discriminant analysis (LDA), while a trained obstetrician determined the ground truth health class. 
     - LDA aims to find a linear combination of features that separates two or more classes of objects or events with the highest possible accuracy.
     - LDA incorporates the costs of misclassification as well as the prior probabilities of category membership and determines the classification rules to minimize the cost.
-  - `Advantages:` It is relatively simple to understand and implement, performs well even on small datasets, and is particularly effective when the classes exhibit a gaussian distribution.
+  - `Advantages:` It is relatively simple to understand and implement, performs well even on small datasets, and is particularly effective when the classes exhibit a Gaussian distribution.
 
 ---
 ### Confusion matrix for fetal health classification
@@ -254,7 +254,7 @@ Vertical lines show medians. The distribution for some metrics can be enumerated
     - pathological: 99/176 = 0.562 
     
 ---
-### Two baselines and LDA sensitivity for each fetal health class.
+### Two baselines and LDA sensitivity for each fetal health class
 
 .footnote[Vertical lines show medians.]
 
@@ -271,7 +271,7 @@ Vertical lines show medians. The distribution for some metrics can be enumerated
 **Choosing the Baseline:**
 
 - Selection should be judicious, especially in the presence of class imbalance.
-- The exact baseline value can be derived from a specific percentile of the baseline model's sampling distribution (For example, 95th percentile)
+- The exact baseline value can be derived from a specific percentile of the baseline model's sampling distribution (For example, 95th percentile).
 
 ---
 ### Discussion and Concluding Remark (Continued)
@@ -284,7 +284,7 @@ Vertical lines show medians. The distribution for some metrics can be enumerated
 
 **Risks of Not Using a Baseline:**
 
-- Absence of a baseline, typical fixed reference values (for example, even chance) can easily result in misleading performance assessments (and training), class distribution and sampling variability. ]
+- Absence of a baseline, typical fixed reference values (for example, even chance) can easily result in misleading performance assessments (and training), class distribution and sampling variability.
 
 ---
 
@@ -297,7 +297,7 @@ Vertical lines show medians. The distribution for some metrics can be enumerated
 
 
 ---
-## Reference 
+## References 
 
 - Megahed, Fadel M., Ying-Ju Chen, L. Allison Jones-Farmer, Steven E. Rigdon, Martin Krzywinski, and Naomi Altman. "Comparing classifier performance with baselines." [Nature Methods](https://www.nature.com/articles/s41592-024-02234-5) (2024).
 
