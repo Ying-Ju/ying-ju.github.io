@@ -209,7 +209,7 @@ kable(confusion_matrix, col.names = c("", "Predicted Positive (PP)", "Predicted 
 ```{r}
 # Define the data frame for performance metrics
 performance_metrics <- data.frame(
-  Metric = c("Accuracy", "Precision", "Recall (Sensitivity)", "Specificity", "F1 Score"),
+  Metric = c("Accuracy", "Precision", "Sensitivity (Recall)", "Specificity", "F1 Score"),
   Description = c("Overall correctness of the model", 
                   "Correctly predicted positive observations to the total predicted positives", 
                   "Correctly predicted positive observations to all observations in actual class", 
