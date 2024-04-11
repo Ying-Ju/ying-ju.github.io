@@ -212,7 +212,7 @@ performance_metrics <- data.frame(
   Metric = c("Accuracy", "Precision", "Sensitivity (Recall)", "Specificity", "F1 Score"),
   Description = c("Overall correctness of the model", 
                   "Correctly predicted positive observations to the total predicted positives", 
-                  "Correctly predicted positive observations to all observations in actual class", 
+                  "Correctly predicted positive observations to all observations in actual positive class", 
                   "Correctly predicted negative observations to all observations in actual negative class",
                   "Weighted average of Precision and Recall"),
   Formula = c("TP+TN / (TP+TN+FP+FN)", 

@@ -3,7 +3,6 @@ usethis
 devtools
 countdown
 xaringanExtra
-emo
 icons
 tidyverse
 ggplot2
@@ -26,6 +25,7 @@ calendR
 pdftools
 RColorBrewer
 emojifont
+emo
 RefManageR
 basemodels
 knitr
