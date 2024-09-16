@@ -1,0 +1,104 @@
+---
+title: | 
+    Unlocking Opportunities: The Statistics Major and Data Analytics Minor
+author: 'Ying-Ju Tessa Chen, PhD <br>[`r icons::icon_style(icons::fontawesome("google"), fill = "white")` Scholar](https://scholar.google.com/citations?user=nfXnYKcAAAAJ&hl=en&oi=ao) &nbsp; |  &nbsp;
+[`r icons::icon_style(icons::fontawesome("github"), fill = "white")` @ying-ju](https://github.com/ying-ju) &nbsp; | &nbsp;
+[`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)</br> <br>'
+date: 'September 17, 2024 | Department of Mathematics | University of Dayton | Dayton, OH'
+output:
+  xaringan::moon_reader:
+    self_contained: false
+    css: [default, "styles/fonts.css", "styles/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    seal: true
+header-includes:  
+  - "styles/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      fig.height = 3,
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(tidyverse, magrittr, lubridate, janitor, # data analysis pkgs
+               emojifont, emo, RefManageR, xaringanExtra) # for
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+
+## Who AM I?
+
+.Large[Ying-Ju Tessa Chen, Associate Professor]
+
+Two master degrees:
+- Mathematics, National Taiwan University
+- Statistics, Bowing Green State University
+
+Ph.D. in statistics (2015) – Bowling Green State University
+
+Before I came to UD… Visiting Assistant Professor at Farmer School of Business in the Miami University (Information Systems & Analytics).
+
+**My research interests:** Empirical Likelihood Method, Change Point Analysis, Applied Machine Learning, Survival Analysis
+
+**Teaching experience:** 14th year since I came to the USA
+
+
+
+
+---
+## Thank You!
+
+.pull-left[
+- This presentation was created based on Dr. Fadel Megahed's presentation at [ISQC 2023](https://www.american.edu/cas/isqc/). Click [here](https://fmegahed.github.io/talks/isqc2023/chatsqc.html) to find the original presentation. 
+
+- Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+]
+
+
+.pull-right[
+
+```{r tessa, echo=FALSE, out.width="60%", fig.height=5}
+knitr::include_graphics("./figs/Tessa_grey_G.gif")
+```
+]
+
