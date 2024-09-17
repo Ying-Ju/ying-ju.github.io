@@ -1,7 +1,8 @@
 ---
 title: | 
     Unlocking Opportunities: The Statistics Major and Data Analytics Minor
-author: 'Ying-Ju Tessa Chen, PhD <br>[`r icons::icon_style(icons::fontawesome("google"), fill = "white")` Scholar](https://scholar.google.com/citations?user=nfXnYKcAAAAJ&hl=en&oi=ao) &nbsp; |  &nbsp;
+author: 'Ying-Ju Tessa Chen, PhD <br>[`r icons::icon_style(icons::fontawesome("home"), fill = "white")` Homepage](https://github.com/ying-ju) &nbsp; | &nbsp;
+[`r icons::icon_style(icons::fontawesome("google"), fill = "white")` Scholar](https://scholar.google.com/citations?user=nfXnYKcAAAAJ&hl=en&oi=ao) &nbsp; |  &nbsp;
 [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` @ying-ju](https://github.com/ying-ju) &nbsp; | &nbsp;
 [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)</br> <br>'
 date: 'September 17, 2024 | Department of Mathematics | University of Dayton | Dayton, OH'
@@ -89,6 +90,8 @@ xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "pan
 - Change Point Analysis
 - Applied Machine Learning
 - Survival Analysis
+
+  [Research Network](https://sites.google.com/a/udayton.edu/ychen4/publications/research-network?authuser=0)
 
 ### Connection to the Program
 
