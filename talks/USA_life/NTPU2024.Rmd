@@ -1,0 +1,120 @@
+---
+title: | 
+    Journey Across Borders: My Experience Living, Studying, and Working in the U.S.
+author: 'Ying-Ju Tessa Chen, PhD <br>[`r icons::icon_style(icons::fontawesome("google"), fill = "white")` Scholar](https://scholar.google.com/citations?user=nfXnYKcAAAAJ&hl=en&oi=ao) &nbsp; |  &nbsp;
+[`r icons::icon_style(icons::fontawesome("github"), fill = "white")` @ying-ju](https://github.com/ying-ju) &nbsp; | &nbsp;
+[`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)</br>'
+date: 'October, 2024 | National Taipei University | Taiwan'
+output:
+  xaringan::moon_reader:
+    self_contained: false
+    css: [default, "styles/fonts.css", "styles/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    seal: true
+header-includes:  
+  - "styles/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      #fig.height = 3,
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(tidyverse, magrittr, lubridate, janitor, caret, # data analysis pkgs
+               DataExplorer, scales, plotly, calendR, pdftools, RColorBrewer,# plots
+               #tmap, sf, urbnmapr, tigris, # maps
+               #gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown,
+               basemodels, 
+               knitr, kableExtra)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+
+## Who am I?
+
+.Large[Ying-Ju Tessa Chen, Associate Professor in Statistics, University of Dayton]
+
+### Academic Background
+  - B.S. in Applied Mathematics (2000), National Chung-Hsing University, Taiwan
+  - M.A. in Mathematics (2003), National Taiwan University
+  - M.S. in Statistics (2011), Bowling Green State University
+  - PhD in statistics (2015), Bowling Green State University
+  
+---
+### Professional Experience
+- **Before I came to UD**:  
+  Visiting Assistant Professor at Farmer School of Business, Miami University (Information Systems & Analytics).
+- **Teaching experience**:  
+  - 15th year since coming to the USA.
+  - `Classroom Teaching:` Since joining the University of Dayton in the Fall of 2017, I have taught 13 different courses in Statistics and Mathematics, including Data Analytics, and a total of 28 sections.
+- **Mentoring**
+  - `Advisor for` [Data Analytics Club](https://1850.udayton.edu/dac/home/)
+  - `Capstone Advisor:` for 16 students.
+  - `Mathematics Clinic (Master's Thesis) Advisor:` for 3 students.
+
+---
+### Research Interests
+- Empirical Likelihood Method
+- Change Point Analysis
+- Applied Machine Learning
+- Survival Analysis
+
+  [Research Network](https://sites.google.com/a/udayton.edu/ychen4/publications/research-network?authuser=0)
+
+
+---
+## Thank You!
+
+.pull-left[
+<br>
+<br>
+- Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+]
+
+
+.pull-right[
+
+```{r tessa, echo=FALSE, out.width="60%", fig.height=5}
+knitr::include_graphics("./figs/Tessa_grey_G.gif")
+```
+]
+
