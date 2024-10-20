@@ -15,10 +15,6 @@ dplyr
 stringr
 forcats
 lubridate
-magrittr
-janitor
-lattice
-caret
 DataExplorer
 scales
 plotly
