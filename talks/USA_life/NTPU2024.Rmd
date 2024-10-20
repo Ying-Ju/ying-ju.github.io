@@ -351,6 +351,13 @@ include_graphics("./figs/mytable.jpg")
 
 .pull-right-2[
 
+<br>
+<br>
+
+```{r UD, echo=FALSE, fig.align='center'}
+include_graphics("./figs/UD.jpg")
+```
+
 ]
 
 ---
