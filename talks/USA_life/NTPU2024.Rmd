@@ -114,16 +114,22 @@ include_graphics("./figs/capstone.jpg")
 ]
 
 ---
-### Research Interests
-
 .pull-left[
+
+### Research Interests
 - Statistics modeling and its applications
 - Data Science applications in manufacturing, healthcare operations, and transportation safety. 
 - I am dedicated to working on research related to people's daily lives and well-being. 
+
+### Professional Service and Leadership
+- Interim Council of Sections Representative 2024, Section for Statistical Programmers and Analysts, American Statistical Association.
+        
 ]
 .pull-right[
-```{r research, echo=FALSE, out.width="100%"}
-include_url("https://sites.google.com/a/udayton.edu/ychen4/publications/research-network?authuser=0", height="500px")
+<br>
+
+```{r research, echo=FALSE, fig.align='center', fig.width=7}
+include_graphics("./figs/coauthors.jpg")
 ```
 ]
 
@@ -230,7 +236,7 @@ include_graphics("./figs/put_in_bay.jpg")
 .pull-left-2[
 ### Academic differences
 
-- **Structures between Taiwan and the U.S. **
+- **Structures between Taiwan and the U.S.**
 .small[
 - `Teaching Styles:` Classes tend to be more interactive. 
 - `Class Expectations:` Students are typically expected to be active learners, which includes contributing to class discussions, asking questions, and working on group projects. 
@@ -348,7 +354,7 @@ include_graphics("./figs/mytable.jpg")
 <br>
 <br>
 
-```{r UD, echo=FALSE, fig.align='center', fig.cap="2023, UD Graduation Banquet."}
+```{r UD, echo=FALSE, fig.align='center', out.width="100%", fig.cap="2023, UD Graduation Banquet."}
 include_graphics("./figs/UD.jpg")
 ```
 
@@ -370,7 +376,12 @@ include_graphics("./figs/UD.jpg")
 ]
 ]
 .pull-right-2[
+<br>
+<br>
 
+```{r , echo=FALSE, fig.align='center', out.width="100%", fig.cap="2018, Miryam Award, as a member of F3USE - a faculty group that collaborates on teaching, research, and supporting females in STEM, University of Dayton."}
+include_graphics("./figs/Miryam.jpg")
+```
 ]
 
 ---
