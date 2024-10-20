@@ -103,13 +103,12 @@ include_graphics("./figs/Tessa.jpg")
 
 .pull-right-2[
 <br>
-```{r MTH208, echo=FALSE, fig.align='center', fig.width=5}
+```{r MTH208, echo=FALSE, fig.align='center', fig.width=5, fig.cap="MTH 208 Exploratory Data Analysis in Spring 2024."}
 include_graphics("./figs/MTH208.jpg")
 ```
 
-<br>
 
-```{r capstone, echo=FALSE, fig.align='center', fig.width=5}
+```{r capstone, echo=FALSE, fig.align='center', fig.width=5, fig.cap="Students for Capstone Projects in Spring 2023."}
 include_graphics("./figs/capstone.jpg")
 ```
 ]
@@ -175,21 +174,17 @@ include_url("https://sites.google.com/a/udayton.edu/ychen4/publications/research
 ]
 .pull-right-2[
 <br>
-```{r USA_Life, echo=FALSE, fig.align='center', out.width="80%"}
-include_graphics("./figs/USA_Life.jpg")
-```
 
-<br> 
-
-
-```{r cook, echo=FALSE, fig.align='center', out.width="80%"}
+```{r cook, echo=FALSE, fig.align='center', out.width="80%", fig.cap="My first homemade curry rice!"}
 include_graphics("./figs/cook.jpg")
 ```
 
-<br>
-
-
 **Lazy people must know a way to survive!** `r emo::ji("smile")`
+
+```{r USA_Life, echo=FALSE, fig.align='center', out.width="80%", fig.cap="My wonderful neighbor, Jo, with her brother and sister-in-law."}
+include_graphics("./figs/USA_Life.jpg")
+```
+
 ]
 
 
@@ -218,16 +213,15 @@ include_graphics("./figs/cook.jpg")
 ]
 
 .pull-right-2[
-```{r put_in_bay, echo=FALSE, fig.align='center', out.width="80%"}
+```{r taiwanese2, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2011, Taiwanese Student Party."}
+include_graphics("./figs/BGSU_taiwanese2.jpg")
+```
+
+<br>
+```{r put_in_bay, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2015, Put-in-Bay Trip."}
 include_graphics("./figs/put_in_bay.jpg")
 ```
 
-<br>
-<br>
-
-```{r taiwanese2, echo=FALSE, fig.align='center', out.width="80%"}
-include_graphics("./figs/BGSU_taiwanese2.jpg")
-```
 ]
 
 ---
@@ -244,7 +238,7 @@ include_graphics("./figs/BGSU_taiwanese2.jpg")
   ]
 ]
 .pull-right-2[
-```{r Gupta, echo=FALSE, fig.align='center', out.width="75%"}
+```{r Gupta, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2015, Dr. Arjun K. Gupta retired."}
 include_graphics("./figs/Gupta.jpg")
 ```
 ]
@@ -268,7 +262,7 @@ include_graphics("./figs/Gupta.jpg")
   ]
 ]
 .pull-right-2[
-```{r Albert, echo=FALSE, fig.align='center', out.width="75%"}
+```{r Albert, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2014, Business Analytics Case Competition, First Place Award, BGSU. Advisor: Dr. Jim Albert."}
 include_graphics("./figs/Albert.jpg")
 ```
 ]
@@ -293,13 +287,13 @@ include_graphics("./figs/Albert.jpg")
 <br>
 <br>
 
-```{r teaching_award, echo=FALSE, fig.align='center', out.width="80%"}
+```{r teaching_award, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2014, Outstanding Teaching Assistant Award, BGSU."}
 include_graphics("./figs/teaching_award.jpg")
 ```
 
 <br>
 
-```{r mytable, echo=FALSE, fig.align='center', out.width="80%"}
+```{r mytable, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2013, My desk at BGSU."}
 include_graphics("./figs/mytable.jpg")
 ```
 ]
@@ -354,7 +348,7 @@ include_graphics("./figs/mytable.jpg")
 <br>
 <br>
 
-```{r UD, echo=FALSE, fig.align='center'}
+```{r UD, echo=FALSE, fig.align='center', fig.cap="2023, UD Graduation Banquet."}
 include_graphics("./figs/UD.jpg")
 ```
 
@@ -389,7 +383,7 @@ include_graphics("./figs/UD.jpg")
 <br>
 <br>
 
-```{r miami1, echo=FALSE, fig.align='center', out.width="75%"}
+```{r miami1, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2017, Some of my colleagues at Miami University."}
 include_graphics("./figs/Miami.jpg")
 ```
 ]
@@ -400,7 +394,7 @@ include_graphics("./figs/Miami.jpg")
 <br>
 <br>
 
-```{r miami2, echo=FALSE, fig.align='center', out.width="75%"}
+```{r miami2, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2017, Goodbye Party at Bob Leonard's house."}
 include_graphics("./figs/Miami2.jpg")
 ```
 ]
@@ -421,7 +415,7 @@ include_graphics("./figs/Miami2.jpg")
 ]
 ]
 .pull-right-2[
-```{r allpass, echo=FALSE, fig.align='center', out.width="65%"}
+```{r allpass, echo=FALSE, fig.align='center', out.width="65%", fig.cap="My lots container for math courses."}
 include_graphics("./figs/allpass.jpg")
 ```
 
@@ -440,7 +434,7 @@ include_graphics("./figs/allpass.jpg")
 <br>
 <br>
 
-```{r flower, echo=FALSE, fig.align='center', out.width="80%"}
+```{r flower, echo=FALSE, fig.align='center', out.width="80%", fig.cap="Apple tree flowers in my backyard."}
 include_graphics("./figs/apple_flower.jpg")
 ```
 ]
