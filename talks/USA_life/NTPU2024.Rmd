@@ -3,6 +3,7 @@ title: |
     Journey Across Borders: My Experience Living, Studying, and Working in the U.S.
 author: 'Ying-Ju Tessa Chen, PhD <br>[`r icons::icon_style(icons::fontawesome("google"), fill = "white")` Scholar](https://scholar.google.com/citations?user=nfXnYKcAAAAJ&hl=en&oi=ao) &nbsp; |  &nbsp;
 [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` @ying-ju](https://github.com/ying-ju) &nbsp; | &nbsp;
+[`r icons::icon_style(icons::fontawesome("home"), fill = "white")` Sites](http://sites.udayton.edu/ychen4) &nbsp; | &nbsp;
 [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)</br>'
 date: 'October, 2024 | National Taipei University | Taiwan'
 output:
@@ -78,11 +79,11 @@ xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "pan
   - B.S. in Applied Mathematics (2000), National Chung-Hsing University, Taiwan
   - M.A. in Mathematics (2003), National Taiwan University
   - M.S. in Statistics (2011), Bowling Green State University
-  - PhD in statistics (2015), Bowling Green State University
+  - Ph.D. in statistics (2015), Bowling Green State University
 ]
 
 .pull-right-2[
-```{r Tessa, echo=FALSE, fig.align='center', out.width="75%"}
+```{r Tessa, echo=FALSE, out.width="75%"}
 include_graphics("./figs/Tessa.jpg")
 ```
 ]
@@ -103,12 +104,12 @@ include_graphics("./figs/Tessa.jpg")
 
 .pull-right-2[
 <br>
-```{r MTH208, echo=FALSE, fig.align='center', fig.width=5, fig.cap="MTH 208 Exploratory Data Analysis in Spring 2024."}
+```{r MTH208, echo=FALSE, fig.width=5, fig.cap="2024, MTH 208 Exploratory Data Analysis."}
 include_graphics("./figs/MTH208.jpg")
 ```
 
 
-```{r capstone, echo=FALSE, fig.align='center', fig.width=5, fig.cap="Students for Capstone Projects in Spring 2023."}
+```{r capstone, echo=FALSE, fig.width=5, fig.cap="2023, Students for Capstone Projects."}
 include_graphics("./figs/capstone.jpg")
 ```
 ]
@@ -128,7 +129,7 @@ include_graphics("./figs/capstone.jpg")
 .pull-right[
 <br>
 
-```{r research, echo=FALSE, fig.align='center', fig.width=7}
+```{r research, echo=FALSE, fig.width=7}
 include_graphics("./figs/coauthors.jpg")
 ```
 ]
@@ -151,7 +152,7 @@ include_graphics("./figs/coauthors.jpg")
 .small[
   - `Individualism vs. Collectivism:` The U.S. places a high value on individualism, where personal goals and independence are emphasized. 
 - `Punctuality:` Being on time for meetings, classes, or social events (e.g., weddings, funerals, etc.) is crucial. 
-- `Small Talk:` Americans often engage in small talk (e.g., weather, sports, or weekend plans) as a way to build rapport. 
+- `Small Talk:` Americans often engage in small talk (e.g., weather, sports, or weekend plans) as a way to build support. 
 - `Personal Space:` People in the U.S. tend to maintain more personal space during conversations. Individuals often leave some distance between themselves and others. 
 ]
 
@@ -181,13 +182,13 @@ include_graphics("./figs/coauthors.jpg")
 .pull-right-2[
 <br>
 
-```{r cook, echo=FALSE, fig.align='center', out.width="80%", fig.cap="My first homemade curry rice!"}
+```{r cook, echo=FALSE, out.width="80%", fig.cap="My first homemade curry rice!"}
 include_graphics("./figs/cook.jpg")
 ```
 
 **Lazy people must know a way to survive!** `r emo::ji("smile")`
 
-```{r USA_Life, echo=FALSE, fig.align='center', out.width="80%", fig.cap="My wonderful neighbor, Jo, with her brother and sister-in-law."}
+```{r USA_Life, echo=FALSE, out.width="80%", fig.cap="My wonderful neighbor, Jo, with her brother and sister-in-law."}
 include_graphics("./figs/USA_Life.jpg")
 ```
 
@@ -200,7 +201,9 @@ include_graphics("./figs/USA_Life.jpg")
 .pull-left-2[
 - **Finding support networks**
 .small[   
-- Taiwanese Student Association or local Taiwanese associations
+- Taiwanese Student Association 
+- local Taiwanese associations
+- Facebook Groups
 - Student Clubs
   ]
 
@@ -219,12 +222,12 @@ include_graphics("./figs/USA_Life.jpg")
 ]
 
 .pull-right-2[
-```{r taiwanese2, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2011, Taiwanese Student Party."}
+```{r taiwanese2, echo=FALSE, out.width="80%", fig.cap="2011, Taiwanese Student Party."}
 include_graphics("./figs/BGSU_taiwanese2.jpg")
 ```
 
 <br>
-```{r put_in_bay, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2015, Put-in-Bay Trip."}
+```{r put_in_bay, echo=FALSE, out.width="80%", fig.cap="2015, Put-in-Bay Trip."}
 include_graphics("./figs/put_in_bay.jpg")
 ```
 
@@ -240,11 +243,15 @@ include_graphics("./figs/put_in_bay.jpg")
 .small[
 - `Teaching Styles:` Classes tend to be more interactive. 
 - `Class Expectations:` Students are typically expected to be active learners, which includes contributing to class discussions, asking questions, and working on group projects. 
-- `Independent Learning:` Students often have more assignments and exams. 
+- `Assessment Methods:` 
+  - Frequent quizzes and exams
+  - Graded homework and projects (e.g., homework assignments, group projects, and presentations)
+  - Participation as part of grading
+  - Diverse forms of evaluation (e.g., papers, presentations, and peer reviews)
   ]
 ]
 .pull-right-2[
-```{r Gupta, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2015, Dr. Arjun K. Gupta retired."}
+```{r Gupta, echo=FALSE, out.width="75%", fig.cap="2015, Dr. Arjun K. Gupta retired."}
 include_graphics("./figs/Gupta.jpg")
 ```
 ]
@@ -268,7 +275,7 @@ include_graphics("./figs/Gupta.jpg")
   ]
 ]
 .pull-right-2[
-```{r Albert, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2014, Business Analytics Case Competition, First Place Award, BGSU. Advisor: Dr. Jim Albert."}
+```{r Albert, echo=FALSE, out.width="75%", fig.cap="2014, Business Analytics Case Competition, First Place Award, BGSU. Advisor: Dr. Jim Albert."}
 include_graphics("./figs/Albert.jpg")
 ```
 ]
@@ -293,13 +300,13 @@ include_graphics("./figs/Albert.jpg")
 <br>
 <br>
 
-```{r teaching_award, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2014, Outstanding Teaching Assistant Award, BGSU."}
+```{r teaching_award, echo=FALSE, out.width="80%", fig.cap="2014, Outstanding Teaching Assistant Award, BGSU."}
 include_graphics("./figs/teaching_award.jpg")
 ```
 
 <br>
 
-```{r mytable, echo=FALSE, fig.align='center', out.width="80%", fig.cap="2013, My desk at BGSU."}
+```{r mytable, echo=FALSE, out.width="80%", fig.cap="2013, My desk at BGSU."}
 include_graphics("./figs/mytable.jpg")
 ```
 ]
@@ -318,7 +325,7 @@ include_graphics("./figs/mytable.jpg")
 - **Additional Tips for Finding Research Opportunities**
 .small[
 - `Attend Research Seminars:` Many campuses host research seminars where professors and students present their work. Attending these can help you learn about research areas of interest and make connections.
-- `Participate in the Statistical Consulting Center:` Many universities with a Statistics department offer a Statistical Consulting Center where students can assist faculty, staff, and external clients with real-world data analysis problems. It's a great way to apply what you’ve learned and gain practical experience.
+- `Participate in the Statistical Consulting Center:` Many universities with a Statistics department offer a Statistical Consulting Center where students can assist faculty, staff, and external clients with real-world data analysis problems. It's a great way to apply what you've learned and gain practical experience.
 ]
 
 <br>
@@ -354,7 +361,7 @@ include_graphics("./figs/mytable.jpg")
 <br>
 <br>
 
-```{r UD, echo=FALSE, fig.align='center', out.width="100%", fig.cap="2023, UD Graduation Banquet."}
+```{r UD, echo=FALSE, fig.cap="2023, UD Graduation Banquet."}
 include_graphics("./figs/UD.jpg")
 ```
 
@@ -379,7 +386,7 @@ include_graphics("./figs/UD.jpg")
 <br>
 <br>
 
-```{r , echo=FALSE, fig.align='center', out.width="100%", fig.cap="2018, Miryam Award, as a member of F3USE - a faculty group that collaborates on teaching, research, and supporting females in STEM, University of Dayton."}
+```{r , echo=FALSE, out.width="100%", fig.cap="2018, Miryam Award, as a member of F3USE - a faculty group that collaborates on teaching, research, and supporting females in STEM, University of Dayton."}
 include_graphics("./figs/Miryam.jpg")
 ```
 ]
@@ -394,7 +401,7 @@ include_graphics("./figs/Miryam.jpg")
 <br>
 <br>
 
-```{r miami1, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2017, Some of my colleagues at Miami University."}
+```{r miami1, echo=FALSE, out.width="75%", fig.cap="2017, Some of my colleagues at Miami University."}
 include_graphics("./figs/Miami.jpg")
 ```
 ]
@@ -405,7 +412,7 @@ include_graphics("./figs/Miami.jpg")
 <br>
 <br>
 
-```{r miami2, echo=FALSE, fig.align='center', out.width="75%", fig.cap="2017, Goodbye Party at Bob Leonard's house."}
+```{r miami2, echo=FALSE, out.width="75%", fig.cap="2017, Goodbye Party at Bob Leonard's house."}
 include_graphics("./figs/Miami2.jpg")
 ```
 ]
@@ -426,7 +433,7 @@ include_graphics("./figs/Miami2.jpg")
 ]
 ]
 .pull-right-2[
-```{r allpass, echo=FALSE, fig.align='center', out.width="65%", fig.cap="My lots container for math courses."}
+```{r allpass, echo=FALSE, out.width="65%", fig.cap="My lots container for math courses."}
 include_graphics("./figs/allpass.jpg")
 ```
 
@@ -445,14 +452,22 @@ include_graphics("./figs/allpass.jpg")
 <br>
 <br>
 
-```{r flower, echo=FALSE, fig.align='center', out.width="80%", fig.cap="Apple tree flowers in my backyard."}
+```{r flower, echo=FALSE, out.width="80%", fig.cap="Apple tree flowers in my backyard."}
 include_graphics("./figs/apple_flower.jpg")
 ```
 ]
 
 ---
-## Q&A
 
+```{r QandA, echo=FALSE, out.width="58%", fig.height=5}
+knitr::include_graphics("./figs/QA.png")
+```
+
+<hr>
+
+.footnote[
+**Image Source:** Image is generated using [ChatGPT](https://chatgpt.com/) by Tessa Chen on October 20, 2024.
+]
 
 ---
 ## Thank You!
@@ -460,7 +475,7 @@ include_graphics("./figs/apple_flower.jpg")
 .pull-left[
 <br>
 <br>
-- Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
 ]
 
 
