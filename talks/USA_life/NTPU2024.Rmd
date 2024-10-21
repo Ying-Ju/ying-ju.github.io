@@ -397,7 +397,7 @@ include_graphics("./figs/mytable.jpg")
 <br>
 
 ```{r UD, echo=FALSE, fig.cap="2023, UD Graduation Banquet."}
-include_graphics("./figs/Dayton.jpg")
+include_graphics("./figs/Dayton.JPG")
 ```
 
 ]
