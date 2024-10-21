@@ -19,6 +19,7 @@ DataExplorer
 scales
 plotly
 calendR
+maps
 pdftools
 RColorBrewer
 emojifont
@@ -27,4 +28,3 @@ basemodels
 knitr
 kableExtra
 xaringanthemer
-maps
