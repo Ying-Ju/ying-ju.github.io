@@ -1,5 +1,9 @@
 .title-slide {
   background-color: #862d59;
+  position: relative;
+  background-image: url(../figs/qr_code.png);
+  background-position: 98% 98%;
+  background-size: 200px;
 }
 
 
