@@ -510,7 +510,7 @@ knitr::include_graphics("./figs/QA.png")
 .pull-left[
 <br>
 <br>
-Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen4@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
 ]
 
 
