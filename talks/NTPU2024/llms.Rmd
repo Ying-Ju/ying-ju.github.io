@@ -1031,6 +1031,23 @@ knitr::include_graphics("figs/ai_stats_perfect.png")
 **Source:** Redman, T.C., and Hoerl, R.W. (2024). "AI and Statistics: Perfect Together". *MIT Sloan Management Review*, available at <https://sloanreview.mit.edu/article/ai-and-statistics-perfect-together/>.
 ]
 
+---
+## Thank You!
+
+.pull-left[
+- This presentation was created based on Dr. Fadel Megahed's presentation at [Statistische Woche](https://statistische-woche.de/en/startseite-en). Click [here](https://fmegahed.github.io/talks/statweek2024/stats_llm.html) to find the original presentation. 
+
+- Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+]
+
+
+.pull-right[
+
+```{r tessa, echo=FALSE, out.width="60%", fig.height=5}
+knitr::include_graphics("./figs/Tessa_grey_G.gif")
+```
+]
+
 
 ---
 class: center, middle, inverse, title-slide
