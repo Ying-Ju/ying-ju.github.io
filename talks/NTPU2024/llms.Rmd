@@ -157,7 +157,7 @@ knitr::include_graphics('figs/google_ai.png')
 knitr::include_graphics('figs/gen_ai_coders_sept_2024.jpeg')
 ```
 
-.center[.font80[Cui et al. (2024). [SSRN 4945566](https://storage.googleapis.com/gweb-uniblog-publish-prod/documents/Generally_Faster_-_The_Economic_Impact_of_Generative_AI.pdf)]]
+.center[.font80[Cui et al. (2024). [SSRN 4945566](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566)]]
 
 ]
 
