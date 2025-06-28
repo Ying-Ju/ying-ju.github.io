@@ -134,7 +134,7 @@ knitr::include_graphics('figs/mckinsey_ai.png')
 <hr>
 </html>
 
-**Image Source:** [McKinsey & Company (July 2023). The economic potential of generative AI: The next productivity frontier [P. 10]](https://www.mckinsey.com/~/media/mckinsey/business%20functions/mckinsey%20digital/our%20insights/the%20economic%20potential%20of%20generative%20ai%20the%20next%20productivity%20frontier/the-economic-potential-of-generative-ai-the-next-productivity-frontier-vf.pdf)
+**Image Source:** [McKinsey & Company (July 2023). The economic potential of generative AI: The next productivity frontier](https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier#/)
 ]
 
 
@@ -157,7 +157,7 @@ knitr::include_graphics('figs/google_ai.png')
 knitr::include_graphics('figs/gen_ai_coders_sept_2024.jpeg')
 ```
 
-.center[.font80[Cui et al. (2024). [SSRN 4945566](https://storage.googleapis.com/gweb-uniblog-publish-prod/documents/Generally_Faster_-_The_Economic_Impact_of_Generative_AI.pdf)]]
+.center[.font80[Cui et al. (2024). [SSRN 4945566](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4945566)]]
 
 ]
 
@@ -1029,6 +1029,23 @@ knitr::include_graphics("figs/ai_stats_perfect.png")
 </html>
 
 **Source:** Redman, T.C., and Hoerl, R.W. (2024). "AI and Statistics: Perfect Together". *MIT Sloan Management Review*, available at <https://sloanreview.mit.edu/article/ai-and-statistics-perfect-together/>.
+]
+
+---
+## Thank You!
+
+.pull-left[
+- This presentation was created based on Dr. Fadel Megahed's presentation at [Statistische Woche](https://statistische-woche.de/en/startseite-en). Click [here](https://fmegahed.github.io/talks/statweek2024/stats_llm.html) to find the original presentation. 
+
+- Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+]
+
+
+.pull-right[
+
+```{r tessa, echo=FALSE, out.width="60%", fig.height=5}
+knitr::include_graphics("./figs/Tessa_grey_G.gif")
+```
 ]
 
 
