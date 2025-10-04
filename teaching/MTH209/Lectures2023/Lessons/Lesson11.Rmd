@@ -1,0 +1,670 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 11: Creating a Map Using ggplot2" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+## Overview
+
+<head>
+    <base target="_blank">
+</head>
+
+In this session, we will talk about how to create a map using the R package <span Style="color:red">ggplot2</span>. 
+
+In order to create a map, we will need the following two key functions 
+
+- <span Style="color:blue">map_data()</span> from the package <span Style="color:red">maps</span> to access the map data related to longitude and latitude. 
+
+- <span Style="color:blue">geom_polygon()</span> from the package <span Style="color:red">ggplot2</span> to create a map.
+
+```{r packages}
+library(pacman)
+p_load(tidyverse, maps, viridis)
+```
+
+Let's take a look at the usage of the function <span Style="color:blue">map_data()</span>. 
+```{}
+map_data(map, region = ".", exact = FALSE, ...)
+```
+
+Arguments:
+
+- <span Style="color:orange">map</span>: name of map provided by the package. These include county, france, italy, nz, state, usa, world, world2
+
+- <span Style="color:orange">region</span>: name of subregions. "." means all subregions are included. 
+
+- <span Style="color:orange">exact</span>: the region is treated as a regular expression (FALSE) or as a fixed string (TRUE).
+
+**Note**: The package <span Style="color:red">viridis</span> provides color maps designed to improve graph readability for readers with common forms of color blindness and/or color vision deficiency. 
+
+## A Simple World Map
+
+Let's create a simple world map. 
+
+```{r, fig.align='center', out.width="40%"} 
+map <- map_data("world")
+ggplot(map, 
+       aes(x = long, y=lat, group = group)) +
+  geom_polygon(fill="lightblue", colour = "white") + 
+  theme_void()
+```
+
+## A Map for Specific Regions
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+```{r , eval= FALSE}
+North_Asia <- c("China", "Japan", "Mongolia", 
+                "North Korea", "South Korea", "Taiwan")
+
+North_Asia_map <- map_data("world", region = North_Asia)
+
+# Compute the centroid as the mean longitude and latitude
+region.data <- North_Asia_map %>%
+  group_by(region) %>%
+  summarise(long = mean(long), lat = mean(lat))
+
+# Ready to plot the map
+ggplot(North_Asia_map, 
+       aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group, fill = region)) +
+  geom_text(data = region.data, aes(label = region),   
+            size = 5, hjust = 0.5, col =  "#808080",
+            fontface='bold') +
+  scale_fill_viridis_d() +
+  theme_void() +
+  theme(legend.position = "none")
+```
+:::
+:::{.column width=50%}
+```{r asia, echo=FALSE, fig.align='center', out.width="90%"}
+North_Asia <- c("China", "Japan", "Mongolia", 
+                "North Korea", "South Korea", "Taiwan")
+North_Asia_map <- map_data("world", region = North_Asia)
+
+# Compute the centroid as the mean longitude and latitude
+region.data <- North_Asia_map %>%
+  group_by(region) %>%
+  summarise(long = mean(long), lat = mean(lat)) %>% 
+  arrange()
+
+# Ready to plot the map
+ggplot(North_Asia_map, 
+       aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group, fill = region)) +
+  geom_text(data = region.data, aes(label = region),  
+            size = 5, hjust = 0.5, col = "#808080", 
+            fontface = "bold") +
+  scale_fill_viridis_d() +
+  theme_void() +
+  theme(legend.position = "none")
+```
+:::
+::::::
+
+## A Choropleth Map - 1
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+In many situations, we want to create a map including some statistics. Here we use the [Alcohol Consumption by Country](https://www.kaggle.com/datasets/justmarkham/alcohol-consumption-by-country) to show an example. 
+
+```{r, eval=FALSE, fig.align='center'}
+drinks <- read_csv("../Data/drinks.csv")
+
+drinks_map <- drinks %>% 
+  left_join(map, by = c("country"="region"))
+
+ggplot(drinks_map, 
+       aes(long, lat, group = group)) +
+  geom_polygon(aes(fill = total_litres_of_pure_alcohol), 
+               colour = "white") +
+  scale_fill_viridis_c(option = "D") +
+  labs(fill = "Total Litres of Pure Alcohol") +
+  theme_void() +
+  theme(legend.position="bottom")
+```
+
+:::
+:::{.column width=50%}
+
+```{r, echo=FALSE, fig.align='center'}
+drinks <- read_csv("../Data/drinks.csv")
+drinks_map <- drinks %>% 
+  left_join(map, by = c("country"="region"))
+ggplot(drinks_map, 
+       aes(long, lat, group = group)) +
+  geom_polygon(aes(fill = total_litres_of_pure_alcohol), 
+               colour = "white") +
+  scale_fill_viridis_c(option = "D") +
+  labs(fill = "Total Litres of Pure Alcohol") +
+  theme_void() +
+  theme(legend.position = "bottom")
+```
+
+:::
+::::::
+
+## A Choropleth Map - 2
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+Or we can use the <span Style="color:blue">geom_map</span> function to achieve the same result. 
+
+```{r, eval=FALSE, fig.align='center'}
+ggplot(drinks, 
+       aes(map_id = country)) +
+  geom_map(aes(fill = total_litres_of_pure_alcohol), 
+           map = map, colour = "white") +
+  expand_limits(x = map$long, y = map$lat) +
+  labs(fill = "Total Litres of Pure Alcohol") +
+  theme_void() +
+  theme(legend.position = "bottom")
+```
+
+:::
+:::{.column width=50%}
+
+```{r, echo=FALSE, fig.align='center'}
+ggplot(drinks, 
+       aes(map_id = country)) +
+  geom_map(aes(fill = total_litres_of_pure_alcohol), 
+           map = map, colour = "white") +
+  expand_limits(x = map$long, y = map$lat) +
+  labs(fill = "Total Litres of Pure Alcohol") +
+  theme_void() +
+  theme(legend.position = "bottom")
+```
+
+:::
+::::::
+
+## A U.S. State-Level Map
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+```{r USA_Map, eval=FALSE}
+US_map <- map_data("state")
+
+# Compute the centroid as the mean longitude and latitude
+state_data <- US_map %>%
+  filter(region != "district of columbia") %>% 
+  group_by(region) %>%
+  summarise(long = mean(long), lat = mean(lat)) %>% 
+  arrange(region)
+
+state_data$region.abb <- state.abb[-c(2, 11)] # drop Alaska & Hawaii
+
+p <- ggplot(US_map, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group, fill = region), 
+               colour = "white") +
+    geom_text(data = state_data, 
+              aes(label = region.abb), 
+              fontface = "bold") +
+  theme_void() + 
+  theme(legend.position = "none")
+
+p
+```
+
+:::
+:::{.column width=50%}
+
+```{r , echo=FALSE, fig.align='center'}
+US_map <- map_data("state")
+
+# Compute the centroid as the mean longitude and latitude
+state_data <- US_map %>%
+  filter(region != "district of columbia") %>% 
+  group_by(region) %>%
+  summarise(long = mean(long), lat = mean(lat)) %>% 
+  arrange(region)
+
+state_data$region.abb <- state.abb[-c(2, 11)] # drop Alaska & Hawaii
+
+p <- ggplot(US_map, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group, fill = region), 
+               colour = "white") +
+    geom_text(data = state_data, 
+              aes(label = region.abb), 
+              fontface = "bold") +
+  theme_void() + 
+  theme(legend.position = "none")
+
+p
+```
+
+:::
+::::::
+  
+## A Dynamic Map using plotly - 1
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+We can use the function <span Style="color:blue">ggplotly()</span> to create a dynamic figure. 
+
+```{r plotly_noshow, eval=FALSE}
+library(plotly)
+ggplotly(p)
+```
+
+:::
+:::{.column width=50%}
+
+```{r plotly_show , echo=FALSE, fig.align='center'}
+library(plotly)
+ggplotly(p)
+```
+
+:::
+::::::
+  
+  
+## A Dynamic Map using plotly - 2
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+Here we improve the quality of the map from the previous page.
+
+```{r plotly_noshow2, eval=FALSE, warning=FALSE}
+US_map$region <- unname(sapply(US_map$region, str_to_title))
+
+g <- ggplot(US_map, 
+            aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group, fill = region), 
+               colour = "white") +
+    geom_text(data = state_data, 
+              aes(label = region.abb,
+                  text = paste0(region,"-\n",
+                                "longitude:", long, "\n",
+                                "latitude", lat)), 
+              fontface = "bold") +
+  theme_void() + 
+  theme(legend.position = "none")
+
+ggplotly(g, tooltip = "text")
+```
+
+:::
+:::{.column width=50%}
+
+```{r plotly_show2, echo=FALSE, warning=FALSE}
+US_map$region <- unname(sapply(US_map$region, str_to_title))
+
+g <- ggplot(US_map, 
+            aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group, fill = region), 
+               colour = "white") +
+    geom_text(data = state_data, 
+              aes(label = region.abb, 
+                  text = paste0(region,"-\n",
+                                "longitude:", long, "\n",
+                                "latitude", lat)), 
+              fontface = "bold") +
+  theme_void() + 
+  theme(legend.position = "none")
+
+ggplotly(g, tooltip = "text")
+```
+:::
+::::::
+  
+## A Dynamic Map using plotly - 3
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+Here we use the data <span Style="color:red">USArrests</span> to include statistics on a map. 
+
+```{r plotly_noshow3, eval=FALSE, warning=FALSE}
+library(usmap)
+US_map <- us_map("state") %>% 
+  filter(full !=  "District of Columbia")  
+
+crimes <- data.frame(region = rownames(USArrests), USArrests) 
+
+crimes_map <- crimes %>% 
+  left_join(US_map, by = c("region"="full"))
+
+crimes_map$group <- as.numeric(crimes_map$group)
+
+region_label <- crimes_map %>% 
+  group_by(abbr) %>% 
+  summarise(x = mean(x), y = mean(y))
+
+g1 <- ggplot(crimes_map, aes(x = x, y = y)) +
+  geom_polygon(aes(group=group, fill = Murder, 
+                   text = paste0(region, ":\n",
+                   Murder, " murder arrests per 100,000")),
+               colour = "white") +
+  geom_text(data = region_label, 
+            aes(label = abbr), fontface = "bold") +
+  scale_fill_viridis_c(option = "B") +
+  theme_void()
+
+ggplotly(g1, tooltip = "text") 
+```
+
+:::
+:::{.column width=50%}
+
+```{r plotly_show3, echo=FALSE, warning=FALSE}
+library(usmap)
+US_map <- us_map("state") %>% 
+  filter(full !=  "District of Columbia")  
+
+crimes <- data.frame(region = rownames(USArrests), USArrests) 
+
+crimes_map <- crimes %>% 
+  left_join(US_map, by = c("region"="full"))
+
+crimes_map$group <- as.numeric(crimes_map$group)
+
+region_label <- crimes_map %>% 
+  group_by(abbr) %>% 
+  summarise(x = mean(x), y = mean(y))
+
+g1 <- ggplot(crimes_map, 
+             aes(x = x, y = y)) +
+  geom_polygon(aes(group=group, 
+                   fill = Murder, 
+                   text = paste0(region, ":\n",
+                   Murder, " murder arrests per 100,000")),
+               colour = "white") +
+  geom_text(data = region_label, 
+            aes(label = abbr),
+            fontface = "bold") +
+  scale_fill_viridis_c(option = "B") +
+  theme_void()
+
+ggplotly(g1, tooltip = "text") 
+```
+:::
+::::::
+
+## A Dynamic Map using plotly - 4
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+Now, we improve the quality of the map on the previous page. We can set font and label styles. The dimension of the map could be decided by the dimension of the static map.
+
+```{r plotly_noshow4, eval=FALSE, warning=FALSE}
+font <- list(
+    family = "Arial",
+    size = 15,
+    color = "white"
+)
+
+label <- list(
+    bgcolor = "#232F34",
+    bordercolor = "transparent",
+    font = font
+)
+
+g1 <- g1 +
+  theme(legend.position = "none")
+
+ggplotly(g1, 
+         tooltip = "text", 
+         width=790, height=552) %>% 
+  style(hoverlabel = label) %>% 
+  layout(font = font) 
+
+```
+
+:::
+:::{.column width=50%}
+
+```{r plotly_show4, echo=FALSE, warning=FALSE}
+font <- list(
+    family = "Arial",
+    size = 15,
+    color = "white"
+)
+
+label <- list(
+    bgcolor = "#232F34",
+    bordercolor = "transparent",
+    font = font
+)
+
+g1 <- g1 +
+  theme(legend.position = "none")
+
+ggplotly(g1, 
+         tooltip = "text", 
+         width=790, height=552) %>% 
+  style(hoverlabel = label) %>% 
+  layout(font = font)
+```
+:::
+::::::
+
+
+## A County-Level Map - 1
+
+We will use the <span Style="color:red">COVID19</span> data to demonstrate the creation of a county-level map. 
+
+<div class = "pull-left">
+
+```{r county1, eval = FALSE}
+covid <- read_csv("../Data/COVID19.csv")
+
+ohio <- covid %>% 
+  filter(administrative_area_level_2=="Ohio",
+                         date == "2021-12-31")
+ohio <- ohio %>% 
+  rename(county = administrative_area_level_3)
+
+ohio_county <- map_data("county", region = "ohio")
+
+ohio_county$subregion <- str_to_title(ohio_county$subregion)
+
+ohio_map <- ohio %>% 
+  left_join(ohio_county, 
+            by = c("county" = "subregion"))
+```
+
+</div>
+
+<div class = "pull-right">
+
+```{r county2, eval = FALSE}
+g2 <- ggplot(ohio_map, 
+             aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = deaths, 
+                   text = paste0("County: ", county, "\n", 
+                                 "Total Deaths: ", deaths))) +
+  geom_text(data = ohio, 
+            aes(x = longitude, y = latitude, label = county),
+            color = "white", fontface = "bold") +
+  scale_fill_viridis_c(option = "H") +
+  theme_minimal() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y =element_blank(),
+        axis.ticks.y=element_blank(), 
+        panel.grid.major = element_blank(), 
+        panel.background = element_blank())
+
+ggplotly(g2, 
+         tooltip = "text", 
+         width=850, height=800) %>% 
+  style(hoverlabel = label) %>% 
+  layout(font = font)
+```
+</div>
+
+## A County-Level Map - 2
+
+::::::{style="display: flex;"}
+:::{.column width=25%}
+
+:::
+:::{.column width=75%}
+```{r county_show, echo = FALSE}
+covid <- read_csv("../Data/COVID19.csv")
+
+ohio <- covid %>% 
+  filter(administrative_area_level_2=="Ohio",
+                         date == "2021-12-31")
+ohio <- ohio %>% 
+  rename(county = administrative_area_level_3)
+
+ohio_county <- map_data("county", region = "ohio")
+
+ohio_county$subregion <- str_to_title(ohio_county$subregion)
+
+ohio_map <- ohio %>% 
+  left_join(ohio_county, 
+            by = c("county" = "subregion"))
+
+g2 <- ggplot(ohio_map, 
+             aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = deaths, 
+                   text = paste0("County: ", county, "\n", 
+                                 "Total Deaths: ", deaths))) +
+  geom_text(data = ohio, 
+            aes(x = longitude, y = latitude, label = county),
+            color = "white", fontface = "bold") +
+  scale_fill_viridis_c(option = "H") +
+  theme_minimal() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y =element_blank(),
+        axis.ticks.y=element_blank(), 
+        panel.grid.major = element_blank(), 
+        panel.background = element_blank())
+
+ggplotly(g2, 
+         tooltip = "text", 
+         width=850, height=800) %>% 
+  style(hoverlabel = label) %>% 
+  layout(font = font)
+```
+
+:::
+::::::
+
+## Bubble Map
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+```{r bubble_noshow, eval=FALSE}
+wine_top10 <- drinks %>% 
+  arrange(desc(wine_servings)) %>% 
+  head(10)
+mydata <- semi_join(drinks_map, wine_top10)
+mydata_map <- mydata %>% 
+  group_by(country) %>% 
+  summarise(long = mean(long), lat = mean(lat), 
+            wine = mean(wine_servings))
+
+pp <- drinks_map %>%
+  ggplot() +
+    geom_polygon(aes(x=long, y = lat, group = group, text = country), 
+                 fill="grey", alpha=0.5) +
+    geom_point(data = mydata_map, 
+               aes(x=long, y=lat, size=wine, color=wine, alpha=wine,
+                   text = paste0(country, ":", wine))) +
+    scale_size_continuous(range=c(1,15)) + # rescale the size of bubbles
+    scale_color_viridis(option="A") +
+    coord_map() + # projects a portion of the earth
+    theme_minimal() +
+    theme(axis.title.x=element_blank(), axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(), axis.title.y=element_blank(),
+          axis.text.y =element_blank(), axis.ticks.y=element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background = element_blank()) +
+    labs(title = "Top 10 Wine Consumption Countries")
+
+ggplotly(pp, tooltip = "text", width = 750, height = 514)
+```
+:::
+:::{.column width=50%}
+```{r bubble_show, echo = FALSE}
+wine_top10 <- drinks %>% 
+  arrange(desc(wine_servings)) %>% 
+  head(10)
+
+mydata <- semi_join(drinks_map, wine_top10)
+
+mydata_map <- mydata %>% 
+  group_by(country) %>% 
+  summarise(long = mean(long), lat = mean(lat), 
+            wine = mean(wine_servings))
+
+pp <- drinks_map %>%
+  ggplot() +
+    geom_polygon(aes(x=long, y = lat, 
+                     group = group, text = country), 
+                 fill="grey", alpha=0.5) +
+    geom_point(data = mydata_map, 
+               aes(x=long, y=lat, size=wine, 
+                   color=wine, alpha=wine,
+                   text = paste0(country, ":", wine))) +
+    scale_size_continuous(range=c(1,15)) + # rescale the size of bubbles
+    scale_color_viridis(option="A") +
+    coord_map() + # projects a portion of the earth
+    theme_minimal() +
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.text.y =element_blank(),
+          axis.ticks.y=element_blank(), 
+          panel.grid.major = element_blank(), 
+          panel.background = element_blank()) +
+    labs(title = "Top 10 Wine Consumption Countries")
+
+ggplotly(pp, tooltip = "text", width = 750, height = 514)
+```
+:::
+::::::
+
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+
+

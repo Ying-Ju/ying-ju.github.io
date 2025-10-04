@@ -1,0 +1,845 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 7: Data Visualization with R Package ggplot2" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+
+## Brief Overview
+
+<head>
+    <base target="_blank">
+</head>
+
+In this session, we will introduce how to visualize data using <span Style="color:red">ggplot2</span>. This lecture is based on [UC Business Analytics R Programming Guide]( https://uc-r.github.io/ggplot_intro).
+
+While we can use the built-in functions in the base package in R to create figures, the package <span Style="color:red">ggplot2</span> creates advanced graphs with simple and flexible commands. 
+
+## Load packages and read the Fuel Economy Data
+
+First, we load the necessary packages, check conflict functions, and get a glimpse of the dataset **mpg** from the R package <span Style="color:red">ggplot2</span>. 
+
+```{r loading_packages_visual}
+library(tidyverse)
+library(conflicted)
+conflict_prefer("lag", "dplyr")
+conflict_prefer("filter", "dplyr")
+glimpse(mpg)
+```
+
+## Understand Our Data
+
+Now we need to understand the data and each variable in the data. This dataset contains 38 popular models of cars from 1999 to 2008. ([Fuel Economy Data](https://ggplot2.tidyverse.org/reference/mpg.html)).
+
+
+|       - manufacturer:	car manufacturer	
+|       - model: model name	
+|       - displ: engine displacement, in liters	
+|       - year: year of manufacturing	(1999-2008)
+|       - cyl: number of cylinders
+|       - trans: type of transmission	
+|       - drv: drive type (f, r, 4, f=front wheel, r=rear wheel, 4=4 wheel)
+|       - cty: city mileage	miles per gallon
+|       - hwy: highway mileage miles per gallon
+|       - fl:	fuel type (diesel, petrol, electric, etc.)
+|       - class: vehicle class	7 types (compact, SUV, minivan etc.)
+
+
+## Grammar of Graphics
+
+The basic idea of creating plots using the R package <span Style="color:red">ggplot2</span> is to specify each component of the following and combine them with <span Style="color:blue">+</span>. 
+
+### ggplot() function
+
+The <span Style="color:blue">ggplot()</span> function plays an important role in data visualization as it is very flexible for plotting many different types of graphic displays. 
+
+The logic when using <span Style="color:blue">ggplot()</span> function is: <span Style="color:orange">ggplot(data, mapping) + geom_function()</span>.
+
+
+## The Basics
+
+The following code chunk shows how we can obtain a scatter plot to study the relationship between engine displacement and highway mileage per gallon. 
+
+::::::{style="display: flex;"}
+:::{.column width=30%}
+
+```{r ggplot_basics1, fig.align='center', out.width="100%"}
+# create canvas
+ggplot(mpg)
+```
+
+:::
+
+:::{.column width=3%}
+
+:::
+
+:::{.column width=30%}
+
+```{r ggplot_basics2, fig.align='center', out.width="100%"}
+# variables of interest mapped
+ggplot(mpg, 
+       mapping = aes(x = displ, y = hwy))
+```
+
+:::
+
+:::{.column width=3%}
+
+:::
+
+:::{.column width=30%}
+
+```{r ggplot_basics3, fig.align='center', out.width="100%"}
+# data plotted
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) +
+  geom_point()
+```
+
+:::
+::::::
+
+
+## Aesthetic Mappings - 1
+
+The aesthetic mappings allow to select variables to be plotted and use data properties to influence visual characteristics such as color, size, shape, position, etc. As a result, each visual characteristic can encode a different part of the data and be utilized to communicate information.
+
+All aesthetics for a plot are specified in the <span Style="color:orange">aes()</span> function call. 
+
+For example, we can add a mapping from the class of the cars to a color characteristic:
+
+```{r visual_color1, fig.align='center', out.width="38%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) +
+  geom_point() + 
+  theme(text = element_text(size = 20))
+```
+
+
+## Aesthetic Mappings - 2
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+**Note:** 
+
+1. We should note that in the above code chunk, "class" is a variable in the data and therefore, the commend specifies a categorical variable is used as the third variable in the figure. 
+
+2. Using the <span Style="color:orange">aes()</span> function will cause the visual channel to be based on the data specified in the argument. For example, using aes(color = "blue") won’t cause the geometry’s color to be “blue”, but will instead cause the visual channel to be mapped from the vector c("blue") — as if we only had a single type of engine that happened to be called “red”. 
+:::
+
+:::{.column width=50%}
+
+If we wish to apply an aesthetic property to an entire geometry, you can set that property as an argument to the geom method, outside of the <span Style="color:orange">aes()</span> call:
+
+```{r visual_color2, fig.align='center', out.width="80%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) +
+  geom_point(color = "blue")  +
+  theme(text = element_text(size = 20))
+```
+
+:::
+::::::
+
+
+## Specifying Geometric Shapes - 1
+
+Building on these basics, we can use <span Style="color:red">ggplot2</span> to create almost any kind of plot we may want. These plots are declared using functions that follow from the Grammar of Graphics. <span Style="color:red">ggplot2</span> supports a number of different types of geometric objects, including:
+
+|    -	geom_bar(): bar charts
+|    - geom_boxplot(): boxplots
+|    -	geom_histogram(): histograms
+|    -	geom_line(): lines 
+|    -	geom_map(): polygons in the shape of a map. 
+|    -	geom_point(): individual points 
+|    -	geom_polygon(): arbitrary shapes
+|    -	geom_smooth(): smoothed lines 
+
+Each of these geometries will make use of the aesthetic mappings provided, albeit the visual qualities to which the data will be mapped will differ. For example, we can map data to the shape of a geom_point (e.g., if they should be circles or squares), or we can map data to the line-type of a geom_line (e.g., if it is solid or dotted), but not vice versa.
+
+
+Almost all geoms require an x and y mapping at the bare minimum.
+
+## Specifying Geometric Shape - 2
+
+::::::{style="display: flex;"}
+:::{.column width=47.5%}
+- x and y mapping needed when creating a scatterplot
+
+```{r visual_geom11, fig.align='center', out.width="48%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_point()
+
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_smooth()
+```
+:::
+:::{.column width=5%}
+:::
+:::{.column width=47.5%}
+- no y mapping needed when creating a bar chart
+
+```{r visual_geom12, fig.align='center', out.width="48%"}
+ggplot(mpg, 
+       aes(x = class)) + 
+  geom_bar()  
+
+ggplot(mpg, 
+       aes(x = hwy)) + 
+  geom_histogram() 
+```
+:::
+::::::
+
+
+
+## Specifying Geometric Shapes - 3
+
+What makes this really powerful is that you can add multiple geometries to a plot, thus allowing you to create complex graphics showing multiple aspects of your data.
+
+```{r visual_geom2, fig.align='center', out.width="40%"}
+# plot with both points and smoothed line
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_smooth()  +
+  theme(text = element_text(size = 20))
+```
+
+
+## Specifying Geometric Shapes - 4
+
+Since the aesthetics for each geom can be different, we could show multiple lines on the same plot (or with different colors, styles, etc). 
+
+For example, we can plot both points and a smoothed line for the same x and y variable but specify unique colors within each geom:
+
+```{r visual_geom3, fig.align='center', out.width="40%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) +
+  geom_point(color = "blue") +
+  geom_smooth(color = "red")  +
+  theme(text = element_text(size = 20))
+```
+
+
+## Specifying Geometric Shapes - 5
+
+It is also possible to give each geom a different data argument, so that we can show multiple data sets in the same plot. 
+
+
+If we specify an aesthetic within <span Style="color:blue">ggplot()</span>, it will be passed on to each geom that follows. Or we can specify certain aes within each geom, which allows us to only show certain characteristics for that specific layer (i.e. geom_point).
+
+::::::{style="display: flex;"}
+:::{.column width=47.5%}
+```{r visual_geom41, fig.align='center', out.width="80%"}
+# color aesthetic passed to each geom layer
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) +
+  geom_point() + 
+  geom_smooth(se = FALSE) +
+  theme(text = element_text(size = 20))
+```
+:::
+
+:::{.column width=5%}
+:::
+
+:::{.column width=47.5%}
+```{r visual_geom42, fig.align='center', out.width="80%"}
+# color aesthetic specified for only the geom_point layer
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) +
+  geom_point(aes(color = class)) + 
+  geom_smooth(se = FALSE)  +
+  theme(text = element_text(size = 20))
+```
+:::
+::::::
+
+
+## Statistical Transformations - 1
+
+The following bar chart shows the frequency distribution of vehicle class. We can find that y axis was defined as the count of elements that have the particular type. This count is not part of the data set, but is instead a statistical transformation that the geom_bar automatically applies to the data. In particular, it applies the stat_count transformation.
+
+```{r visual_bar, fig.align='center', out.width="40%"}
+ggplot(mpg, 
+       aes(x = class)) +
+  geom_bar() +
+  theme(text = element_text(size = 20))
+```
+
+## Statistical Transformations - 2
+
+<span Style="color:red">ggplot2</span> supports many different statistical transformations. For example, the “identity” transformation will leave the data “as is”. We can specify which statistical transformation a geom uses by passing it as the stat argument. For example, consider our data already had the count as a variable:
+
+```{r visual_count0, fig.align='center', out.width="40%"}
+(class_count <- count(mpg, class))
+```
+
+## Statistical Transformations - 3
+
+We can use stat = "identity" within geom_bar to plot our bar height values to this variable. Also, note that we now include n for our y variable:
+
+```{r visual_count1, fig.align='center', out.width="40%"}
+ggplot(class_count, 
+       aes(x = class, y = n)) +
+  geom_bar(stat = "identity") +
+  theme(text = element_text(size = 20))
+```
+
+## Statistical Transformations - 4
+
+We can also call <span Style="color:blue">stat_</span> functions directly to add additional layers. For example, here we create a scatter plot of highway miles for each displacement value and then use <span Style="color:blue">stat_summary()</span> to plot the mean highway miles at each displacement value.
+
+```{r visual_summary, fig.align='center', out.width="40%"}
+ggplot(mpg, 
+       aes(displ, hwy)) + 
+  geom_point(color = "grey") + 
+  stat_summary(fun.y = "mean", geom = "line", 
+               size = 1, linetype = "dashed") +
+  theme(text = element_text(size = 20))
+```
+
+
+## Position Adjustments - 1
+
+In addition to a default statistical transformation, each geom also has a default position adjustment which specifies a set of “rules” as to how different components should be positioned relative to each other. This position is noticeable in <span Style="color:blue">geom_bar()</span> if we map a different variable to the color visual characteristic.
+
+
+```{r visual_position1, fig.align='center', out.width="40%"}
+# bar chart of class, colored by drive (front, rear, 4-wheel)
+ggplot(mpg, 
+       aes(x = class, fill = drv)) + 
+  geom_bar() +
+  theme(text = element_text(size = 20))
+```
+
+## Position Adjustments - 2
+
+The <span Style="color:blue">geom_bar()</span> by default uses a position adjustment of "stack", which makes each rectangle's height proprotional to its value and stacks them on top of each other. We can use the position argument to specify what position adjustment rules to follow:
+
+::::::{style="display: flex;"}
+:::{.column width=47.5%}
+```{r visual_position21, fig.align='center', out.width="75%"}
+# position = "dodge": values next to each other
+ggplot(mpg, 
+       aes(x = class, fill = drv)) + 
+  geom_bar(position = "dodge") +
+  theme(text = element_text(size = 20))
+```
+:::
+:::{.column width=5%}
+:::
+:::{.column width=47.5%}
+```{r visual_position22, fig.align='center', out.width="75%"}
+# position = "fill": percentage chart
+ggplot(mpg, 
+       aes(x = class, fill = drv)) + 
+  geom_bar(position = "fill") +
+  theme(text = element_text(size = 20))
+```
+:::
+::::::
+
+
+**Note:** We may need to check the documentation for each particular geom to learn more about its positioning adjustments.
+
+
+## Managing Scales - 1
+
+Whenever we specify an aesthetic mapping, <span Style="color:blue">ggplot()</span> uses a particular **scale** to determine the range of values that the data should map to. It automatically adds a scale for each mapping to the plot.
+
+```{r visual_scale1, fig.align='center', out.width="40%"}
+# color the data by engine type
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  theme(text = element_text(size = 20))
+```
+
+
+## Managing Scales - 2
+
+However, the sclae used in the figure could be changed if needed. Each scale can be represented by a function with the following name: **scale_**, followed by the name of the aesthetic property, followed by an _ and the name of the scale. A continuous scale will handle things like numeric data, whereas a discrete scale will handle things like colors.
+ 
+
+```{r visual_scale2, fig.align='center', out.width="38%"}
+# same as above, with explicit scales
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) + 
+  geom_point() +
+  scale_x_continuous() + 
+  scale_y_continuous() +
+  scale_colour_discrete() +
+  theme(text = element_text(size = 20))
+```
+
+
+## Managing Scales - 3
+
+While the default scales will work fine, it is possible to explicitly add different scales to replace the defaults. For example, we can use a scale to change the direction of an axis:
+
+```{r visual_reverse, fig.align='center', out.width="40%"}
+# milage relationship, ordered in reverse
+ggplot(mpg, 
+       aes(x = cty, y = hwy)) +
+  geom_point() +
+  scale_x_reverse() +
+  scale_y_reverse() +
+  theme(text = element_text(size = 20))
+```
+
+## Managing Scales - 4
+
+Similarly, we can use <span Style="color:blue">scale_x_log10()</span> and <span Style="color:blue">scale_x_sqrt()</span> to transform the scale. We can use scales to format the axes as well. 
+
+```{r visual_scale3, fig.align='center', out.width="40%"}
+ggplot(mpg, 
+       aes(x = class, fill = drv)) + 
+  geom_bar(width=0.75, position = "fill") +
+  scale_y_continuous(breaks = seq(0, 1, by = .2), 
+                     labels = scales::percent) + 
+  labs(y = "Percent") +
+  theme(text = element_text(size = 18))
+```
+
+## Use Pre-Defined Palettees 
+
+A common parameter to change is which set of colors to use in a plot. While you can use the default coloring, a more common option is to leverage the pre-defined palettes from [colorbrewer.org](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3){target="_blank"}. These color sets have been carefully designed to look good and to be viewable to people with certain forms of color blindness. We can leverage color brewer palletes by specifying the <span Style="color:blue">scale_color_brewer()</span>, passing the pallete as an argument.
+
+::::::{style="display: flex;"}
+:::{.column width=47.5%}
+- default color brewer
+
+```{r color_brewer1, fig.align='center', out.width="72%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  scale_color_brewer() +
+  theme(text = element_text(size = 18))
+```
+:::
+:::{.column width=5%}
+:::
+:::{.column width=47.5%}
+- specifying color palette
+
+```{r color_brewer2, fig.align='center', out.width="72%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set3") +
+  theme(text = element_text(size = 16))
+```
+:::
+::::::
+
+
+## Coordinate Systems - 1
+
+Similar to scales, coordinate systems are specified with functions that all start with **coord_** and are added as a layer. There are a number of different possible coordinate systems to use, including:
+
+-	coord_cartesian: the default Cartesian coordinate system, where you specify x and y values
+-	coord_flip: a cartesian system with the x and y flipped
+-	coord_fixed: a cartesian system with a “fixed” aspect ratio
+-	coord_polar: a plot using polar coordinates
+-	coord_quickmap: a coordinate system that approximates a good aspect ratio for maps. 
+
+## Coordinate Systems - 2
+
+::::::{style="display: flex;"}
+:::{.column width=47.5%}
+- zoom in with coord_cartesian
+
+```{r coord1, fig.align='center', out.width="80%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_point() +
+  coord_cartesian(xlim = c(0, 5)) +
+  theme(text = element_text(size = 20))
+```
+:::
+
+:::{.column width=5%}
+:::
+:::{.column width=47.5%}
+- flip x and y axis with coord_flip
+
+```{r coord2, fig.align='center', out.width="80%"}
+ggplot(mpg, 
+       aes(x = class)) + 
+  geom_bar() + 
+  coord_flip() +
+  theme(text = element_text(size = 20))
+```
+:::
+::::::
+
+
+## Coordinate Systems - 3
+
+We can use <span Style="color:blue">geom_bar() + coord_polar()</span> to create a pie chart.
+
+::::::{style="display: flex;"}
+:::{.column width=55%}
+```{r pie_hide, fig.align='center', eval=FALSE}
+class_count$percent <- round(class_count$n/sum(class_count$n)*100,2)
+# Create a basic bar
+pie <- ggplot(class_count, 
+              aes(x = "", y = percent, fill = class)) +
+  geom_bar(stat = "identity", width = 1, color = "white")
+# Convert to pie (polar coordinates) and add labels
+pie <- pie + 
+  coord_polar("y", start = 0) + 
+  geom_text(aes(label = paste0(percent, "%")), 
+            fontface = "bold", color = "black",
+            position = position_stack(vjust = 0.5))
+# Add color scale (hex colors)
+pie <- pie + scale_fill_brewer(palette = "Oranges") 
+# Remove labels and change font size
+pie <- pie + theme_void() +
+  theme(text = element_text(size = 20))
+
+pie
+```
+:::
+:::{.column width=45%}
+
+```{r pie_show, fig.align='center', out.width="90%", echo=FALSE}
+class_count$percent <- round(class_count$n/sum(class_count$n)*100,2)
+
+# Create a basic bar
+pie <- ggplot(class_count, 
+              aes(x = "", y = percent, fill = class)) +
+  geom_bar(stat="identity", width = 1, color = "white")
+ 
+# Convert to pie (polar coordinates) and add labels
+pie <- pie + 
+  coord_polar("y", start = 0) + 
+  geom_text(aes(label = paste0(percent, "%")), 
+            fontface = "bold", color = "black",
+            position = position_stack(vjust = 0.5))
+ 
+# Add color scale (hex colors)
+pie <- pie + 
+  scale_fill_brewer(palette = "Oranges") 
+ 
+# Remove labels and change font 
+pie <- pie + 
+  theme_void() +
+  theme(text = element_text(size = 20))
+
+pie
+```
+:::
+::::::
+
+Some useful functions:
+
+|       - Add text labels: <span Style="color:blue">geom_text()</span>
+|       - Change fill color using colour schemes from [ColorBrewer](http://colorbrewer2.org): <span Style="color:blue">scale_color_brewer()</span>
+|       - Apply <span Style="color:blue">theme_void()</span> to remove axes, background, etc
+
+
+## Coordinate Systems - 4
+
+We can create a donut chart by having a hole inside of a pie chart. 
+
+The only difference between the pie chart code is that we set: x = 2 and xlim = c(0.5, 2.5) to create the hole inside the pie chart. Additionally, the argument width in the function <span Style="color:blue">geom_bar()</span> is no longer needed.
+
+::::::{style="display: flex;"}
+:::{.column width=55%}
+
+```{r donut_hide, fig.align='center', eval=FALSE}
+# Create a basic bar
+donut <- ggplot(class_count, 
+                aes(x = 2, y = percent, fill = class)) +
+  geom_bar(stat = "identity", color = "white")
+ 
+# Convert to pie (polar coordinates) and add labels
+donut <- donut + 
+  coord_polar("y", start = 0) + 
+  geom_text(aes(label = paste0(percent, "%")),
+            fontface = "bold", color = "black", 
+            position = position_stack(vjust = 0.5))
+ 
+# Add color scale (hex colors)
+donut <- donut + 
+  scale_fill_brewer(palette = "Oranges") 
+ 
+# Remove labels and change font size
+donut <- donut + 
+  theme_void() +
+  theme(text = element_text(size = 20)) + 
+  xlim(0.5, 2.5)
+
+donut
+```
+:::
+:::{.column width=45%}
+
+```{r donut_show, fig.align='center', out.width="90%", echo=FALSE}
+# Create a basic bar
+donut <- ggplot(class_count, 
+                aes(x = 2, y = percent, fill = class)) +
+  geom_bar(stat = "identity", color = "white")
+ 
+# Convert to pie (polar coordinates) and add labels
+donut <- donut + 
+  coord_polar("y", start = 0) + 
+  geom_text(aes(label = paste0(percent, "%")),
+            fontface = "bold", color = "black", 
+            position = position_stack(vjust = 0.5))
+ 
+# Add color scale (hex colors)
+donut <- donut + 
+  scale_fill_brewer(palette = "Oranges") 
+ 
+# Remove labels and change font size
+donut <- donut + 
+  theme_void() +
+  theme(text = element_text(size = 20)) + 
+  xlim(0.5, 2.5)
+
+donut
+
+```
+:::
+::::::
+
+
+
+## Facets - 1
+
+::::::{style="display: flex;"}
+:::{.column width=55%}
+If we want to divide the information into multiple subplots, facets are ways to go. It allows us to view a separate plot for each case in a categorical variable. We can construct a plot with multiple facets by using the <span Style="color:blue">facet_wrap()</span>. This will produce a “row” of subplots, one for each categorical variable (the number of rows can be specified with an additional argument).
+
+**Note:** 
+
+1. We can <span Style="color:blue">facet_grid()</span> to facet the data by more than one categorical variable.
+
+2. We use a tilde (~) in our facet functions. With <span Style="color:blue">facet_grid()</span> the variable to the left of the tilde will be represented in the rows and the variable to the right will be represented across the columns.
+
+:::
+:::{.column width=5%}
+:::
+:::{.column width=40%}
+```{r facets1, fig.align='center', out.width="90%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_grid(~ class) +
+  theme(text = element_text(size = 20))
+```
+:::
+::::::
+
+
+## Facets - 2
+
+```{r facets2, fig.align='center', out.width="50%"}
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(year ~ cyl) +
+  theme(text = element_text(size = 20))
+```
+
+
+## Labels & Annotations - 1
+
+Textual annotations and labels (on the plot, axes, geometry, and legend) are crucial for understanding and presenting information. 
+
+- <span Style="color:orange">labs</span>: assign title, subtitile, caption, x & y labels
+
+::::::{style="display: flex;"}
+:::{.column width=55%}
+We can add titles and axis labels to a chart using the labs() function (not labels, which is a different R function!).
+
+```{r labels, fig.align='center', out.width="100%", eval=FALSE}
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  labs(title = "Fuel Efficiency by Engine Power",
+       subtitle = "Fuel economy data from 1999 and 2008 for 38 popular models of cars",
+       x = "Engine Displacement (liters)",
+       y = "Fuel Efficiency (miles per gallon)",
+       color = "Car Type") +
+  theme(text = element_text(size = 20))
+```
+:::
+:::{.column width=5%}
+:::
+:::{.column width=40%}
+```{r labels2, fig.align='center', out.width="100%", echo=FALSE}
+ggplot(mpg, 
+       aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  labs(title = "Fuel Efficiency by Engine Power",
+       subtitle = "Fuel economy data from 1999 and 2008 for 38 popular models of cars",
+       x = "Engine Displacement (liters)",
+       y = "Fuel Efficiency (miles per gallon)",
+       color = "Car Type") +
+  theme(text = element_text(size = 20))
+```
+:::
+::::::
+
+## Labels & Annotations - 2 
+
+It is also possible to add labels into the plot itself (e.g., to label each point or line) by adding a new geom_text or geom_label to the plot; effectively, we are plotting an extra set of data which happen to be the variable names. 
+
+::::::{style="display: flex;"}
+:::{.column width=55%}
+```{r label_points, fig.align='center', out.width="100%", eval=FALSE}
+# a data table of each car that has best efficiency of its type
+best_in_class <- mpg %>%
+  group_by(class) %>%
+  filter(row_number(desc(hwy)) == 1)
+
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) +
+  geom_label(data = best_in_class, 
+             aes(label = model), alpha = 0.5) +
+  theme(text = element_text(size = 20))
+```
+:::
+:::{.column width=5%}
+:::
+:::{.column width=40%}
+```{r label_points2, fig.align='center', out.width="100%", echo=FALSE}
+# a data table of each car that has best efficiency of its type
+best_in_class <- mpg %>%
+  group_by(class) %>%
+  filter(row_number(desc(hwy)) == 1)
+
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) +
+  geom_label(data = best_in_class, 
+             aes(label = model), alpha = 0.5) +
+  theme(text = element_text(size = 20))
+```
+:::
+::::::
+
+## Labels & Annotations - 3
+
+However, we can find that two labels overlap one-another in the top left part of the plot on the previous slide. We can use the <span Style="color:blue">geom_text_repel()</span> from the <span Style="color:red">ggrepel</span> package to help position labels.
+
+::::::{style="display: flex;"}
+:::{.column width=55%}
+```{r ggrepel, fig.align='right', out.width="100%", eval=FALSE}
+library(ggrepel)
+
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) +
+  geom_text_repel(data = best_in_class, 
+                  aes(label = model)) +
+  theme(text = element_text(size = 20))
+
+```
+:::
+:::{.column width=5%}
+:::
+:::{.column width=40%}
+```{r ggrepel2, fig.align='right', out.width="100%", echo=FALSE}
+library(ggrepel)
+
+ggplot(mpg, 
+       aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) +
+  geom_text_repel(data = best_in_class, 
+                  aes(label = model)) +
+  theme(text = element_text(size = 20))
+
+```
+:::
+::::::
+
+## Themes
+
+Whenever we want to customize titles, labels, fonts, background, grid lines, and legends, we can use themes. 
+
+::::::{style="display: flex;"}
+:::{.column width=55%}
+```{r theme1, fig.align='center', out.width="100%", eval=FALSE}
+ggplot(mpg, 
+       aes(x=displ, y=hwy)) + 
+  geom_point() + 
+  labs(title = "Fuel Efficiency by Engine Power",
+       x = "Engine Displacement (Liters)",
+       y = "Fuel Efficiency (Miles per gallon)") + 
+  theme(axis.text.x = element_text(size = 18),
+        axis.text.y = element_text(size = 18),  
+        axis.title.x = element_text(size = 18),
+        axis.title.y = element_text(size = 18))
+
+```
+
+**Note:** 
+  
+1. We only list some key components here.
+
+2. See [Modify Components of A Theme](https://ggplot2.tidyverse.org/reference/theme.html) and [Complete Themes](https://ggplot2.tidyverse.org/reference/ggtheme.html) for more details about the use of theme.  
+:::
+:::{.column width=5%}
+:::
+:::{.column width=40%}
+```{r theme2, fig.align='center', out.width="100%", echo=FALSE}
+ggplot(mpg, 
+       aes(x=displ, y=hwy)) + 
+  geom_point() + 
+  labs(title = "Fuel Efficiency by Engine Power",
+       x = "Engine Displacement (Liters)",
+       y = "Fuel Efficiency (Miles per gallon)") + 
+  theme(axis.text.x = element_text(size = 18),
+        axis.text.y = element_text(size = 18),  
+        axis.title.x = element_text(size = 18),
+        axis.title.y = element_text(size = 18))
+
+```
+:::
+::::::
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+

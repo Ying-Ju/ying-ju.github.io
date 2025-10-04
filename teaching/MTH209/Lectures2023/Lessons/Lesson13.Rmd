@@ -1,0 +1,357 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 13: String Manipulation with stringr" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+## Overview
+
+In this session, we will learn string manipulation in R. We'll learn the basics of how the strings work and how to create them by hand. The focus of this session will be on regular expression. We will use the R package <span Style="color:red">stringr</span>. 
+
+
+```{r}
+library(stringr)
+```
+
+**Note:** This lesson is based on the book: R for Data Science (@wickham2016r). 
+
+
+<head>
+    <base target="_blank">
+</head>
+
+
+## String Basics - 1
+
+We can create strings with either single quotes or double quotes. 
+
+```{r string_basics}
+string1 <- "Hello, the world!"
+string2 <- "We can use a 'single' quote inside of a string"
+string3 <- 'or use a "double" quote inside of a string'
+```
+
+```{r string_print, echo=T}
+string1
+string2
+string3
+```
+
+## String Basics - 2
+
+To include a literal single or double quote in a string, we can use `\` to escape it. 
+
+```{r quotes}
+single_q <- '\'' # or "'"
+double_q <- "\"" # or '"'
+```
+
+```{r quotes_print, echo=T}
+single_q
+double_q
+```
+
+This means if we want to include a literal backslash, we will need to double it up: `"\\"`. 
+
+**Note:** We should note that the printed representation of a string is not the same as string itself since the printed representation shows the escapes. To see the raw contents of the strings, use the <span Style="color:blue">writeLines()</span> function. 
+
+```{r writelines}
+writeLines(string3)
+writeLines(double_q)
+```
+
+## Some Common Special Characters
+
+There are a handful of special characters. We list a few of them here:
+
+- `"\n"`: newline
+- `"\t"`: tab
+- `\\`: backslash `\`
+
+**Note:** A complete list could be found by requesting help on <span Style="color:blue">`?'"'`</span> or <span Style="color:blue">`?"'"`</span>. 
+
+We may also need to write non-English characters such as Greek alphabet letters & symbols. We can <span Style="color:purple">Unicode Character</span> that works on all platforms. A list of unicode characters could be found at [Wikipedia](https://en.wikipedia.org/wiki/List_of_Unicode_characters). For example, we can find the code for the Greek small letter mu is `U+03BC` and the small letter rho is `U+03C1`. 
+
+```{r unicode}
+x1 <- "\u03bc"
+x2 <- "\u03c1"
+```
+
+```{r, echo=TRUE}
+x1
+x2
+```
+
+## String Length
+
+We can use the <span Style="color:blue">str_length()</span> function to get the number of characters in a string. 
+
+```{r length}
+length(string1)
+str_length(string1)
+```
+
+**Note:** The <span Style="color:blue">length()</span> function returns the length of the object, not the number of characters in the string. 
+
+## Combining Strings
+
+To combine two or more strings, we could use the <span Style="color:blue">paste()</span>, or <span Style="color:blue">paste0()</span>, or <span Style="color:blue">str_c()</span>. Since we have introduced the first two functions, we will focus on the usage of the third function. Since we use RStudio, typing <span Style="color:blue">str_</span> will trigger autocomplete, allowing us to see all <span Style="color:red">stringr</span> functions. 
+
+```{r str_c1}
+str_c("Python", "and", "R")
+str_c("Python", "C++", "R", sep=", ")
+str_c(c("Python", "C++", "R"), collapse = ",")
+```
+
+```{r str_c2}
+str_c("Data for", 2015:2020, " Year")
+```
+
+```{r str_c3}
+name <- "Tessa"
+time_of_day <- "morning"
+birthday <- FALSE
+str_c("Good ", time_of_day, " ", name, 
+      if (birthday) " and Happy Birthday!", ".")
+```
+
+
+## Subsetting Strings
+
+We can extract parts of a string using the <span Style="color:blue">str_sub()</span> function, which takes start and end arguments that give the position of the substring. 
+
+```{r subset}
+x <- c("December 1, 2021", "July 7, 1969", "March 17, 2004", "January 11, 1976")
+str_sub(x, nchar(x)-4, nchar(x))
+str_sub(x, -4, -1)
+str_sub(x, -4, -1) <- "2022"
+x
+```
+
+**Note:** 
+1. Negative numbers count backwards from end
+
+2. The <span Style="color:blue">str_sub()</span> function won't fail if the string is too short. It will just return as much as possible. 
+
+3. We can also use the assignment form of <span Style="color:blue">str_sub()</span> function to modify strings. 
+
+## Matching Patterns with Regular Expressions
+
+To learn regular expression, we will use <span Style="color:blue">str_view()</span> and <span Style="color:blue">str_view_all()</span> functions. We start from a simple example. 
+
+```{r view}
+x
+str_view(x, "20")
+#str_view(x, ", ")
+```
+
+## Basic Matches - 1
+
+The next step up in complexity is., which matches any character (except a newline). 
+
+```{r complexity}
+str_view(x, ".ly.")
+```
+
+## Basic Matches - 2
+
+But if . matches any character, how do we match the character "."? To create the regular expression, we need the string "\\.". 
+
+```{r dot1}
+x <- c("abc", "a.c", "bef")
+```
+
+Try: `str_view(c("abc", "a.c", "bet"), "a.c")`
+
+```{r dot2}
+dot <- "\\."
+writeLines(dot)
+str_view(x, "a\\.c")
+```
+
+## Basic Matches - 3
+
+If we want to match `\` in a string, we need to write `\\\\` to mach one `\` in the string. 
+
+```{r}
+x <- "a\\b"
+writeLines(x)
+str_view(x, "\\\\")
+```
+
+## Basic Matches - 4
+
+By default, regular expressions will match any part of a string. 
+
+- ^ to match the start of the string
+- $ to match the end of the string
+
+
+```{r}
+address <- c("tessa@udayton.edu", "abc@bgsu.edu", "def@miamioh.edu", "hello@gmail.com", "rst@mailbox.org")
+# str_vew(address, "^t")
+str_view(x, ".edu$")
+```
+
+## Basic Matches - 5
+
+```{r}
+x <- c("apple pie", "apple", "apple cake", "sweet apple cookies")
+# str_vew(address, "^t")
+str_view(x, "^apple$")
+```
+
+## Character Classes and Alternatives
+
+There are a number of special patterns that match more than one character. Here are four useful tools:
+
+- `\d` matches any digit
+- `\s` matches any whitespace (space, tab, newline)
+- `[abc]` matches a, b, or c
+- `[^abc]` matches anything except a, b, or c
+
+To create a regular expression containing `\d` or `\s`, we will need to excepe the `\` for the string. So we will type `\\d` or `\\s`. We can use alternation to pick between one or more alternative patterns. 
+
+```{r}
+str_view(c("grey", "gray"), "gr(e|a)y")
+```
+
+## Repetition - 1
+
+- ?: 0 or 1
+- +: 1 or more
+- *: 0 or more
+
+Try: 
+
+1. `str_view(x, "CC+")`
+2. `str_view(x, "CC*")`
+3. `str_view(x, "C[LX]+")`
+
+```{r}
+x <- "1888 is the longest year in Roman numerals: MDCCCLXXXVIII"
+str_view(x, "CC?")
+```
+
+## Repetition - 2
+
+We can also specify the number of matches precisely. 
+
+- `{n}`: exactly n
+- `{n,}`: n or more
+- `{,m}`: at most m
+- `{n,m}`: between n amd m
+
+```
+str_view(x, "C{2}")
+str_view(x, "C{2,}")
+str_view(x, "C{2,3}")
+```
+
+By default these matches will match the longest string possible. You can make them "lazy", matching the shortest string possible, by putting a ? after them. 
+
+```
+str_view(x, "C{2,3}?")
+```
+
+## Detect Matches
+
+We can use the <span Style="color:blue">str_detect()</span> function to check if a character vector matches a pattern. 
+
+```{r}
+x <- c("Jazz Chisholm Jr", "Cedric Mullins", "Alex Colome", "LaMonte Wade Jr", "AJrich")
+str_detect(x, "Jr")
+x[str_detect(x, "Jr")]
+x[str_detect(x, "Jr$")]
+```
+
+
+## Extract Matches - 1
+
+We can use the <span Style="color:blue">str_extract()</span> function to check if a character vector matches a pattern. The following example was from the [Harvard sentence](http://bit.ly/Harwardsentences), which were designed to test VOIP systems. There are provided in the <span Style="color:red">stringr</span> package.
+
+```{r}
+length(sentences)
+head(sentences, n = 4)
+```
+
+Suppose that we want to find all sentences that contain a color.
+
+```{r}
+colors <- c("red", "orange", "yellow", "green", "purple", "blue")
+color_match <- str_c(colors, collapse = "|")
+color_match
+has_color <- str_subset(sentences, color_match)
+matches <- str_extract(has_color, color_match)
+head(matches)
+```
+
+## Extract Matches - 2
+
+The <span Style="color:blue">str_extract()</span> function only extracts the first match. We can use the <span Style="color:blue">str_extract_all()</span> function to get all matches.
+
+```{r}
+more <- sentences[str_count(sentences, color_match) > 1]
+more
+str_extract_all(more, color_match)
+```
+
+If we use <span Style="color:orange">simplify = TRUE</span> function, <span Style="color:blue">str_extract_all()</span> function will return a matrix with short matches expanded to the same length as the longest. 
+
+```{r}
+str_extract_all(more, color_match, simplify = TRUE)
+```
+
+
+## Replaceing Matches 
+
+The <span Style="color:blue">str_replace()</span> and <span Style="color:blue">str_replace_all()</span> functions allow us to replace matches with new strings. 
+
+```{r}
+languages <- c("python", "java,", "php", "javascript", "objective-c", "ruby",
+               "perl", " sql","kotlin", " r,", "matlab"," c#", " c++ ", "c++,", "c++/", " c,", " c ", "c/")
+
+languages <- toupper(languages)
+all_c1 <- str_c(languages[c(12:18)], collapse = "|")
+str_replace(languages, all_c1, "C")
+all_c2 <- str_c(c("C\\+\\+ ", "C\\+\\+,", "C\\+\\+/"), collapse = "|")
+all_c <- str_c(c(all_c1, all_c2), collapse = "|")
+str_replace(languages, all_c, "C")
+```
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+
+

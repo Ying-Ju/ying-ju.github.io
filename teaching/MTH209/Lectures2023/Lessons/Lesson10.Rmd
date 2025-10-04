@@ -1,0 +1,401 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: 'Lesson 10: Relational Data with dplyr'
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+## Overview
+
+<head>
+    <base target="_blank">
+</head>
+
+In this lesson, we will talk about how to work with relational data. There are three families verbs designed to work with relational data:
+
+- Mutating joins: adding new variables to one data frame from matching observations (identifier) in another. 
+
+- Filtering joins: filtering observations from one data frame based on whether or not they match an observation in the other table.
+
+- Set operations: treating observations as if they were set elements. 
+
+**Note:** This lesson is based on the book: R for Data Science (@wickham2016r). 
+
+## Reading Datasets in nycflights13 
+
+We will explore relational data from the R package <span Style="color:red">nycflights13</span> using the two-table verbs from <span Style="color:red">dplyr</span>. 
+
+
+```{r packages}
+library(pacman)
+p_load(tidyverse, nycflights13)
+```
+
+This <span Style="color:red">nycflights13</span> package includes 5 datasets: **airlines**, **airports**, **flights**, **planes**, and **weather**.
+
+- **airlines** provides the full carrier name from its abbreviated code.
+
+- **airports** gives information about each airport, identified by the *faa* airport code. 
+
+- **planes** provides information about each plane, identified by its *tailnum*.
+
+- **weather** gives the weather at each NYC airport for each hour.
+
+**Note:** We introduce a R function <span Style="color:blue">p_load()</span> in the R package <span Style="color:red">pacman</span> here. The <span Style="color:blue">p_load()</span> function checks to see if a package is installed, if not it attempts to install the package from CRAN and/or any other repository in the <span Style="color:red">pacman</span> repository list. 
+
+## Getting to Know Variables
+
+Let's take a look at what variables are in these datasets.
+
+```{r info, echo=FALSE}
+alldata <- list(airlines, airports, flights, planes, weather)
+names(alldata) <- c("airlines", "airports", "flights", "planes", "weather")
+m <- unlist(lapply(alldata, ncol))
+info <- data.frame(matrix(rep(NA), ncol=5, nrow=max(m)))
+colnames(info) <- names(alldata)
+for (i in 1:5){
+  info[1:m[i],i] <- sort(colnames(alldata[[i]]))
+}
+DT::datatable(info, options = list(
+ columnDefs = list(list(className = 'dt-center', targets = 1:5))
+))
+```
+
+
+## Show the Relationships between the Tables
+
+One way to understand the relationships between the tables is with a drawing:
+
+```{r relationship, echo=FALSE}
+url <- "https://d33wubrfki0l68.cloudfront.net/245292d1ea724f6c3fd8a92063dcd7bfb9758d02/5751b/diagrams/relational-nycflights.png"
+```
+
+<center>
+![](`r url`)
+</center>
+
+## Keys
+
+The variables used to connect each pair of tables are called *keys*. A key is a variable or a set of variables that uniquely identifies an observation. There are two types of keys:
+
+- A *primary* key uniquely identifies an observation in its own table. 
+
+- A *foreign* key uniquely identifies an observation in another table. 
+
+If a table/dataset lacks a primary key, it may be useful to add one with the <span Style="color:blue">mutate()</span> and <span Style="color:blue">rownumber()</span> functions. This makes it easier to match observations and check our work. Such a variable is called a *surrogate* key. 
+
+A primary key and the corresponding foreign key in another table form a relation, which is typically one-to-many.
+
+**Note:**
+
+1. A variable can be both a primary key and a foreign key. 
+2. It is important to verify that the keys do indeed uniquely identify each observation.
+
+
+## Verifying Keys
+
+Here we show two examples:
+
+```{r count1}
+planes %>% 
+  count(tailnum) %>% 
+  filter(n > 1)
+```
+
+```{r count2}
+weather %>%
+  select(year, month, day, hour, origin) %>% 
+  duplicated() %>% sum()
+``` 
+
+
+## Mutating Joins
+
+A mutating join could be used to combine variables from two tables. It matches observations by their keys first, then copies across variables from one table to the other. For the convenience, we start from a small data frame. 
+
+```{r smalldata}
+flights2 <- flights %>% 
+  select(year:day, hour, origin, dest, tailnum, carrier)
+```
+
+Suppose we want to add the full airline name to the **flight2** data. We can combine the **airlines** and **flight2** data frames by <span Style="color:blue">left_join()</span> function. 
+
+```{r left_join}
+flights2 %>%
+  select(-origin, -dest) %>% 
+  left_join(airlines, by = "carrier") %>% 
+  head(n=3)
+```
+
+## Understanding Joins
+
+::::::{style="display: flex;"}
+:::{.column width=25%}
+Consider two data frames.
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/108c0749d084c03103f8e1e8276c20e06357b124/5f113/diagrams/join-setup.png"`){width="50%"}
+:::
+:::{.column width=35%}
+A join is a way of connecting each row in x to some or zero rows in y.
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/820b012580731f2134f90ee9c6388994c2343683/27703/diagrams/join-setup2.png"`){width="50%"}
+:::
+:::{.column width=40%}
+In an actual join, matches will be indicated with dots. 
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/3abea0b730526c3f053a3838953c35a0ccbe8980/7f29b/diagrams/join-inner.png"`){width="75%"}
+:::
+::::::
+
+### Inner Join
+
+The simplest type of join is the inner join. It matches pairs of observations whenever their keys are equal. The output of an inner join is a new data frame that contains the key, the x values, and the y values. We use <span Style="color:orange">by</span> to indicate which variable is the key. 
+
+```{r xy, echo=FALSE}
+x <- tribble(
+  ~key, ~val_x,
+     1, "x1",
+     2, "x2",
+     3, "x3"
+)
+y <- tribble(
+  ~key, ~val_y,
+     1, "y1",
+     2, "y2",
+     4, "y3"
+)
+```
+```{r inner}
+x %>% 
+  inner_join(y, by = "key")
+```
+
+## Outer Joins
+
+We should note that an inner join keeps only observations that appear in both data frames. An outer join keeps observation that apper in at least one of the data frames. 
+
+There are three types of outer joins. 
+
+::::::{style="display: flex;"}
+:::{.column width=33%}
+
+```{r leftjoin, echo=FALSE, fig.align='left', out.width = "90%"}
+knitr::include_graphics("../Figures/left.JPG")
+```
+:::
+:::{.column width=33%}
+```{r rightjoin, echo=FALSE, fig.align='left', out.width = "90%"}
+knitr::include_graphics("../Figures/right.JPG")
+```
+:::
+:::{.column width=33%}
+```{r fulljoin, echo=FALSE, fig.align='left', out.width = "90%"}
+knitr::include_graphics("../Figures/full.JPG")
+```
+:::
+::::::
+
+The most commonly used join is the left join. We use a left join whenever we loop up additional data from another data frame since it keeps the original observations even when there is not a match. 
+
+## Duplicate Keys
+
+When keys are not unique. There are two possibilities:
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+- One data frame has duplicate keys. 
+
+|   This means that there is a one-to-many relationship between two data frames. 
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/6faac3e996263827cb57fc5803df6192541a9a4b/c7d74/diagrams/join-one-to-many.png"`){width="60%"}
+
+:::
+:::{.column width=50%}
+- Both data frames have duplicate keys. 
+
+|   This is usually an error. When we join duplicated keys, we will get all possible combinations.
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/d37530bbf7749f48c02684013ae72b2996b07e25/37510/diagrams/join-many-to-many.png"`){width="60%"}
+
+:::
+::::::
+
+## Defining the Key Columns - 1
+
+- The default, <span Style="color:orange">by = NULL</span>, uses all variables that appear in both tables. 
+
+```{r ex1}
+flights2 %>% 
+  left_join(weather) %>% 
+  head()
+```
+
+## Defining the Key Columns - 2
+
+- A character vector, <span Style="color:orange">by = "A"</span>, uses the variable *A* that appears in both tables.
+
+```{r ex2}
+flights2 %>% 
+  left_join(planes, by = "tailnum") %>% 
+  head()
+```
+
+## Defining the Key Columns - 3
+
+- A named character vector, <span Style="color:orange">by = c("A" = "B")</span>, matches variable *A* in the first data frame to variable *B* in the second data frame. 
+
+```{r ex3}
+flights2 %>% 
+  left_join(airports, by = c("dest" = "faa")) %>% 
+  head(n=3)
+```
+
+```{r ex4}
+flights2 %>% 
+  left_join(airports, by = c("origin" = "faa")) %>% 
+  head(n=3)
+```
+
+## Filtering Joins - 1
+
+Filtering joins match observations in the same way as mutating joins, but affect the observations, not the variables. There are two types.
+
+- semi_join(x, y) keeps all observations in x that have a match in y.
+
+- anti_join(x, y) drops all observations in x that have a match in y.
+
+Suppose that we want to find the 10 days with the highest average delays. How would we construct the filter statement that used year, month, and day to match it back to flights?
+
+```{r approach1}
+topdest <- flights %>% 
+  count(dest, sort=TRUE) %>% 
+  head(10)
+
+flights %>% 
+  filter(dest %in% topdest$dest) %>% 
+  head(5) # only show the first 5 rows due to the limited space on the page
+```
+
+## Filtering Joins - 2
+
+The previous approach is difficult to extend to the situation when including multiple variables. 
+
+```{r semijoin}
+flights %>% 
+  semi_join(topdest) %>% 
+  head(10)
+```
+
+## Filtering Joins - 3
+
+::::::{style="display: flex;"}
+:::{.column width=33%}
+- Semi-Join - 1
+
+The following figure shows how a semi-join works. Only the existence of a match is important. It doesn't matter which observation is matched.
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/028065a7f353a932d70d2dfc82bc5c5966f768ad/85a30/diagrams/join-semi.png"`){width="75%"}
+:::
+:::{.column width=33%}
+- Semi-Join - 2
+
+\
+\
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/e1d0283160251afaeca35cba216736eb995fee00/1b3cd/diagrams/join-semi-many.png"`){width="75%"}
+:::
+:::{.column width=33%}
+
+- Anti-Join
+
+The inverse of a semi-join is an anti-join. An anti-join keeps the rows that don't have a match. 
+
+\
+
+![](`r "https://d33wubrfki0l68.cloudfront.net/f29a85efd53a079cc84c14ba4ba6894e238c3759/c1408/diagrams/join-anti.png"`){width="80%"}
+:::
+::::::
+
+## Set Operations - 1
+
+The final types of two-table verb are the set operations. 
+
+- intersect(x, y) returns only observations in x and y.
+- union(x, y) returns unique observations in x and y.
+- setdiff(x, y) returns observations in x, but not in y.
+
+These expects that x and y inputs to have the same variables, and treat the observations like sets. 
+
+## Set Operations - 2
+
+We see a simple example here.
+
+```{r set}
+df1 <- tribble(
+  ~x, ~y,
+   1,  1,
+   2,  1
+)
+df2 <- tribble(
+  ~x, ~y,
+   1,  1,
+   1,  2
+)
+```
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+```{r interset}
+intersect(df1, df2)
+```
+
+```{r union}
+union(df1, df2)
+```
+:::
+:::{.column width=50%}
+
+```{r setdiff1}
+setdiff(df1, df2)
+```
+
+```{r setdiff2}
+setdiff(df2, df1)
+```
+:::
+::::::
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+
+

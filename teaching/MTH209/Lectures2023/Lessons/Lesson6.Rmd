@@ -1,0 +1,311 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 6: Basic Graphical Displays" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+
+## Brief Overview
+
+<head>
+    <base target="_blank">
+</head>
+
+In this session, we will use the Black Friday Data available in [Kaggle](https://www.kaggle.com/datasets/pranavuikey/black-friday-sales-eda) to study how to make the following graphical displays. 
+
+```{r data}
+library(tidyverse)
+Friday <- read_csv("../Data/Black_Friday.csv")
+```
+ 
+:::::: {style="display: flex;"}
+
+::: {.column width=50%}
+- Categorical Data
+  - Bar Chart
+  - Pie Chart
+
+- Quantitative Data
+  - Histogram
+  - Boxplot
+  - Scatterplot 
+  - Line 
+:::
+
+::: {.column width=50%}
+Here is a list of common arguments:
+
+  - col: a vector of colors 
+  - main: title for the plot
+  - xlim or ylim: limits for the x or y axis
+  - xlab or ylab: a label for the x axis
+  - font: font used for text, 1=plain; 2=bold; 3=italic, 4=bold italic
+  - font.axis: font used for axis 
+  - cex.axis: font size for x and y axes
+  - font.lab: font for x and y labels
+  - cex.lab: font size for x and y labels
+:::
+::::::
+
+## Understand Your Data
+
+In order to understand the customer purchases behavior against various products of different categories, the retail company "ABC Private Limited", in United Kingdom, shared purchase summary of various customers for selected high volume products from last month. The data contain the following variables. 
+
+- User_ID: User ID
+- Product_ID: Product ID
+- Gender: Sex of User
+- Age: Age in bins
+- Occupation: Occupation (Masked)
+- City_Category: Category of the City (A,B,C)
+- Stay_In_Current_City_Years: Number of years stay in current city
+- Marital_Status: Marital Status
+- Product_Category_1: Product Category (Masked)
+- Product_Category_2: Product may belongs to other category also (Masked)
+- Product_Category_3: Product may belongs to other category also (Masked)
+- Purchase: Purchase Amount
+
+
+## Get a Glimpse of the Data
+
+We can use the <span Style="color:blue">glimpse()</span> function to get a glimpse of the data.
+
+```{r glimpse}
+glimpse(Friday)
+```
+
+
+## Bar Chart - 1
+
+Bar chart is a graphical display good for the general audience. Here, we study the distribution of Age Group of the company's customers who purchased their products on Black Friday.
+
+**Usage:** barplot(height, ...)
+
+```{r bar1, fig.align = 'center', out.width="40%"}
+barplot(table(Friday$Age))
+```
+
+## Bar Chart - 2
+
+We can have the horizontal bars. Using the argument <span Style="color:orange">col</span>, we can assign a color for bars. The argument <span Style="color:orange">main</span> could be used to change the title of the figure.   
+
+```{r bar2, fig.align = 'center', out.width="37%"}
+par(mgp=c(4,1,0)) # change the margin line for the axis title, axis labels and axis line
+par(mar=c(5,7,4,2)) # set margin of the figure 
+barplot(table(Friday$Age), col = "lightblue", main = "Distribution of Purchases by Customer's Age", horiz = TRUE, xlab = "Number of Purchases",
+        ylab = "Age Group", las=1)
+```
+ 
+**Note:** The margin of a figure could be set using the <span Style="color:blue">par()</span> function. The order of the setting is 
+<span Style="color:orange">c(bottom, left, top, right)</span>. 
+
+
+## Bar Chart - 3
+
+We can use RGB color code to assign colors. 
+
+```{r bar3, fig.align = 'center', out.width="40%"}
+barplot(table(Friday$Age), col = "#69b3a2", main = "Distribution of Purchases by Customer's Age", xlab = "Age Group", ylab ="Number of Customers")
+```
+
+## Pie Chart - 1
+
+Similarly, we can use pie chart to study the distribution of the city category. 
+
+**Usage:** pie(height, ...)
+
+```{r pie1, fig.align = 'center', out.width="40%"}
+library(tidyverse)
+pie(table(Friday$City_Category), main = "Distribution of City Category", col = c("#264e70", "#679186", "#bbd4ce"))
+```
+
+## Pie Chart - 2
+
+The following code chunk shows an advanced setting. 
+
+```{r pie2, fig.align = 'center', out.width="38%"}
+H <- table(Friday$City_Category)
+percent <- round(100*H/sum(H), 1) # calculate percentages
+pie_labels <- paste(percent, "%", sep="") # include %
+pie(H, main = "Distribution of City Category", labels = pie_labels, col = c("#54d2d2", "#ffcb00", "#f8aa4b"))
+legend("topright", c("A","B","C"), cex = 0.8, fill = c("#54d2d2", "#ffcb00", "#f8aa4b"))
+```
+**Tip:** Use color palette to choose colors (Google search: color scheme generator). 
+
+
+## Histogram 
+
+Histogram is used when we want to study the distribution of a quantitative variable. Here we study the distribution of customer purchase amount.
+
+**Usage:** hist(x, ...)
+
+```{r histogram, fig.align = 'center', out.width="40%"}
+hist(Friday$Purchase, main = "Distribution of Customer Purchase Amount", xlab = "Purchase Amount (British Pounds)")
+```
+
+We can find that the distribution of histogram is multimodal. 
+
+
+## Boxplot - 1
+
+Here, we talk about another graphical display that can be used to study the distribution of a quantitative variable: box and whisker plot (boxplot). 
+
+**Usage:** boxplot(x, ...) or boxplot(formula, ...)
+
+```{r boxplot1, fig.align = 'center', out.width="40%"}
+boxplot(Friday$Purchase, xlab="Purchase Amount", ylab="British Pounds")
+```
+
+## Boxplot -2
+
+In general, a boxplot is used When we want to compare the distributions of several quantitative variables.  In the following we study the distribution of customer purchase amount among different age groups. 
+
+:::::: {style="display: flex;"}
+
+::: {.column width=50%}
+
+In order to know how this can be done, we need to know how to define a formula in R. 
+
+**Usage:** A ~ B
+
+  - A: response variable
+  - B: explanatory variables
+:::
+
+::: {.column width=50%}
+
+```{r boxplot2, fig.align = 'center', out.width="90%"}
+boxplot(Friday$Purchase ~ Friday$Age)
+```
+
+:::
+::::::
+
+## Boxplot - 3
+
+We can improve the quality of the boxplot by changing a few settings in the default settings. 
+
+```{r boxplot3, fig.align = 'center', out.width="45%"}
+boxplot(Friday$Purchase ~ Friday$Age, main = "Distribution of Purchase by Age Group", 
+        xlab = "Customer Age Group", ylab = "Purchase Amount", cex.lab = 1.25, cex.axis = 1.25, col = "#54d2d2")
+```
+
+## Boxplot - 4
+
+We can use the argument <span Style="color:orange">data</span> to indicate that variables used are from a given data.
+
+```{r boxplot4, fig.align = 'center', out.width="45%"}
+boxplot(Purchase ~ Gender + Marital_Status, data = Friday, main="Distribution of Purchase by Sex and Marital_Status", 
+        xlab="Sex and Marital Status", ylab="Purchase",  cex.lab=1.25, cex.axis=1.25, 
+        names = c("Female & Single", "Male & Single", "Female & Married", "Male & Married"))
+```
+
+## Scatterplot - 1
+
+When we want to study the relationship of two quantitative variables, a scatterplot can be used.  Since this data set doesn't have another quantitative variable, we will use the built-in data <span class="orange">mtcars</span> in R. Then we study the relationship of miles per gallon against the weight of vehicles. 
+
+```{r scatterplot, fig.align='center', out.width="40%"}
+plot(mpg ~ wt, data=mtcars, 
+     xlab = "Weight (1000 lbs)", ylab = "Miles per Gallon",
+     pch = 19, col = "blue")
+```
+
+## Line Plot - 1
+
+When we want to show how a quantitative variable changes over a period of time, a line plot can be used.  Line plots can also be used to compare changes over the same period of time for several groups.  
+In order to graph a line plot, we need to know two additional arguments 
+
+|     - <span Style="color:orange">type</span>: "p" to draw only points; "l" to draw only lines; "o" to draw both points and lines
+  
+|     - <span Style="color:orange">lty</span>: line types. 0 = blank; 1 = solid; 2 = dashed; 4 = dotdash, 5 = longdash, 6 = twodash
+
+## Line Plot - 2  
+
+Since the Black Friday Data are not time series data, it is not appropriate to use a line plot.  In the following code chunk, we create a data frame using the forecasted highest temperatures from July 13 to July 22 in 2022 ([The Weather Channel](https://weather.com/)).  
+
+<div class="pull-left">
+
+```{r line1, eval=FALSE, fig.align='center', out.width="28%"}
+Date <- 13:22
+Dayton_OH <- c(84, 86, 91, 89, 89, 91, 92, 91, 91, 91)
+Houston_TX <- c(100, 97, 96, 94, 94, 94, 93, 93, 92, 91)
+Denver_CO <- c(95, 85, 89, 96, 97, 96, 92, 91, 95, 96)
+Fargo_ND <- c(86, 80, 84, 87, 90, 87, 83, 84, 87, 89)
+df <- data.frame(Date, Dayton_OH, Houston_TX, Denver_CO, Fargo_ND)
+
+plot(Date, Dayton_OH, type="o", col="blue", 
+     xlab="Date in July", 
+     ylab="Highest Temperature", 
+     ylim=c(80, 100))
+lines(Date, Houston_TX, type="o", col="red")
+lines(Date, Denver_CO, type="o", col="purple")
+lines(Date, Fargo_ND, type="o", col="darkgreen")
+# Add a legend
+legend("topright", # Position of the legend
+       legend = c("Dayton, OH", "Houston, TX", 
+                  "Denver, CO", "Fargo, ND"), # Labels
+       col = c("blue", "red", "purple", "darkgreen"), # Colors
+       lty = 1, # Line types
+       pch = 1) # Point types
+```
+
+</div>
+
+<div class="pull-right">
+
+```{r line2, echo=FALSE, fig.align='center', out.width="90%"}
+Date <- 13:22
+Dayton_OH <- c(84, 86, 91, 89, 89, 91, 92, 91, 91, 91)
+Houston_TX <- c(100, 97, 96, 94, 94, 94, 93, 93, 92, 91)
+Denver_CO <- c(95, 85, 89, 96, 97, 96, 92, 91, 95, 96)
+Fargo_ND <- c(86, 80, 84, 87, 90, 87, 83, 84, 87, 89)
+df <- data.frame(Date, Dayton_OH, Houston_TX, Denver_CO, Fargo_ND)
+
+plot(Date, Dayton_OH, type="o", col="blue", xlab="Date in July", ylab="Highest Temperature", ylim=c(80, 100))
+lines(Date, Houston_TX, type="o", col="red")
+lines(Date, Denver_CO, type="o", col="purple")
+lines(Date, Fargo_ND, type="o", col="darkgreen")
+# Add a legend
+legend("topright", # Position of the legend
+       legend = c("Dayton, OH", "Houston, TX", "Denver, CO", "Fargo, ND"), # Labels
+       col = c("blue", "red", "purple", "darkgreen"), # Colors
+       lty = 1, # Line types
+       pch = 1) # Point types
+```
+
+</div>
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+

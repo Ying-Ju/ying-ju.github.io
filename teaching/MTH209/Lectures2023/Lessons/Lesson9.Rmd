@@ -1,0 +1,124 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 9: R Markdown Presentations" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+## Overview
+
+In this session, we will introduce 
+
+1. Rmarkdown Presentations
+2. Flex Dashboard
+
+
+<head>
+    <base target="_blank">
+</head>
+
+
+## Rmarkdown Presentations - 1
+
+In order to create a Rmarkdown presentation, we click <span Style="color:#3384FF">File</span> and then find <span Style="color:#3384FF">New File</span> and then <span Style="color:#3384FF">R markdown ...</span> There are four options:
+
+- Html (ioslides)
+
+This format allows us to create a slide show and the slides could be broken up into sections by using the heading tags # and ##. If a header is not needed, a new slide could be created using a horizontal rule (- - -).
+
+- Html (Slidy)
+
+Similar to ioslides, this format allows to create a slide show broken up into sections by using the heading tag ##. If a header is not needed, a new slide could be created using a horizontal rule (- - -). A Slidy presentation gives a table of content while An ioslides presentation doesn't.  
+
+- PDF (beamer)
+
+This format allows to create a beamer presenation (LaTex). The slides could be broken up into sections by using the heading tags # and ##. If a header is not needed, a new slide could be created using a horizontal rule (- - -).
+
+- PowerPoint
+
+
+## Rmarkdown Presentations - 2
+
+```{r presentation, echo=FALSE, fig.align='center', fig.cap="Creating a Rmarkdown Presentation", out.width = "30%"}
+knitr::include_graphics("../Figures/presentation.JPG")
+```
+
+## Rmarkdown Presentations - 3
+
+In the following, we show an example of the header of a Rmarkdown file. 
+```{r Rmarkdown_heading, echo=FALSE, fig.align='center', out.width = "40%"}
+knitr::include_graphics("../Figures/Rmarkdown_heading.JPG")
+```
+
+We can use the output option to manipulate which presentation we would like to have. 
+
+- output: ioslides_presentation
+- output: slidy_presentation
+- output: beamer_presentation
+- output: powerpoint_presentation
+
+To render an R Markdown document into its final output format, we can click the <span Style="color:#3384FF">Knit</span> button to render the document in RStudio and RStudio will show a preview of it. 
+
+The further settings for presentations could be found at [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/presentations.html)
+
+
+## xaringan Presentation
+
+A easy way to start creating a xaringan presentation is to use the R markdown template with <span Style="color:#3384FF">Ninja Presentation</span> or <span Style="color:#3384FF">Ninja Themed Presentation</span>.
+
+```{r xaringan, echo=FALSE, fig.align='center', fig.cap="Creating a Rmarkdown Presentation", out.width = "30%"}
+knitr::include_graphics("../Figures/xaringan.JPG")
+```
+
+A comprehensive tutorial regarding xaringan presentation could be found at [xaringan Presentation](https://bookdown.org/yihui/rmarkdown/xaringan.html)
+
+
+## Flex Dashboard
+
+A easy way to start creating a Flex dashboard is to use the R markdown template with <span Style="color:#3384FF">Flex Dashboard</span>.
+
+```{r dashboard, echo=FALSE, fig.align='center', fig.cap="Creating a Flex Dashboard", out.width = "30%"}
+knitr::include_graphics("../Figures/dashboard.JPG")
+```
+
+- We can use # to create multiple pages. 
+- We can use <span Style="color:#3384FF">orientation</span> in the <span Style="color:#3384FF">output</span> options to specify the layout to be <span Style="color:#3384FF">columns</span> or <span Style="color:#3384FF">rows</span>. 
+
+A comprehensive tutorial regarding Flex Dashboard could be found at [flexdashboard](https://pkgs.rstudio.com/flexdashboard/)
+
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+
+

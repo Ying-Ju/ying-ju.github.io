@@ -1,0 +1,490 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 15: R Programming Structures" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+
+## Overview
+
+<head>
+    <base target="_blank">
+</head>
+
+In this session, we will talk about R programming structures including 
+
+- Control Statements
+- Creation of Functions
+- Recursion
+
+  
+**Note:** This lesson is based on the book: The Art of R Programming ([@matloff2011art]). 
+
+## Control Statements - 1
+
+- Loops
+
+Loops can be used when repetitive operations are needed. Using loops helps to make the code more readable. However, programming in R is particularly slow when multiple loops are used. Writing pseudo code to plan your algorithm may help to reduce the number of loops needed in the computation. 
+
+There are three main types of loop in R: the <span Style="color:blue">for()</span> loop, the <span Style="color:blue">while()</span> loop and the <span Style="color:blue">repeat</span> loop.
+
+### for loop statement
+
+<span Style="color:blue">for()</span> loops are used for general purposes. This means we should know the number of iterations needed. 
+
+```{}
+for (variable in sequence){
+    statments
+}
+```
+
+### while loop statement
+
+A <span Style="color:blue">while()</span> loop is recommended when the number of iterations in the loop is unknown. For example, if we want to find a numerical solution of $sin(x) = x + 1$ where error less than 0.0001, we can use the while() loop to find the solution. 
+
+```{}
+while (condition){
+    statments
+}
+```
+
+We will introduce the <span Style="color:blue">repeat</span> loop after talking about if-else statement. 
+
+
+## Control Statements - 2
+
+**Example**: Give $n=100$, find $1\times 2+2\times 3 + \cdots + n\times (n+1)$.
+
+```{r for_findsum}
+total_for<- 0
+n <- 100
+for (i in 1:n){
+  total_for <- total_for + i*(i+1)
+}
+total_for
+```
+
+```{r while_findsum}
+total_while <- 0
+n <- 100
+i <- 1
+while(i <= n){
+  total_while <- total_while + i*(i+1)
+  i <- i + 1
+}
+total_while
+```
+
+**Note**: If we forget to increment or decrement the value inside the while loop, then the code executes infinite times, called an infinite loop.
+
+## Control Statements - 3
+
+**Example (Application of the Fixed Point Theorem):** Find a solution for $sin(x) = x + 1$. 
+
+```{r FPT}
+find_solution <- function(x) sin(x) - 1
+precision <- 0.00001
+step <- 0
+x0 <- 0.5
+error <- 1
+
+# the while() loop will be executed when the error is higher than the precision and the step is less than 100
+
+while (error > precision & step < 100){
+  step <- step + 1
+  xn <- find_solution(x0)
+  error <- abs(xn-x0)
+  x0 <- xn
+}
+
+if (step == 100){
+  print("We cannot find the root within 100 iterations.")
+}else{
+  print(paste("The root of sin(x) = x + 1 is about", x0))
+  print(paste("It takes", step, "iterations."))
+}
+```
+
+## Control Statements - 4
+
+We show two advanced examples for computing fractals from iterated function systems [Fern Fractal](https://krazydad.com/bestiary/bestiary_fern.html).
+
+The first example shows fractal fern.
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+```{r fern, fig.align='center', out.width="80%", eval=FALSE}
+a <- c(0, 0.85, 0.2, -0.15)
+b <- c(0, 0.04, -0.26, 0.28)
+c <- c(0, -0.04, 0.23, 0.26)
+d <- c(0.16, 0.85, 0.22, 0.24)
+e <- c(0, 0, 0, 0)
+f <- c(0, 1.6, 1.6, 0.44)
+numits <- 2000 # number of iterations
+x <- 0
+y <- 0
+
+par(bg="black") # change the color for the background
+plot(seq(-2, 10, by = 0.1), seq(-2, 10, by = 0.1), type = "n", main = "fractal fern")
+
+for (n in seq(1, numits)){
+  k <- sample(1:4, 1, replace = T, prob = c(0.01, 0.85, 0.07, 0.07))
+  newx <- a[k]*x + b[k]*y + e[k]
+  newy <- c[k]*x + d[k]*y + f[k]
+  x <- newx
+  y <- newy
+  
+  if (n > 10) points(x + 3, y, col = "green", cex = 0.5, pch = 20)
+}
+```
+
+:::
+:::{.column width=50%}
+
+```{r fern_true, fig.align='center', out.width="80%", echo=FALSE}
+a <- c(0, 0.85, 0.2, -0.15)
+b <- c(0, 0.04, -0.26, 0.28)
+c <- c(0, -0.04, 0.23, 0.26)
+d <- c(0.16, 0.85, 0.22, 0.24)
+e <- c(0, 0, 0, 0)
+f <- c(0, 1.6, 1.6, 0.44)
+numits <- 2000 # number of iterations
+x <- 0
+y <- 0
+
+par(bg="black") # change the color for the background
+plot(seq(-2, 10, by = 0.1), seq(-2, 10, by = 0.1), type = "n", main = "fractal fern")
+
+for (n in seq(1, numits)){
+  k <- sample(1:4, 1, replace = T, prob = c(0.01, 0.85, 0.07, 0.07))
+  newx <- a[k]*x + b[k]*y + e[k]
+  newy <- c[k]*x + d[k]*y + f[k]
+  x <- newx
+  y <- newy
+  
+  if (n > 10) points(x + 3, y, col = "green", cex = 0.5, pch = 20)
+}
+```
+:::
+::::::
+
+## Control Statements - 5
+
+Here is another example for fractal tree
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+```{r tree, fig.align='center', out.width="80%", eval=FALSE}
+a <- c(0, 0.42, 0.42, 0.1)
+b <- c(0, -0.42, 0.42, 0)
+c <- c(0, 0.42, -0.42, 0)
+d <- c(0.5, 0.42, 0.42, 0.1)
+e <- c(0, 0, 0, 0)
+f <- c(0, 0.2, 0.2, 0.2)
+numits <- 5000 # number of iterations
+x <- 0
+y <- 0
+
+par(bg="black") # change the color for the background
+plot(seq(-0.3, 0.3, by = 0.1), seq(0, 0.3, by = 0.05), type = "n", main = "fractal tree")
+
+for (n in seq(1, numits)){
+  k <- sample(1:4, 1, replace = T, prob = c(0.05, 0.4, 0.4, 0.15))
+  newx <- a[k]*x + b[k]*y + e[k]
+  newy <- c[k]*x + d[k]*y + f[k]
+  x <- newx
+  y <- newy
+  
+  if (n > 10) points(x, y, col = "green", cex = 0.5, pch = 20)
+}
+```
+
+:::
+:::{.column width=50%}
+
+```{r tree_true, fig.align='center', out.width="80%", echo=FALSE}
+a <- c(0, 0.42, 0.42, 0.1)
+b <- c(0, -0.42, 0.42, 0)
+c <- c(0, 0.42, -0.42, 0)
+d <- c(0.5, 0.42, 0.42, 0.1)
+e <- c(0, 0, 0, 0)
+f <- c(0, 0.2, 0.2, 0.2)
+numits <- 5000 # number of iterations
+x <- 0
+y <- 0
+
+par(bg="black") # change the color for the background
+plot(seq(-0.3, 0.3, by = 0.1), seq(0, 0.3, by = 0.05), type = "n", main = "fractal tree")
+
+for (n in seq(1, numits)){
+  k <- sample(1:4, 1, replace = T, prob = c(0.05, 0.4, 0.4, 0.15))
+  newx <- a[k]*x + b[k]*y + e[k]
+  newy <- c[k]*x + d[k]*y + f[k]
+  x <- newx
+  y <- newy
+  
+  if (n > 10) points(x, y, col = "green", cex = 0.5, pch = 20)
+}
+```
+:::
+::::::
+
+## Control Statements - 6
+
+- Conditional Statements
+
+Conditional statements can be very helpful when we only want to execute the commands under certain conditions. 
+
+### if-else statement
+
+```{}
+if (condition1){
+    statements-1
+}else{
+    statements-2
+}
+```
+
+
+```{}
+if (condition1){
+    statements-1
+}else if (condition2){
+    statements-2
+}else{
+    statements-3
+}
+```
+
+### ifelse statement
+
+When the logical statement is simple and short, it is convenient to use the <span Style="color:blue">ifelse()</span> function.
+
+```{}
+ifelse(condition, true_value, false_value)
+```
+
+## Control Statements - 7
+
+The following code chunk shows a simple example that examines a number is odd number or not. 
+
+```{r ifodd}
+x <- 11
+if (x%%2==1){
+  print(paste(x, "is an odd number."))
+}
+```
+
+Here is an improved version of the previous example. 
+
+```{r ifoddoreven}
+x <- 11
+if (x%%2==1){
+  print(paste(x, "is an odd number."))
+}else{
+  print(paste(x, "is an even number."))
+}
+```
+
+In the following code chunk, we sample 10 values from $1, 2, \ldots, 100$ with replacement and check if these 10 values are odd or even numbers. 
+
+```{r ifelse}
+x <- sample(1:100, 10)
+ifelse(x%%2 == 1, "Odd", "Even")
+```
+
+## Control Statements - 8
+
+**Example**: Give $n=100$, find $1\times 2+2\times 3 + \cdots + n\times (n+1)$.
+
+```{r repeat_findsum}
+total_repeat <- 0
+n <- 100
+i <- 1
+repeat{
+  total_repeat <- total_repeat + i*(i+1)
+  i <- i + 1
+  if (i > n) break
+}
+total_repeat
+```
+
+**Example**: Read all csv files in a folder and check the dimension of each data file. 
+
+```{}
+all_files <- list.files("C:/Users/tessa/Dropbox/MTH 209/Some Good Datasets", ".csv", full.names = T)
+
+for (j in 1:length(all_files)){
+  temp_file <- read_csv(all_files[j])
+  print(dim(temp_file))
+}
+```
+
+## Creation of Functions - 1
+
+While we can use lots of functions in the R packages, there are some situations that we may want to define a function by ourselves. Using functions make our code well-organized and readable as well.
+
+```{}
+function_name <- function(arg1, arg2, ...){
+    function body
+}
+```
+
+In the following code chunk, we define a function to check if a value is an even number or odd number. 
+
+```{r function1}
+check_numbers <- function(n){
+  # n: an integer
+  if (!(n%%2 %in% c(0,1))) return("The input value needs to be an integer.")
+  if (n %% 2 == 1){
+    return(paste(n, "is an odd number."))
+  }else{
+    return(paste(n, "is an even number."))
+  }
+}
+check_numbers(2022)
+check_numbers(21.57)
+```
+
+**Note**: Arguments are not required to create a function.
+
+## Creation of Functions - 2
+
+```{r function2}
+squared <- function(x, a, opt_arg){
+  # x: base value
+  # a: exponent of x
+  # opt_arg: optional argument
+  
+  if (missing(opt_arg)){
+    new <- a*x^2
+  }else{
+    new <- a^x^2 + opt_arg
+  }
+  cat("This functon returns:", "\n")
+  return(new)
+}
+
+squared(4, 5, 1024)
+
+```
+
+**Note**: The <span Style="color:blue">print()</span> function returns a data object to the console and the <span Style="color:blue">cat</span> function outputs a character string in a readable format. 
+
+## Creation of Functions - 3
+
+**Fixed-Point Theorem**: a function $F$ will have at least one fixed point (a point $x$ such that $F(x)=x$) under some conditions on $F$.  
+
+```{r fpt_application}
+math_function <- function(x) sin(x) - 1
+FPT_algorithm <- function(f, precision, x0, max_iter=20){
+  # f: a function of one variable
+  # precision: precision of the algorithm
+  # x0: initial value
+  # max_iter: maximum number of iterations
+  error <- 5
+  step <- 0
+  while (error > precision & step < max_iter){
+    step <- step + 1
+    xn <- f(x0)
+    error <- abs(xn-x0)
+    x0 <- xn
+  }
+  if (step == max_iter){
+    return(paste("We cannot find the root within", max_iter, "iterations."))
+  }else{
+    return(paste("The root is", x0, "and it takes", step, "iterations to obtain this root."))
+  }
+}
+FPT_algorithm(math_function, 10^-5, 0.5, 100)
+FPT_algorithm(cos, 10^-4, 0, 100)
+```
+
+## Recursion - 1
+
+- Can a function call itself?
+
+Yes, it is called a <span Style="color:purple">recursive</span> function. (A function within a function)
+
+All recursive algorithms have the following steps:
+
+1. Base step (when to stop)
+
+2. Work toward base step
+
+3. Recursive call
+
+**A quote from [L. Peter Deutsch](https://en.wikipedia.org/wiki/L._Peter_Deutsch)**: To iterate is human, to recurse divine.
+
+
+## Recursion - 2
+
+**Example**: Use the recursive algorithm to define a function to calculate
+\[1\times 2+ 2\times 3 + \cdots + n\times (n+1).\]
+
+
+```{r factorial}
+Rec_function <- function(n){
+  if (n==1){ 
+    return(1*2)
+  }else{
+    return(n*(n+1) + Rec_function((n-1)))
+  }
+}
+
+Rec_function(100)
+```
+
+## Recursion - 3
+
+**Example**: The Fibonacci numbers are numbers in the following sequence:
+\[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, \ldots \]
+Let $F_n$ be the nth Fibonacci numbers. Then
+\[Fn = F_{n-1} + F_{n-2}.\]
+Write a recursive algorithm to find $F_n$.
+
+```{r Fibonacci}
+Fibonacci <- function(n){
+  if (n==1){
+    return(0)
+  }else if (n==2){
+    return(1)
+  }else{
+    return(Fibonacci(n-1)+Fibonacci(n-2))
+  }
+}
+
+Fibonacci(7)
+Fibonacci(20)
+```
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller

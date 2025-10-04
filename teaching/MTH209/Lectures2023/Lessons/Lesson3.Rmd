@@ -1,0 +1,321 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 3: Basic Data Structures (Vectors, Matrices, and Arrays)" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+## Basic Data Structures 
+
+<head>
+    <base target="_blank">
+</head>
+
+In this lesson, we will introduce the following data structures in R. 
+
+- Vectors
+- Matrices and Arrays
+
+**Note:** This lesson is based on the book: The Art of R Programming (@matloff2011art). 
+
+## Vectors - 1
+
+The **vector** is the fundamental data type in R. In this session, We will focus on the first two topics below. The third topic will be introduced later this semester. 
+
+1. Recycling: Automatic extension of vectors with certain settings
+2. Filtering: The extraction of subsets of vectors
+3. Vectorization: When applying a function on vectors element-by-element
+
+
+## Vectors - 2
+
+- Adding and Deleting Vector Elements
+
+```{r adv}
+x <- c(147, 85, 21, 99, 38, 47, 1, 27)
+x <- c(x[2:5], 217, 304, x[6])
+x
+x[-c(1,4,8)] # Use negative subscripts to exclude certain elements. 
+```
+
+- Obtaining the Length of a Vector 
+We can use the <span Style="color:blue">length()</span> function to get the length of vectors, factors. 
+
+```{r length}
+length(x)
+x[-length(x)]
+```
+
+## Vectors - 3
+
+- Recycling
+We can find that the shorter vector was recycled based on the output below when adding two unequal sized vectors.
+
+```{r recyling}
+c(4, 1, 5) + c(3, 2, 4, 7, 1)
+```
+
+
+- Common Vector Operations
+When the <span Style="color:blue">*</span> function is applied, the multiplication is done element by element. The same principle applies to other numeric operators. 
+
+```{r c1}
+c(1, 2, 3) * c(4, 1, 5)
+c(1, 3, 4) / c(4, 1, 5)
+c(1, 3, 4) %% c(4, 1, 5) # x mod y, it returns remainder
+```
+
+
+## Vectors - 4
+
+- Generating Useful Vectors with the : Operator
+We can use the <span Style="color:blue">:</span> operator to create a vector consisting of a range of numbers. 
+
+```{r colon1}
+7:19
+15:6
+```
+
+Be aware of operator precedence issues. 
+
+```{r colon2}
+1:10-1
+1:(10-1)
+```
+
+## Vectors - 5
+
+- Generating Vector Sequences with seq()
+We can use the <span Style="color:blue">seq()</span> function to generate a sequence in arithmetic progression. 
+
+
+```{r seq1}
+seq(from = 0.1, to = 1, by = 0.1)
+seq(from = 0.1, to = 1, length = 5)
+```
+
+- Know the default arguments in the <span Style="color:blue">seq()</span> function. 
+
+```{r seq2}
+seq(1, 10)
+seq(1, 10, 2)
+```
+
+**Note:** The order of arguments in default is *from*, *to*, and *by*. 
+
+## Vectors - 6
+
+- Repeating Vector Constants with rep()
+We can use the <span Style="color:blue">rep()</span> function to put the same constant into long vectors. 
+
+```{r rep}
+x <- rep(NA, 3)
+x 
+rep(3, 10)
+rep(c(1, 3, -2), 5)
+rep(c(1, 3, -2), each = 2)
+rep("Hello", 4)
+```
+
+## Vectors - 7
+
+- Using any() and all()
+The <span Style="color:blue">any()</span> and <span Style="color:blue">all()</span> functions report a logical value, for which whether any or all of their arguments are TRUE.
+
+```{r aa1}
+x <- c(68, 43, 86, 51, 88, 29, 61, 18, 22, 45)
+any(x > 50)
+all(x < 75)
+```
+
+- Be aware of missing values (NA)
+
+```{r aa2}
+x <- c(NA, x, NA, NA) # include 3 NA's in x
+any(x < 10)
+any(x < 10, na.rm=T) # T means TRUE
+```
+
+## Matrices and Arrays - 1
+
+Matrix is a two dimensional rectangular data structure in R. A matrix is a vector with two attributes: the number of rows and the number of columns. 
+
+Matrix row and column subscripts starts with 1. The matrix $A$ below has $m$ rows and $n$ columns. We say that the dimension of $A$ is $m\times n$. 
+
+\[A = \left(
+\begin{array}{cccc}
+A[1,1] & A[1,2] & \ldots & A[1,n]\\
+A[2,1] & A[2,2] & \ldots & A[2,n]\\
+\vdots & \vdots & \ddots & \vdots\\
+A[m,1] & A[m,2] & \ldots & A[m,n]
+\end{array}
+\right)\]
+
+
+## Matrices and Arrays - 2 
+
+- Creating Matrices 
+We can use the <span Style="color:blue">matrix()</span> function to create a matrix. One should know that the internal storage of a matrix is in *column-major order* (column 1, column 2,...). The <span Style="color:blue">dim()</span> function could be used to check the dimension of a matrix. 
+
+```{r create_m}
+X <- matrix(c(1, 3, 2, 4, 5, 8), nrow = 2)
+X
+dim(X)
+nrow(X) # obtain the number of rows
+ncol(X) # obtain the number of columns
+matrix(c(1, 3, 2, 4, 5, 8), ncol=2, byrow = T)
+```
+
+## Matrices and Arrays - 3
+
+- General Matrix Operations
+We can perform linear algebra operations on matrices, such as matrix multiplication, matrix scalar multiplication, and matrix addition. 
+
+```{r math1}
+A <- matrix(c(1, 2, 3, 4), ncol=2)
+A %*% A # matrix multiplication
+-2 * A
+A + A
+```
+
+## Matrices and Arrays - 4
+
+- Matrix Indexing
+The same operations we talked about for vectors apply to matrices as well. 
+
+```{r indexing}
+set.seed(1000) # set a random seed
+A <- matrix(sample(1:100, 12), ncol=3) # use 12 random numbers to create a 4 by 3 matrix.
+A
+A[2:3,]
+A[, - c(1,3)] # remove the 1st and 3rd columns
+```
+
+## Matrices and Arrays - 5
+
+We can also assign values to submatrices. The following code chunk shows an example based on A given on the previous slide. 
+
+```{r submatrices}
+A
+A[, 1:2] <- matrix(c(1, 2, 3, 4, 7, 5, 8, -3), ncol=2)
+A
+```
+
+## Matrices and Arrays - 6
+
+- Filtering on Matrices 
+We can extract values in a matrix based on conditions. 
+
+```{r filtering_m1}
+A
+A[A[,2] >= 6, ]
+A[which(A[,2] >= 6), ]
+```
+
+*A[,2] >= 6* finds rows in the 2nd column such that their values are at least 6 and returns a set of logical values. The <span Style="color:blue">which()</span> function reports which indices are *TRUE*. 
+
+
+## Matrices and Arrays - 7
+
+We should note that the filtering criterion can be based on a variable different from the one to which the filtering will be applied. This could be very useful when we have more than one matrices (or data frames) and we want to use the conditions from one matrix to extract values in another matrix. 
+
+```{r filtering_m2}
+A
+z <- c(7, 8, 20, 31)
+A[z %% 2 == 1, ]
+```
+
+Here, *z %% 2 == 1* checks each element of z for being an odd number and returns a set of logical values. 
+
+Since matrices are vectors, we can apply vector operations to them as well. The code chunk below shows an example. 
+
+```{r which}
+which(A < 20) 
+```
+
+
+## Matrices and Arrays - 8
+
+- Adding and Deleting Matrix Rows and Columns
+We can reassign a matrix and then the dimension of it could be changed. 
+
+```{r adm}
+A <- A[2:3, -2]
+```
+
+- Use the <span Style="color:blue">cbind()</span> or <span Style="color:blue">rbind()</span> functions
+The <span Style="color:blue">cbind()</span> function can be used to combine two matrices by columns (numbers of rows in two matrices have to be the same). And  <span Style="color:blue">rbind()</span> works similarly. 
+
+```{r crbind}
+one <- rep(1, 2)
+cbind(A, one)
+rbind(A, one)
+```
+
+
+## Matrices and Arrays - 9
+
+- Naming Matrix Rows and Columns
+We can give names to columns or rows in a matrix if necessary. The <span Style="color:blue">colnames()</span> function can be used to name matrix columns. And  <span Style="color:blue">rownames()</span> works similarly. 
+
+
+```{r names}
+X 
+colnames(X) <- c("C1", "C2", "C3")
+X
+rownames(X) <- c("R1", "R2")
+X
+```
+
+
+## Matrices and Arrays - 10
+
+- Higher-Dimension Arrays
+Suppose we have data taken at different times, one data point per person per variable per time. Time becomes the third dimension, in addition to rows and columns. Such data sets are called array in R. 
+
+```{r arrays}
+# Create two matrices.
+set.seed(1000)
+matrix1 <- matrix(sample(1:100, 9), ncol=3)
+matrix2 <- matrix(sample(1:100, 9), ncol=3)
+
+# Take these matrices as input to the array.
+result <- array(cbind(matrix1, matrix2), dim = c(3,3,2))
+result
+```
+
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+

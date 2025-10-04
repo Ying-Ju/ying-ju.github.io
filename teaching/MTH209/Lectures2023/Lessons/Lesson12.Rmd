@@ -1,0 +1,172 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 12: A Quick Overview of GitHub" 
+author: |
+  | Department of Mathematics
+  | University of Dayton
+bibliography: ../styles/MTH209.bib
+link-citations: yes
+output: 
+  slidy_presentation:
+    css: ["../styles/fonts.css", "../styles/mytheme.css"]
+    font_adjustment: -1
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      cache.lazy = TRUE,
+                      out.width = "100%",
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      verbose = TRUE)
+```
+
+## Overview
+
+In this session, we will provide a quick overview of GitHub. It will cover some basic usages of GitHub Desktop due to the time limitation of the class. 
+
+<head>
+    <base target="_blank">
+</head>
+
+
+### What is Git?
+
+Git is a version control system that allows us to track changes in any set of files. It is typically used by programmers who are working on source code together. 
+
+
+### What is GitHub?
+
+GitHub is a version control and collaboration tools for programming. It allows us to collaborate on projects from any location with other people. 
+
+
+## Register for a GitHub account
+
+We can register for a GitHub account at [www.github.com](https://github.com/){target="_blank"}.
+
+```{r github, echo=FALSE, fig.align='center', out.width = "50%"}
+knitr::include_graphics("../Figures/GitHub.JPG")
+```
+
+
+## Install and Set up GitHub Desktop
+
+```{r github_desktop, echo=FALSE, fig.align='center', fig.cap="Installing GitHub Desktop from https://desktop.github.com/", out.width = "50%"}
+knitr::include_url("https://desktop.github.com/", height = "600px")
+```
+
+## GitHub
+
+We will create a process that shows how to create a repository, track changes, and explore a file's history. 
+
+
+```{r github_home, echo=FALSE, fig.align='center', out.width = "80%"}
+knitr::include_graphics("../Figures/GitHub_home.JPG")
+```
+
+## GitHub Desktop
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+Here is an example that shows how GitHub Desktop looks like. 
+
+```{r github_desktop_example, echo=FALSE, fig.align='center', out.width = "80%"}
+knitr::include_graphics("../Figures/GitHub_desktop.JPG")
+```
+
+:::
+:::{.column width=50%}
+
+- Current repository
+- Current branch
+- Fetch origin
+
+Fetch downloads the most recent updates from origin but it does not update our local working copy with the changes. After we click Fetch origin, the button changes to Pull Origin. Clicking Pull Origin will update our local working copy with the fetched updates.
+
+- Summary (required) & Description (optional)
+- Commit to master
+
+When we commit the changes, the list of uncommitted changes was gone from the left pane. We have, however, just committed the changes locally. The commit must be pushed to the remote (origin) repository.
+:::
+::::::
+
+## Use GitHub Pages to Publish a HTML File
+
+::::::{style="display: flex;"}
+:::{.column width=60%}
+
+```{r github_desktop_pages, echo=FALSE, fig.align='center'}
+knitr::include_graphics("../Figures/GitHub_Pages.JPG")
+```
+
+:::
+:::{.column width=40%}
+
+The html file needs to be named as <span Style="Color:#ff8000">index.html</span>. 
+
+1. Sign in our GitHub account at [www.github.com](https://github.com/).
+2. Navigate to the repository where our html file is.
+3. Click <span Style="color:#3384FF">Settings</span> and find <span Style="color:#3384FF">Pages</span> from the left menu.
+4. Under "GitHub Pages", use the None or Branch drop-down menu and select a publishing source.
+5. Click <span Style="color:#3384FF">Save</span>.
+
+**Note:** It may take a few minutes to have the webpage available online, depending on the HTML file size.  
+:::
+::::::
+
+
+
+## Use GitHub Pages to Publish Several HTML Pages
+
+::::::{style="display: flex;"}
+:::{.column width=50%}
+
+One can find that it is less effective when creating a repository for posting only one HTML file. There could be a situation where we have to post multiple HTML pages. There is an easy way to do this. This also applies to the situation when one webpage is posted. 
+
+1. Head over to GitHub and create a new public repository named <span Style="color:red">username.github.io</span>, where the username is our username on GitHub. 
+
+2. Go to the folder where we want to store our webpages. 
+
+3. Add the HTML files.
+
+The webpage is available at 
+```
+https://username.github.io/folder/filename.html.
+```
+
+For example, all the class lessons are stored in the the folder <span Style="color:orange">teaching/MTH209</span> in the
+GitHub repository <span Style="color:red">ying-ju.github.io</span>. The webpage for this lesson is 
+
+https://ying-ju.github.io/teaching/MTH209/Lesson15.html.  
+
+:::
+:::{.column width=50%}
+
+```{r github_page, echo=FALSE, fig.align='center', out.width = "85%"}
+knitr::include_graphics("../Figures/GitHub_lessons.JPG")
+```
+
+:::
+::::::
+
+
+## README
+
+You can utilize the following single character keyboard shortcuts to enable alternate display modes (@xie2018r):
+
+* A: Switches show of current versus all slides (helpful for printing all pages)
+
+* B: Make fonts large
+
+* c: Show table of contents
+
+* S: Make fonts smaller
+
+
+
+
+
+
