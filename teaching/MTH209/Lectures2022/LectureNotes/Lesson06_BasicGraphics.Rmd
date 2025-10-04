@@ -1,0 +1,506 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 6: Basic Graphical Displays" 
+author: '<br>Ying-Ju Tessa Chen, PhD <br><br> Associate Professor <br> Department of Mathematics<br> University of Dayton <br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @ying-ju](https://twitter.com/ju_tessa) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` ying-ju](https://github.com/ying-ju/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)<br>'
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../Styles/fonts.css", "../Styles/modified_theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: magula
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../Styles/header.html"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+daytonred = '#E4002B'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+
+
+pacman::p_load(lubridate, janitor, magrittr,
+               tidyverse, # data analysis pkgs
+               countdown, fontawesome, RefManageR, 
+               xaringanExtra, # for slides
+               gifski, av, # for animations
+               rvest, # for scraping
+               scales # for the comma function
+               ) 
+
+BibOptions(check.entries = FALSE, bib.style = "authoryear", 
+           style = "markdown", dashed = TRUE)
+
+bib = ReadBib("../Styles/MTH209.bib") 
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "16px")
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipable"))
+
+```
+
+## Learning Objectives
+
+.small[
+In this session, we will use the Black Friday Data available in [Kaggle](https://www.kaggle.com/datasets/pranavuikey/black-friday-sales-eda). 
+
+```{r data}
+library(tidyverse)
+Friday <- read_csv("../Datasets/Black_Friday.csv")
+```
+
+]
+
+.pull-left[
+.footnotesize[
+- Categorical Data
+  - Bar Chart
+  - Pie Chart
+
+- Quantitative Data
+  - Histogram
+  - Boxplot
+  - Scatterplot 
+  - Line 
+]
+]
+
+.pull-right[
+.footnotesize[
+Here is a list of common arguments:
+
+  - col: a vector of colors 
+  - main: title for the plot
+  - xlim or ylim: limits for the x or y axis
+  - xlab or ylab: a label for the x axis
+  - font: font used for text, 1=plain; 2=bold; 3=italic, 4=bold italic
+  - font.axis: font used for axis 
+  - cex.axis: font size for x and y axes
+  - font.lab: font for x and y labels
+  - cex.lab: font size for x and y labels
+]
+]
+
+---
+## Understand Your Data
+
+.footnotesize[To understand the customer purchases behavior against various products of different categories, the retail company "ABC Private Limited", in United Kingdom, shared purchase summary of various customers for selected high volume products from last month. The data contain the following variables. 
+
+- User_ID: User ID
+- Product_ID: Product ID
+- Gender: Sex of User
+- Age: Age in bins
+- Occupation: Occupation (Masked)
+- City_Category: Category of the City (A,B,C)
+- Stay_In_Current_City_Years: Number of years stay in current city
+- Marital_Status: Marital Status
+- Product_Category_1: Product Category (Masked)
+- Product_Category_2: Product may belongs to other category also (Masked)
+- Product_Category_3: Product may belongs to other category also (Masked)
+- Purchase: Purchase Amount
+]
+
+---
+## Get a Glimpse of the Data
+
+.small[We can use the .green[glimpse()] function to get a glimpse of the data.
+
+```{r glimpse}
+glimpse(Friday)
+```
+]
+
+---
+## Bar Chart - 1
+
+.small[Bar chart is a graphical display good for the general audience. Here, we study the distribution of Age Group of the company's customers who purchased their products on Black Friday.
+
+**Usage:** barplot(height, ...)
+
+```{r bar1, out.width="35%"}
+barplot(table(Friday$Age))
+```
+
+]
+
+---
+## Bar Chart - 2
+
+.small[We can have the horizontal bars. Using the argument .purple[col], we can assign a color for bars. The argument .purple[main] could be used to change the title of the figure. ] 
+
+.pull-left[
+
+```{r bar2, out.width="35%", eval=FALSE}
+# change the margin line for the axis title, axis labels and axis line
+par(mgp=c(4,1,0))
+
+# set margin of the figure 
+par(mar=c(5,7,4,2)) 
+
+barplot(table(Friday$Age), 
+        col = "lightblue", 
+        main = "Distribution of Customer's Age", 
+        horiz = TRUE, 
+        xlab = "Number of Customers",
+        ylab = "Age Group", las=1)
+```
+
+]
+.pull-right[
+```{r bar2_hide, out.width="70%", eval=TRUE, echo=FALSE}
+par(mgp=c(4,1,0)) # change the margin line for the axis title, axis labels and axis line
+par(mar=c(5,7,4,2)) # set margin of the figure 
+barplot(table(Friday$Age), col = "lightblue", main = "Distribution of Customer's Age", 
+        horiz = TRUE, xlab = "Number of Customers",
+        ylab = "Age Group", las=1)
+```
+]
+
+.footnoteisze[**Note:** The margin of a figure could be set using the .green[par()] function. The order of the setting is .purple[c(bottom, left, top, right)]. 
+]
+---
+## Bar Chart - 3
+
+.small[
+We can use RGB color code to assign colors. 
+
+```{r bar3, out.width="35%"}
+barplot(table(Friday$Age), col = "#69b3a2", 
+        main = "Distribution of Customer's Age", 
+        xlab = "Age Group", ylab ="Number of Customers")
+```
+
+]
+
+---
+## Pie Chart - 1
+
+.small[
+Similarly, we can use pie chart to study the distribution of the city category. 
+
+**Usage:** pie(height, ...)
+
+```{r pie1, fig.align = 'center', out.width="40%"}
+library(tidyverse)
+pie(table(Friday$City_Category), 
+    main = "Distribution of City Category", 
+    col = c("#264e70", "#679186", "#bbd4ce"), cex = 1.5)
+```
+
+]
+
+---
+## Pie Chart - 2
+
+.pull-left[
+.small[The following code chunk shows an advanced setting. 
+
+```{r pie2, out.width="80%", eval=FALSE}
+H <- table(Friday$City_Category)
+
+# calculate percentages
+percent <- round(100*H/sum(H), 1)
+
+# include %
+pie_labels <- paste(percent, "%", sep="") 
+
+pie(H, main = "Distribution of City Category",
+    labels = pie_labels, 
+    col = c("#54d2d2", "#ffcb00", "#f8aa4b"))
+legend("topright", c("A","B","C"), cex = 0.8, 
+       fill = c("#54d2d2", "#ffcb00", "#f8aa4b"))
+```
+]
+]
+
+.pull-right[
+```{r pie2_hide, out.width="80%", eval=TRUE, echo=FALSE}
+H <- table(Friday$City_Category)
+
+# calculate percentages
+percent <- round(100*H/sum(H), 1)
+
+# include %
+pie_labels <- paste(percent, "%", sep="") 
+
+pie(H, main = "Distribution of City Category",
+    labels = pie_labels, cex = 1.5,
+    col = c("#54d2d2", "#ffcb00", "#f8aa4b"))
+legend("topright", c("A","B","C"), cex = 0.8, 
+       fill = c("#54d2d2", "#ffcb00", "#f8aa4b"))
+```
+]
+
+.small[**Tip:** Use color palette to choose colors (Google search: color scheme generator). ]
+
+---
+## Histogram 
+
+.small[Histogram is used when we want to study the distribution of a quantitative variable. Here we study the distribution of customer purchase amount.
+
+**Usage:** hist(x, ...)
+]
+
+.pull-left[
+
+```{r histogram, out.width="40%", eval=FALSE}
+hist(Friday$Purchase, 
+     main = "Distribution of Customer Purchase Amount", 
+     xlab = "Purchase Amount (British Pounds)")
+```
+]
+.pull-right[
+```{r histogram_hide, out.width="70%", eval=TRUE, echo=FALSE}
+hist(Friday$Purchase, 
+     main = "Distribution of Customer Purchase Amount", 
+     xlab = "Purchase Amount (British Pounds)")
+```
+
+.footnotesize[
+We can find that the distribution of histogram is multimodal. ]
+]
+
+---
+## Boxplot - 1
+
+.small[Here, we talk about another graphical display that can be used to study the distribution of a quantitative variable: box and whisker plot (boxplot). 
+**Usage:** boxplot(x, ...) or boxplot(formula, ...)
+
+```{r boxplot1, out.width="35%"}
+boxplot(Friday$Purchase, xlab = "Purchase Amount",
+        ylab = "British Pounds", cex.lab = 1.5, cex.axis = 1.5)
+```
+
+]
+
+---
+## Boxplot -2
+
+.small[In general, a boxplot is used When we want to compare the distributions of several quantitative variables.  In the following we study the distribution of customer purchase amount among different age groups. ]
+
+.pull-left[
+
+.small[In order to know how this can be done, we need to know how to define a formula in R. 
+
+**Usage:** A ~ B
+
+  - A: response variable
+  - B: explanatory variables
+  ]
+]
+.pull-right[
+
+```{r boxplot2, out.width="60%"}
+boxplot(Friday$Purchase ~ Friday$Age, 
+        xlab = "Age", 
+        ylab = "Purchase (British Pounds)",
+        cex.lab = 1.5, cex.axis = 1.25)
+```
+
+]
+
+---
+## Boxplot - 3
+
+.small[
+We can improve the quality of the boxplot by changing a few settings in the default settings. 
+
+```{r boxplot3, out.width="35%"}
+boxplot(Friday$Purchase ~ Friday$Age, 
+        main = "Distribution of Purchase by Age Group",
+        xlab = "Customer Age Group", 
+        ylab = "Purchase Amount", 
+        cex.lab = 1.5, cex.axis = 1.25, col = "#54d2d2")
+```
+
+]
+
+---
+## Boxplot - 4
+
+.small[
+We can use the argument .purple[data] to indicate that variables used are from a given data.
+
+```{r boxplot4, out.width="35%"}
+boxplot(Purchase ~ Gender + Marital_Status, data = Friday, 
+        main="Distribution of Purchase by Sex and Marital_Status", 
+        xlab="Sex and Marital Status", ylab="Purchase", cex.lab=1.25, cex.axis=1.25, horizontal = TRUE,
+        names = c("Female & Single", "Male & Single", "Female & Married", "Male & Married"))
+```
+
+]
+
+---
+## Scatterplot - 1
+
+.small[
+When we want to study the relationship of two quantitative variables, a scatterplot can be used. We will use a R built-in dataset `mtcars`. We study the relationship of gross horsepower against mileage.]
+
+```{r scatterplot, out.width="35%"}
+plot(mpg ~ hp, data = mtcars, xlab = "Gross Horsepower", ylab = "Miles per Gallon", 
+     col = daytonred, cex.lab = 1.5, cex.axis = 1.5, pch = 19)
+```
+
+---
+## Point Shapes Available in R
+
+```{r pch, echo=FALSE, out.width="50%"}
+library(ggpubr)
+d <- data.frame(p = c(0:25))
+    p <- ggplot() + scale_y_continuous(name = "") + scale_x_continuous(name = "") + 
+        scale_shape_identity() + geom_point(data = d, mapping = aes(x = p%%6, 
+        y = p%/%6, shape = p), size = 5, fill = "blue") + 
+        geom_text(data = d, mapping = aes(x = p%%6, y = p%/%6 + 
+            0.25, label = p), size = 5) + scale_y_reverse() + 
+        theme(axis.title = element_blank())
+    ggpar(p, ticks = FALSE, tickslab = FALSE, main = "")
+#ggpubr::show_point_shapes() + labs(title="") 
+```
+
+---
+## Line Plot - 1
+
+.small[When we want to show how a quantitative variable changes over a period of time, a line plot can be used.  Line plots can also be used to compare changes over the same period of time for several groups.  
+In order to graph a line plot, we need to know two additional arguments 
+
+- .purple[type]: 
+<br> "p" to draw only points; 
+<br> "l" to draw only lines; 
+<br> "o" to draw both points and lines
+  
+- .purple[lty]: line types. 
+<br> 0 = blank; 
+<br> 1 = solid; 
+<br> 2 = dashed; 
+<br> 4 = dotdash, 
+<br> 5 = longdash, 
+<br> 6 = twodash
+]
+
+---
+## Line Plot - 2  
+
+.small[
+Since the Black Friday Data are not time series data, it is not appropriate to use a line plot.  In the following code chunk, we create a data frame using the forecasted highest temperatures from July 13 to July 22 ([The Weather Channel](https://weather.com/)).]  
+
+.pull-left[
+.small[
+
+```{r line1, fig.align='center', out.width="28%", eval=FALSE}
+Date <- 13:22
+Dayton_OH <- c(84, 86, 91, 89, 89, 
+               91, 92, 91, 91, 91)
+Houston_TX <- c(100, 97, 96, 94, 94, 
+                94, 93, 93, 92, 91)
+Denver_CO <- c(95, 85, 89, 96, 97, 
+               96, 92, 91, 95, 96)
+Fargo_ND <- c(86, 80, 84, 87, 90, 
+              87, 83, 84, 87, 89)
+df <- data.frame(Date, Dayton_OH, Houston_TX,
+                 Denver_CO, Fargo_ND)
+
+plot(Date, Dayton_OH, type = "o", col = "blue", 
+     xlab = "Date in July", 
+     ylab = "Highest Temperature",
+     ylim = c(80, 100), 
+     cex.lab = 1.5, cex.axis = 1.5)
+lines(Date, Houston_TX, type="o", col="red")
+lines(Date, Denver_CO, type="o", col="purple")
+lines(Date, Fargo_ND, type="o", col="darkgreen")
+```
+]
+]
+.pull-right[
+.small[
+
+```{r line11, fig.align='center', out.width="75%", echo=FALSE}
+Date <- 13:22
+Dayton_OH <- c(84, 86, 91, 89, 89, 
+               91, 92, 91, 91, 91)
+Houston_TX <- c(100, 97, 96, 94, 94, 
+                94, 93, 93, 92, 91)
+Denver_CO <- c(95, 85, 89, 96, 97, 
+               96, 92, 91, 95, 96)
+Fargo_ND <- c(86, 80, 84, 87, 90, 
+              87, 83, 84, 87, 89)
+df <- data.frame(Date, Dayton_OH, Houston_TX, Denver_CO, Fargo_ND)
+
+plot(Date, Dayton_OH, type = "o", col = "blue", 
+     xlab = "Date in July", 
+     ylab = "Highest Temperature",
+     ylim = c(80, 100), cex.lab = 1.5, cex.axis = 1.5)
+lines(Date, Houston_TX, type="o", col="red")
+lines(Date, Denver_CO, type="o", col="purple")
+lines(Date, Fargo_ND, type="o", col="darkgreen")
+```
+]
+]
+
+---
+# Summary of Main Points
+
+By now, you should know how to create the following types of graphic displays:
+
++ Categorical Data
+
+  - Bar Chart
+  - Pie Chart
+
++ Quantitative Data
+  - Histogram
+  - Boxplot
+  - Scatterplot
+  - Line
+
+---
+# Supplementary Materials
+
+Here are some useful supplementary materials for self-learning. 
+
+.pull-left[
+.center[[<img src="https://r4ds.hadley.nz/cover.jpg" height="250px">](https://r4ds.had.co.nz)]
+.small[
+* [Plots](https://r4ds.hadley.nz/base-r#plots)
+]
+]
+.pull-right[
+.center[[<img src="../Figures/RPubs.png" height="250px">](https://RPubs.com)]
+.small[
+* [Basic Plots 1](https://rpubs.com/miguelpatricio/plots)
+* [Basic Plots 2](https://rpubs.com/Felix/7795)
+]
+]
+
+
+
+
+
+
+
+

@@ -1,0 +1,42 @@
+---
+title: "Homework 1"
+author: "Tessa Chen"
+date: "2023-08-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Character - 1
+
+A character object is used to store text, letters, or words (strings) in R.
+
+```{r code1}
+x <- "Hello"
+y <- "UD students!"
+class(x) # we can use class() function to obtain the data type
+nchar(x)
+```
+
+**Note:** Where defining strings, double quotes "" and single quotes '' are interchangeably but double quotes are preferred (and character constants are printed using double quotes), so single quotes are normally only used to delimiit character constants containing double quotes. 
+
+## Character - 2
+
+If we want to cobmine two strings into one string, we can use paste() or paste0() function. 
+
+```{r code2}
+paste(x,y)
+paste(x,y, sep=",")
+paste(x,y,sep=", ")
+paste(x, ", ", y)
+paste0(x,y)
+```
+
+## An example of showing a graph
+
+```{r plot}
+boxplot(Petal.Width ~ Species, data = iris)
+```
+This example shows boxplots.

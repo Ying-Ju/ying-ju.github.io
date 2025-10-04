@@ -1,0 +1,173 @@
+---
+title: "MTH 209 Data Manipulation and Management"
+subtitle: "Lesson 9: R Markdown Presentations" 
+author: '<br>Ying-Ju Tessa Chen, PhD <br><br> Associate Professor <br> Department of Mathematics<br> University of Dayton <br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @ying-ju](https://twitter.com/ju_tessa) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` ying-ju](https://github.com/ying-ju/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)<br>'
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../Styles/fonts.css", "../Styles/modified_theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: magula
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../Styles/header.html"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+daytonred = '#E4002B'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+
+
+pacman::p_load(lubridate, janitor, magrittr,
+               tidyverse, # data analysis pkgs
+               countdown, fontawesome, RefManageR, 
+               xaringanExtra, # for slides
+               gifski, av, # for animations
+               rvest, # for scraping
+               scales # for the comma function
+               ) 
+
+BibOptions(check.entries = FALSE, bib.style = "authoryear", 
+           style = "markdown", dashed = TRUE)
+
+bib = ReadBib("../Styles/MTH209.bib") 
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "16px")
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipable"))
+
+```
+
+## Learning Objectives
+
+In this session, we will learn
+
+1. Rmarkdown Presentations
+2. Flex Dashboard
+
+
+---
+## Rmarkdown Presentations - 1
+
+In order to create a Rmarkdown presentation, we click <span Style="color:#3384FF">File</span> and then find <span Style="color:#3384FF">New File</span> and then <span Style="color:#3384FF">R markdown ...</span> There are four options:
+
+- Html (ioslides): This format allows us to create a slide show and the slides could be broken up into sections by using the heading tags # and ##. If a header is not needed, a new slide could be created using a horizontal rule (- - -).
+
+- Html (Slidy): Similar to ioslides, this format allows to create a slide show broken up into sections by using the heading tag ##. If a header is not needed, a new slide could be created using a horizontal rule (- - -). A Slidy presentation gives a table of content while An ioslides presentation doesn't.  
+
+- PDF (beamer): This format allows to create a beamer presenation (LaTex). The slides could be broken up into sections by using the heading tags # and ##. If a header is not needed, a new slide could be created using a horizontal rule (- - -).
+
+- PowerPoint
+
+---
+## Rmarkdown Presentations - 2
+
+```{r presentation, echo=FALSE, fig.align='center', fig.cap="Creating a Rmarkdown Presentation", out.width = "50%"}
+knitr::include_graphics("../Figures/presentation.JPG")
+```
+
+
+---
+## Rmarkdown Presentations - 3
+
+In the following, we show an example of the header of a Rmarkdown file. 
+
+```{r Rmarkdown_heading, echo=FALSE, fig.align='center', out.width = "40%"}
+knitr::include_graphics("../Figures/Rmarkdown_heading.JPG")
+```
+
+We can use the output option to manipulate which presentation we would like to have. 
+
+- output: ioslides_presentation
+- output: slidy_presentation
+- output: beamer_presentation
+- output: powerpoint_presentation
+
+To render an R Markdown document into its final output format, we can click the <span Style="color:#3384FF">Knit</span> button to render the document in RStudio and RStudio will show a preview of it. 
+
+The further settings for presentations could be found at [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/presentations.html)
+
+
+---
+## xaringan Presentation
+
+A easy way to start creating a xaringan presentation is to use the R markdown template with <span Style="color:#3384FF">Ninja Presentation</span> or <span Style="color:#3384FF">Ninja Themed Presentation</span>.
+
+```{r xaringan, echo=FALSE, fig.align='center', fig.cap="Creating a Rmarkdown Presentation", out.width = "30%"}
+knitr::include_graphics("../Figures/xaringan.JPG")
+```
+
+A comprehensive tutorial regarding xaringan presentation could be found at [xaringan Presentation](https://bookdown.org/yihui/rmarkdown/xaringan.html)
+
+---
+## Flex Dashboard
+
+A easy way to start creating a Flex dashboard is to use the R markdown template with <span Style="color:#3384FF">Flex Dashboard</span>.
+
+```{r dashboard, echo=FALSE, fig.align='center', fig.cap="Creating a Flex Dashboard", out.width = "30%"}
+knitr::include_graphics("../Figures/dashboard.JPG")
+```
+
+- We can use # to create multiple pages. 
+- We can use <span Style="color:#3384FF">orientation</span> in the <span Style="color:#3384FF">output</span> options to specify the layout to be <span Style="color:#3384FF">columns</span> or <span Style="color:#3384FF">rows</span>. 
+
+A comprehensive tutorial regarding Flex Dashboard could be found at [flexdashboard](https://pkgs.rstudio.com/flexdashboard/)
+
+---
+# Summary of Main Points
+
+By now, you should know how to create different types of presentation such as
+
+- ioslides
+- Slidy
+- beamer
+- Powerpoint
+- xaringan
+- Flex Dashboard
+
+
+---
+# Supplementary Materials
+
+Here are some useful supplementary materials for self-learning. 
+
+.pull-left[
+.center[[<img src="https://r4ds.hadley.nz/cover.jpg" height="250px">](https://r4ds.hadley.nz)]
+.small[
+* [Data Visualization](https://r4ds.hadley.nz/data-visualize)
+]
+]
+.pull-right[
+.center[[<img src="../Figures/RPubs.png" height="250px">](https://RPubs.com)]
+.small[
+* [Visualizations with ggplot2 1](https://rpubs.com/chrisbrunsdon/UG_ggplot)
+* [Visualization with ggplot2 2](https://rpubs.com/Cisco_Self_Serve/318832)
+]
+]
