@@ -40,7 +40,10 @@ h1, h2, h3 {
 /* change the line spread for readability
    and so that inline code highlighting 
    doesn't cover text on the line above */
-.remark-slide-content { font-size:20px}
+.remark-slide-content {
+  font-size:20px;
+  padding-top:12px;
+}
 .remark-slide-content p, 
 .remark-slide-content li {
   line-height: 1.4;
