@@ -1,0 +1,204 @@
+---
+title: "A 10-Minute Tour of Analytical Views in Dimensions.ai"
+author: "Ying-Ju Tessa Chen"
+institute: "Department of Mathematics, University of Dayton"
+date: January 23, 2026
+date-format: "MMMM DD, YYYY"
+format:
+  revealjs: 
+    theme: [default, style_files/tessa_theme.scss]
+    slide-number: true
+    footer: "AI Demo Day | University of Dayton | Dayton, OH"
+    title-slide-attributes:
+      data-background-color: "#0b3c5d"
+---
+
+## Plan
+
+<head>
+    <base target="_blank">
+</head>
+
+<div style="margin-top: 2em;"></div>
+
+This short demo is meant to:
+
+-   give you a **sense of what is possible**
+-   help you decide **whether Dimension.ai is useful for your work**
+
+
+## What is Dimension.ai
+
+[**Dimension.ai**](https://www.dimensions.ai/) **is a research intelligence platform that helps you:**
+
+-   🔍 **Search** publications (free), datasets (free), grants, patents, and clinical trials *together*
+
+-   📈 **See trends** across time, topics, and disciplines
+
+-   🌐 **Explore networks** of researchers, institutions, and funding
+
+-   🤖 **Use AI summaries** to quickly understand research landscapes
+
+> **Think beyond finding papers -\
+> think understanding the research ecosystem.**
+
+<div style="margin-top: 1em;"></div>
+
+Not a replacement for Google Scholar. A complement when you want context, patterns, and strategy.
+
+##  {.inverse .center .title-slide}
+
+Demo Time: [https://www.dimensions.ai/](https://www.dimensions.ai)
+
+
+## Interface of Dimension.ai
+
+```{r}
+knitr::include_graphics("dimension.png")
+```
+
+## Dimension.ai: Take-Home Messages
+
+**What you saw today**
+
+-   Start from a **research topic**, not individual papers
+
+-   Use **Analytical Views** to understand trends and structure
+
+-   Narrow down to **focused, relevant literature** efficiently
+
+**Beyond discovery**
+
+-   **Altmetric**: see how research is discussed beyond academia
+
+-   **Author network**: visualize collaboration and research identity
+
+**AI Acknowledgment:**
+This presentation was prepared with the assistance of AI-based tools for drafting, editing, and formatting support. All content and interpretations are the author’s own.
+
+
+## Appendix: Publish and Embed a Co-author Network (Google Drive + VOSviewer Online)
+
+<div style="margin-top: 1em;"></div>
+
+This appendix provides step-by-step instructions for sharing an interactive co-author network on a personal webpage. The workflow uses a VOSviewer JSON file (e.g., `coauthor_network.json`) hosted on Google Drive and visualized via VOSviewer Online.
+
+\
+
+### What you need
+
+-   A VOSviewer JSON file downloaded from Dimension.ai (e.g., `VOSviewer-network.json`)
+-   A Google Drive account
+-   A personal webpage (department site, GitHub Pages, WordPress, etc.)
+
+------------------------------------------------------------------------
+
+### Part 1 - Upload the JSON file to Google Drive
+
+1.  Upload `VOSviewer-network.json` to Google Drive.
+2.  Right-click the file → **Share**.
+3.  Under **General access**, select **Anyone with the link** (not **Restricted**).
+4.  Set permission to **Viewer**.
+5.  Copy the share link.
+
+> **Note:** If the access is not set to “Anyone with the link,” VOSviewer Online will not be able to load the JSON file.
+
+------------------------------------------------------------------------
+
+### Part 2 - Convert the Google Drive share link into a direct-access link
+
+::: {style="font-size: 80%;"}
+A typical Google Drive share link looks like this:
+
+> https://drive.google.com/file/d/<span style="color: red;">FILE_ID</span>/view?usp=sharing
+
+<div style="margin-top: 1em;"></div>
+
+#### Step 1: Extract the `FILE_ID`
+
+The `FILE_ID` is the substring between `/d/` and `/view`.
+
+<div style="margin-top: 1em;"></div>
+
+#### Step 2: Create the direct-access link
+
+Use the following format:
+
+> https://drive.google.com/uc?id=<span style="color: red;">FILE_ID</span>
+
+<div style="margin-top: 1em;"></div>
+
+**Quick test:** Paste the `direct-access` link into a browser.
+
+-   If it downloads or displays the JSON content, it is accessible.
+-   If you see a permissions error, revisit the sharing settings in Part 1.
+:::
+
+------------------------------------------------------------------------
+
+### Part 3 - Create a VOSviewer Online link for your network
+
+<div style="margin-top: 1em;"></div>
+
+Use the direct-access link (from Part 2) as the `json` parameter for VOSviewer Online:
+
+> https://app.vosviewer.com/?json=https://drive.google.com/uc?id=<span style="color: red;">FILE_ID</span>
+
+**Quick test:** Open the link in a browser to confirm the interactive map loads.
+
+------------------------------------------------------------------------
+
+### Part 4 - Add the network to your personal website
+
+::: {style="font-size: 80%;"}
+
+There are two common approaches:\
+
+
+#### Option A (Recommended fallback): Add a hyperlink (most reliable)
+
+This option works on virtually any website platform:
+
+```html
+<p>
+  <a href="https://app.vosviewer.com/?json=https://drive.google.com/uc?id=FILE_ID"
+     target="_blank" rel="noopener">
+    View my co-author network (interactive)
+  </a>
+</p>
+```
+
+\
+
+#### Option B (Best-looking): Embed using an iframe
+
+Embedding displays the interactive map directly on your webpage:
+
+```html
+<iframe
+  src="https://app.vosviewer.com/?json=https://drive.google.com/uc?id=FILE_ID"
+  width="100%"
+  height="650"
+  style="border:0;"
+  loading="lazy">
+</iframe>
+```
+
+**Compatibility note:** Some website builders or institutional CMS platforms restrict iframes.\
+
+If the embedded view does not load, use Option A (hyperlink), which is the most robust alternative.
+:::
+
+------------------------------------------------------------------------
+
+### Troubleshooting (common issues)
+
+-   **It opens in VOSviewer Online, but the iframe is blank:**\
+    Your website platform may block external iframes. Use Option A (hyperlink).
+
+-   **Others cannot access the network / permissions error:**\
+    Confirm the Drive file is shared as **Anyone with the link** and permission is **Viewer**.
+
+-   **I updated the JSON file and the link stopped working:**\
+    If you uploaded a *new* file, the `FILE_ID` changed. Update your links accordingly.\
+    If you replaced/updated the *same* file (same `FILE_ID`), links usually remain valid.
