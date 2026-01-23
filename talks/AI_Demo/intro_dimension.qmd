@@ -24,12 +24,12 @@ format:
 This short demo is meant to:
 
 -   give you a **sense of what is possible**
--   help you decide **whether Dimension.ai is useful for your work**
+-   help you decide **whether Dimensions.ai is useful for your work**
 
 
-## What is Dimension.ai
+## What is Dimensions.ai
 
-[**Dimension.ai**](https://www.dimensions.ai/) **is a research intelligence platform that helps you:**
+[**Dimensions.ai**](https://www.dimensions.ai/) **is a research intelligence platform that helps you:**
 
 -   🔍 **Search** publications (free), datasets (free), grants, patents, and clinical trials *together*
 
@@ -51,13 +51,13 @@ Not a replacement for Google Scholar. A complement when you want context, patter
 Demo Time: [https://www.dimensions.ai/](https://www.dimensions.ai)
 
 
-## Interface of Dimension.ai
+## Interface of Dimensions.ai
 
 ```{r}
 knitr::include_graphics("dimension.png")
 ```
 
-## Dimension.ai: Take-Home Messages
+## Dimensions.ai: Take-Home Messages
 
 **What you saw today**
 
@@ -87,7 +87,7 @@ This appendix provides step-by-step instructions for sharing an interactive co-a
 
 ### What you need
 
--   A VOSviewer JSON file downloaded from Dimension.ai (e.g., `VOSviewer-network.json`)
+-   A VOSviewer JSON file downloaded from Dimensions.ai (e.g., `VOSviewer-network.json`)
 -   A Google Drive account
 -   A personal webpage (department site, GitHub Pages, WordPress, etc.)
 
