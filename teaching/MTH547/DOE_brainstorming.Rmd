@@ -1,0 +1,277 @@
+---
+title: "MTH 547 Design of Experiments"
+subtitle: "Project Ideation & Feasibility Workshop" 
+author: '<br>Ying-Ju Tessa Chen, PhD <br><br> Associate Professor <br> Department of Mathematics<br> University of Dayton <br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @ying-ju](https://twitter.com/ju_tessa) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` ying-ju](https://github.com/ying-ju/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)<br>'
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "styles/fonts.css", "styles/modified_theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: magula
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+  includes:  
+    in_header: "styles/header.html"
+    after_body: "css/collapsecode.js"  
+---
+  
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+daytonred = '#E4002B'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+
+
+pacman::p_load(lubridate, janitor, magrittr,
+               tidyverse, # data analysis pkgs
+               countdown, fontawesome, RefManageR, 
+               xaringanExtra, # for slides
+               gifski, av, # for animations
+               rvest, # for scraping
+               scales, # for the comma function
+               knitr,
+               plotly
+) 
+
+```
+
+
+
+## Workshop Goals
+
+
+**Key points:**
+
+* Generate promising project directions
+* Think in terms of *experimental structure*
+* No final decisions today
+* Ideas will evolve as we learn more DOE tools
+
+---
+
+## What Makes a DOE-Friendly Project?
+
+* Measurable response
+* Controllable factors
+* Ability to replicate
+* Potential for **multiple factors**
+* Feasible within the semester
+
+
+---
+
+## Individual Brainstorming
+
+.small[
+**Instruction:**
+
+* Write down at least **3 topics or processes** you’re interested in
+* For each:
+
+  * Possible response
+  * At least one factor
+
+**Optional AI use:** You may use AI **before or during this step** to help generate or refine ideas.
+
+> Example prompts:
+>
+> * “I’m interested in designing an experiment about step count during daily walks.
+The response could be average steps per 30-minute walk.
+Suggest 2–3 controllable factors I could vary and explain why they might matter.”
+> * “I have a vague idea about improving sleep quality.
+Help me define a measurable response variable and two experimental factors that could realistically be controlled.”
+> * "Here is a tentative experiment idea: testing different study environments.
+Can you help me check whether this idea is suitable for a multi-factor experimental design and suggest possible factors and responses?"
+
+**Important:** AI suggestions are **starting points**. You must still judge feasibility and relevance.
+]
+
+---
+
+## Group Sharing & Idea Expansion
+
+**Instruction:**
+
+* Share your ideas within your group
+* Combine or improve ideas
+* Add possible factors
+
+👉 **No AI here**
+This is intentionally *human discussion*.
+You want peer reasoning, not chatbot convergence.
+
+---
+
+## Feasibility Voting
+
+**Criteria for voting:**
+
+* DOE-friendly
+* Interesting/meaningful
+* Realistic
+
+Each student votes → top 3 ideas per group.
+
+
+---
+
+## Design Thinking: Current vs Future Tools
+
+Split it visually:
+
+**What you know now**
+
+* One-factor designs
+* ANOVA
+* Diagnostics
+
+**What you will learn soon**
+
+* Multi-factor designs
+* Interactions
+* $2^k$ factorial designs
+
+Message:
+
+> Today, you are allowed to think *ahead* of where we are in the course.
+---
+
+## Brainstorming Run 1: One-Factor Framing
+
+For each of the top 3 ideas:
+
+* Response
+* One factor
+* Levels
+* Replication
+
+👉 **Optional AI use**
+
+You *can* allow AI to help articulate:
+
+* clearer response definitions
+* possible factor levels & ensure they are reasonable
+
+> Use AI only if your group is stuck.
+
+---
+
+## Brainstorming Run 2: Multi-Factor Expansion
+
+Now push depth.
+
+For each of the top 3 ideas:
+
+* What second factor matters?
+* Could there be interactions?
+* What would you *expect* to interact?
+
+👉 **This is where AI can be powerful — but risky**
+
+> You may use AI to **suggest additional factors**,
+> but you must decide which ones make sense and justify your choices using experimental reasoning.
+
+
+---
+
+## Brainstorming Run 3: Practical Constraints
+
+* What limits runs?
+* What must be controlled?
+* What could be blocked?
+
+> A block is a source of variability that we cannot or do not want to study, but we can group experimental runs by to reduce noise in the response.
+
+Blocking is needed only if there is a known nuisance variable that **affects the response**, and **cannot be randomized away easily**.
+
+.small[
+**Examples:**
+- Runs must be conducted on different days
+- Multiple machines must be used
+- Ingredients come from different batches
+- Different operators are involved
+]
+
+If none of those constraints exist → no block needed.
+
+👉 **No AI in this stage**
+
+---
+
+## How to Identify a Blocking Variable
+
+.pull-left[
+
+**Ask yourself:**
+
+* Does this variable affect the response?
+* Am I interested in its effect?
+* Can I randomize across it easily?
+
+If:
+
+* affects response ✔️
+* not of interest ✔️
+* hard to randomize ✔️
+
+→ Good candidate for blocking
+]
+.pull-right[
+
+**Common blocking variables**
+
+- Day or time
+- Operator / person
+- Machine or batch
+- Location
+- Raw material batch
+- Subject (if repeated measures)
+]
+
+<br>
+
+> If runs must be conducted on different days, day may be treated as a block.
+
+> If multiple machines are used but machine performance is not the focus, machine may be a block.
+---
+
+## Expectations Reminder 
+
+Expected Requirements
+
+* **Core**: $\geq 2$ factors + interaction consideration
+* **Advanced (optional)**: $\geq 3$ factors, $2^k$, fractional factorial
+
+
+> You are not expected to use AI in your final project analysis unless explicitly allowed.
+
+
+---
+
+## What Happens After Today
+
+* Ideas refined; Pick one from your top three ideas
+* Designs evolve
+* More tools coming soon
+* You’ll have time to prepare your presentation
+
+### Acknowledgment
+Parts of the workshop structure and example prompts were developed with the assistance of an AI language model (ChatGPT) and refined by the instructor.
