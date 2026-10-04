@@ -1,0 +1,69 @@
+/*-- scss:defaults --*/
+$body-bg: #faf9f5;
+$body-color: #183b49;
+$link-color: #287c8e;
+$font-family-sans-serif: 'Aptos', 'Segoe UI', sans-serif;
+$presentation-heading-font: 'Aptos Display', 'Segoe UI', sans-serif;
+$presentation-font-size-root: 30px;
+$presentation-heading-color: #183b49;
+/*-- scss:rules --*/
+.reveal h1 { font-size: 2.5em; font-weight: 750; }
+.reveal h2 { font-size: 1.5em; font-weight: 700; margin-bottom: .65em; }
+.reveal .subtitle { color: #287c8e; }
+.reveal strong { color: #c3682e; }
+.reveal blockquote { border-left: 5px solid #d97938; padding: .3em .8em; box-shadow: none; font-size: 1.2em; }
+.reveal table { font-size: .77em; width: 90%; }
+.reveal table th { color: #287c8e; }
+.reveal .small { font-size: .57em; color: #596b71; }
+.reveal section img { max-height: 500px; object-fit: contain; }
+.reveal .slide-number { color: #596b71; }
+.reveal h2::after { content: ''; display: block; width: 64px; height: 4px; background: #d97938; margin-top: .4em; }
+.reveal section[data-background-color="#183b49"] { color: #faf9f5; }
+.reveal section[data-background-color="#183b49"] h2 { color: #faf9f5; font-size: 1.8em; }
+.reveal section[data-background-color="#183b49"] strong { color: #f4b47c; }
+.reveal #title-slide { padding-top: 90px; text-align: left; border-top: 8px solid #d97938; }
+.reveal #title-slide .subtitle { font-size: 1.2em; }
+.reveal #title-slide .quarto-title-author { text-align: left; }
+.reveal .footer { font-size: 12px; color: #718085; }
+.reveal table td, .reveal table th { padding: .45em .55em; }
+.reveal .qq-slide > p { text-align: center; }
+.reveal .math.display { font-size: 1.2em; margin: 1em 0; }
+
+
+.reveal #title-slide,
+.reveal #title-slide * {
+  text-align: left !important;
+}
+
+.reveal #title-slide .quarto-title-authors {
+  justify-content: flex-start !important;
+}
+
+.reveal #title-slide .quarto-title-author {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
+.reveal #title-slide .title-secondary {
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+.reveal #title-slide .quarto-title-author {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.reveal #title-slide .author-links {
+  margin-top: 0.6em;
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.reveal #title-slide .quarto-title-affiliation {
+  font-size: 0.85em !important;
+  color: #596b71;
+  text-align: left;
+  margin-top: 5em;
+}
