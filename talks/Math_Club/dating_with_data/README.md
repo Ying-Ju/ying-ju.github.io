@@ -1,3 +1,4 @@
-# MathClub.github.io
+# Math Club Talk
 This is the markdown for a talk given to Math Club at the University of Dayton on October 5, 2021. 
+
 The slides can be found here: https://ying-ju.github.io/talks/Math_Club/dating_with_data/talk.html.
