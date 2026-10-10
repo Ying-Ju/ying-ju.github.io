@@ -14,7 +14,7 @@ institute: "October 12, 2026 · Math Club · University of Dayton"
 title-slide-attributes:
   data-state: hide-slide-number
   data-background-image: figures/qr.png
-  data-background-size: 150px
+  data-background-size: 200px
   data-background-position: "right 50px bottom 50px"
 format:
   revealjs:
@@ -229,7 +229,7 @@ and helps us estimate **probabilities and percentiles**.
 
 What proportion of jobs require more than 8 hours?
 
-How many labor hours cover 90% of jobs?
+What labor-hour threshold includes 90% of repair jobs?
 :::
 ::: notes
 1 minute. Distinguish the empirical distribution (what we observed) from a fitted model (a smooth curve we propose). Both repair questions are answered later in the talk. All examples today use real, observed data.
@@ -500,7 +500,7 @@ Lower AIC means better relative fit. Lognormal tracks the long tail most closely
 Positive-labor orders (n = 2,837).
 :::
 
-**Weibull is closer for these questions. Lognormal fits better overall.**
+**Lognormal has the lowest AIC among these candidates; Weibull is closer to the observed values for these two questions.**
 
 ::: fragment
 Underestimating large jobs can reduce planned capacity. Acceptable error depends on the decision.
@@ -582,11 +582,15 @@ A point mass at **\$250,000**: 8.07%
 **Payment above \$100,000: observed 27.4% · model 25.5%**
 
 ::: small
-Model = truncated Lognormal interior + the 8.07% point mass at \$250,000.
+Full model: point masses at \$0 (17.93%) and \$250,000 (8.07%),
+plus a truncated Lognormal interior (74.01%).
 :::
 
 ::: notes
 2 minutes. This answers the \$100,000 question: 214 of 781 claims (27.4%) exceed \$100,000; the mixed model (74.01% × truncated-Lognormal P(interior > \$100k) ≈ 23.6%, plus the 8.07% cap mass) gives about 25.5%. Truncated Lognormal has lower AIC than truncated Gamma in this exploratory likelihood comparison, delta AIC about 32.78. The normalization is F(cap)-F(0). Do not present ordinary fits after simply deleting capped claims. No uncapped-loss tail is identified from the cap values. If asked about pricing: expected payment per policy needs both P(claim) from policy exposure and the payment distribution from claims; these records only give the second.
+
+We model payment amounts among reported claims.
+Policy-level risk also requires claim frequency and exposure information.
 :::
 
 ## Professor “Close Enough” revisited
