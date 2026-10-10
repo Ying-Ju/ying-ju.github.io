@@ -57,7 +57,7 @@ Could “close enough” change our estimate of a rare event?
 #| fig-height: 5
 #| out-width: "100%"
 
-pacman::p_load(emojifont, emo, ggplot2, RefManageR)
+pacman::p_load(emojifont, ggplot2, RefManageR)
 
 # Illustration: both distributions have mean 0 and SD 1
 df <- 5
@@ -389,11 +389,36 @@ An unusual pitch depends on the pitcher and the comparison period.
 
 ## Cincinnati repair work {background-color="#183b49"}
 
-How much mechanic labor does a repair require?
+**How much mechanic labor does a repair require?**
 
-**2,869 closed repair orders** for police equipment, work-order year 2022.
+:::: {.columns}
 
-Resource planning needs the full range of work demands.
+::: {.column width="55%"}
+**What are these records?**
+
+- City of Cincinnati fleet maintenance and repair work orders.
+- Our subset: **2,869 closed repair orders** for police equipment, work-order year **2022**.
+
+**What do we measure?**
+
+Recorded labor hours per repair order.
+:::
+
+::: {.column width="45%"}
+**Why understand the distribution?**
+
+- Plan staffing and labor budgets.
+- Estimate the proportion of labor-intensive jobs.
+- Allow for unusually demanding repairs.
+:::
+
+::::
+
+::: {.small}
+Labor hours measure work effort—not elapsed repair time or vehicle downtime.
+
+Source: [Cincinnati Open Data · Fleet Preventative Maintenance & Repair Work Orders](https://data.cincinnati-oh.gov/Thriving-Neighborhoods/Fleet-Preventative-Maintenance-Repair-Work-Orders/2a8x-bxjm)
+::: 
 
 ::: notes
 2 minutes. Fleet equipment, not verified individual passenger vehicles. An order is the observation; equipment can contribute several orders. Work-order year defines the cohort, not necessarily completion year. Latest public observations in the downloaded source stop in August 2023 despite metadata suggesting daily updates. Source: https://data.cincinnati-oh.gov/Thriving-Neighborhoods/Fleet-Preventative-Maintenance-Repair-Work-Orders/2a8x-bxjm . Labor hours are recorded aggregate labor; they do not measure elapsed downtime. Downtime definitions were too vague to support the earlier time-to-return story.
@@ -464,11 +489,27 @@ Acceptable error depends on the decision and its consequences.
 
 ## Flood claims after Hurricane Helene {background-color="#183b49"}
 
-North Carolina, 2024 losses
+**Where do these data come from?**
 
-Single-family properties with **\$250,000 building coverage**
+The **Federal Emergency Management Agency (FEMA)** manages
+the **National Flood Insurance Program (NFIP)**.
 
-**781 claims** in the FEMA data snapshot
+**Our sample**
+
+- **781 flood insurance claims** associated with Hurricane Helene.
+- North Carolina · 2024 losses · Single-family homes.
+- Each policy has **$250,000 in building coverage**.
+
+**What do we measure?**
+
+Recorded building claim payments—not total flood damage.
+
+::: {.small}
+Source: [OpenFEMA · NFIP Redacted Claims, Version 3](https://www.fema.gov/openfema-data-page/nfip-redacted-claims-v3)
+
+Data snapshot: September 8, 2026 · Payments may change as claims develop.
+:::
+
 
 ::: notes
 2 minutes. Source: https://www.fema.gov/openfema-data-page/nfip-redacted-claims-v3 and https://www.fema.gov/api/open/v3/NfipClaims . Filter occupancyType=11, floodEvent='Hurricane Helene', state NC, yearOfLoss 2024, totalBuildingInsuranceCoverage=250000. Variable netBuildingPaymentAmount. Snapshot asOfDate September 8 2026. Claims may develop; no closed-status field establishing finalization. Paid amount differs from total damage or latent loss. One storm creates dependence across claims.
