@@ -32,8 +32,8 @@ functions_for <- function(fit) {
 baseball <- read.csv("data/fastballs.csv")
 
 baseball$player <- factor(baseball$player_name,
-  levels=c("Abbott, Andrew","Bibee, Tanner","Yamamoto, Yoshinobu"),
-  labels=c("Andrew Abbott","Tanner Bibee","Yoshinobu Yamamoto"))
+                          levels=c("Abbott, Andrew","Bibee, Tanner","Yamamoto, Yoshinobu"),
+                          labels=c("Andrew Abbott","Tanner Bibee","Yoshinobu Yamamoto"))
 
 bcurves <- bqq <- bresults <- list()
 
@@ -48,22 +48,22 @@ for (name in levels(baseball$player)) {
   }
   starts <- c(10,100,1000)
   opts <- lapply(starts,function(df) optim(c(mu,log(sig),log(df)),nllt,
-    method="Nelder-Mead",control=list(maxit=10000,reltol=1e-11)))
+                                           method="Nelder-Mead",control=list(maxit=10000,reltol=1e-11)))
   opt <- opts[[which.min(vapply(opts,function(o)o$value,numeric(1)))]]
   ts <- exp(opt$par[2]); td <- exp(opt$par[3]); tm <- opt$par[1]
   cat(name, ": t df=", td, "location=",tm,"scale=",ts," convergence=",opt$convergence,"\n")
   wf <- functions_for(fit_positive(x,"weibull"))
   fs <- list(Normal=list(d=function(z)dnorm(z,mu,sig),q=function(p)qnorm(p,mu,sig)),
-    t=list(d=function(z)dt((z-tm)/ts,td)/ts,q=function(p)tm+ts*qt(p,td)),Weibull=wf)
+             t=list(d=function(z)dt((z-tm)/ts,td)/ts,q=function(p)tm+ts*qt(p,td)),Weibull=wf)
   grid <- seq(89,100,length.out=1000); prob <- ppoints(length(x),a=.5)
-
-    for (model in names(fs)) {
+  
+  for (model in names(fs)) {
     fun <- fs[[model]]
     bcurves[[length(bcurves)+1]] <- data.frame(player=name,model=model,x=grid,y=fun$d(grid))
     bqq[[length(bqq)+1]] <- data.frame(player=name,model=model,theory=fun$q(prob),observed=sort(x))
     bresults[[length(bresults)+1]] <- data.frame(player=name,model=model,n=length(x),
-      AIC=2*ifelse(model=="t",3,2)-2*sum(log(fun$d(x))),
-      t_df=ifelse(model=="t",td,NA_real_))
+                                                 AIC=2*ifelse(model=="t",3,2)-2*sum(log(fun$d(x))),
+                                                 t_df=ifelse(model=="t",td,NA_real_))
   }
 }
 
@@ -191,11 +191,23 @@ y <- claims$netBuildingPaymentAmount; cap <- 250000
 
 stopifnot(all(!is.na(y)),all(y>=0 & y<=cap))
 
-p <- ggplot(data.frame(y=y),aes(y)) +
-  geom_histogram(binwidth=10000,boundary=0,closed="left",fill="#287c8e",colour="white") +
-  annotate("text",x=240000,y=Inf,label=sprintf("%d zero payments\n%d payments at $250,000",sum(y==0),sum(y==cap)),
-           hjust=1,vjust=1.6,size=5,colour="#183b49") +
-  scale_x_continuous(labels=scales::label_dollar()) +
+# Show the two point masses ($0 and the cap) in their own colours so the first
+# bin is not read as part of the continuous body.
+# Point masses go first in the stacking order so they sit on the x-axis and
+# their heights can be read directly from the y-axis.
+hist_df <- data.frame(y=y, part=factor(ifelse(y==0,"$0 payment",ifelse(y==cap,"At $250,000 cap","Between")),
+                                       levels=c("$0 payment","At $250,000 cap","Between")))
+p <- ggplot(hist_df,aes(y,fill=part)) +
+  # Breaks run to $260,000 so the capped payments get their own bar ([250k, 260k])
+  # instead of sharing the $240k-$250k bar with 4 interior payments.
+  geom_histogram(breaks=seq(0,260000,10000),closed="left",colour="white",position=position_stack(reverse=TRUE)) +
+  scale_fill_manual(values=c("$0 payment"="#d97938","Between"="#287c8e","At $250,000 cap"="#7963a6"),
+                    breaks=c("$0 payment","Between","At $250,000 cap")) +
+  annotate("text",x=12000,y=sum(y==0)*0.8,label=sprintf("%d at $0",sum(y==0)),
+           hjust=0,size=5.5,colour="#d97938",fontface="bold") +
+  annotate("text",x=255000,y=sum(y==cap)+18,label=sprintf("%d at cap",sum(y==cap)),
+           hjust=0.5,size=5.5,colour="#7963a6",fontface="bold") +
+  scale_x_continuous(breaks=seq(0,250000,50000),labels=scales::label_dollar(),expand=expansion(mult=c(.01,.04))) + 
   labs(x="Net building payment",y="Number of claims")
 
 save_plot(p,"insurance_hist")

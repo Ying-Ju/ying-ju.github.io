@@ -11,6 +11,11 @@ author: >-
   [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "#183b49")` ychen4@udayton.edu](mailto:ychen4@udayton.edu)
   </div>
 institute: "October 12, 2026 · Math Club · University of Dayton"
+title-slide-attributes:
+  data-state: hide-slide-number
+  data-background-image: figures/qr.png
+  data-background-size: 150px
+  data-background-position: "right 50px bottom 50px"
 format:
   revealjs:
     theme: [simple, theme.scss]
@@ -57,7 +62,7 @@ Could “close enough” change our estimate of a rare event?
 #| fig-height: 5
 #| out-width: "100%"
 
-pacman::p_load(emojifont, ggplot2, RefManageR)
+pacman::p_load(ggplot2)
 
 # Illustration: both distributions have mean 0 and SD 1
 df <- 5
@@ -99,7 +104,7 @@ ggplot(curves, aes(x, density, color = model)) +
     y = 0.16,
     label = "Threshold",
     hjust = -0.08,
-    size = 4.5,
+    size = 7,
     color = "#596b71"
   ) +
   scale_color_manual(
@@ -201,7 +206,9 @@ ggplot(curves, aes(x, density, color = model)) +
 ```
 
 ::: {.fragment}
-**Beyond 3: Normal ≈ 0.135% · Student t ≈ 0.586%**
+**Beyond 3 SD: Normal ≈ 0.135% · Student t ≈ 0.586%**
+
+About **4×** as likely under t.
 
 A similar-looking curve can give a very different tail probability.
 :::
@@ -225,7 +232,7 @@ What proportion of jobs require more than 8 hours?
 How many labor hours cover 90% of jobs?
 :::
 ::: notes
-1 minute. A physical mechanism can be causal while our predictions remain uncertain. Distinguish empirical distribution from a proposed parametric model. All examples today use observed data.
+1 minute. Distinguish the empirical distribution (what we observed) from a fitted model (a smooth curve we propose). Both repair questions are answered later in the talk. All examples today use real, observed data.
 :::
 
 ## Is 94 mph fast? {background-color="#183b49"}
@@ -238,7 +245,7 @@ How many labor hours cover 90% of jobs?
 
 Four-seam fastball release speed, in miles per hour (mph).
 
-Typically a pitcher's fastest and straightest pitch.
+Typically a pitcher's fastest pitch.
 
 \
 
@@ -312,7 +319,7 @@ What does the distribution look like—and what information do we lose?
 
 
 
-## Three pitchers, three fitted distributions
+## Three candidate models for each pitcher
 
 ![](figures/baseball_fits.png){width="100%"}
 
@@ -321,7 +328,7 @@ What does the distribution look like—and what information do we lose?
 :::
 
 ::: notes
-3 minutes. Ask whether bell-shaped means Normal. The t has an estimated location, scale and degrees of freedom, not the fixed standard t distribution. Weibull fixes the lower endpoint at zero. This is a descriptive pooled comparison: game-level dependence and changing baselines limit iid likelihood interpretation.
+2 minutes. Ask whether bell-shaped means Normal. The t has an estimated location, scale and degrees of freedom, not the fixed standard t distribution. Weibull fixes the lower endpoint at zero. This is a descriptive pooled comparison: game-level dependence and changing baselines limit iid likelihood interpretation.
 :::
 
 ## What does the comparison say?
@@ -359,7 +366,7 @@ Interpret the AIC rankings cautiously because within-game dependence and changes
 ![](figures/baseball_qq.png){width="100%"}
 
 ::: notes
-2 minutes. Both axes use mph and equal scale. Points near y=x suggest agreement at the corresponding quantile. A few extreme pitches can depart. Models fit the rounded reported speeds as continuous measurements. No diagnostic injury conclusion follows from a slow pitch.
+1 minute. How to read it: if the model were perfect, every point would sit on the dashed line. Both axes use mph and equal scale. Points near y=x suggest agreement at the corresponding quantile. A few extreme pitches can depart. Models fit the rounded reported speeds as continuous measurements. No diagnostic injury conclusion follows from a slow pitch.
 :::
 
 ## A personal baseline changes the answer
@@ -372,10 +379,6 @@ Interpret the AIC rankings cautiously because within-game dependence and changes
 
 An unusual pitch depends on the pitcher and the comparison period.
 
-::: notes
-2 minutes. Strictly greater than 94, not greater than or equal. Monitoring supports questions about performance, not causal diagnosis. Abbott's mean in March–May was about 92.68 mph versus 92.10 in August–September, so pooling the season can obscure a shifting baseline. A game mean has a different uncertainty from an individual pitch.
-:::
-
 \
 
 ### What did we assume?
@@ -385,6 +388,10 @@ An unusual pitch depends on the pitcher and the comparison period.
 
 ::: fragment
 **A good distributional fit does not establish independence or stability over time.**
+:::
+
+::: notes
+2 minutes. Strictly greater than 94, not greater than or equal. Monitoring supports questions about performance, not causal diagnosis. Abbott's mean in March–May was about 92.68 mph versus 92.10 in August–September, so pooling the season can obscure a shifting baseline. A game mean has a different uncertainty from an individual pitch.
 :::
 
 ## Cincinnati repair work {background-color="#183b49"}
@@ -421,7 +428,7 @@ Source: [Cincinnati Open Data · Fleet Preventative Maintenance & Repair Work Or
 ::: 
 
 ::: notes
-2 minutes. Fleet equipment, not verified individual passenger vehicles. An order is the observation; equipment can contribute several orders. Work-order year defines the cohort, not necessarily completion year. Latest public observations in the downloaded source stop in August 2023 despite metadata suggesting daily updates. Source: https://data.cincinnati-oh.gov/Thriving-Neighborhoods/Fleet-Preventative-Maintenance-Repair-Work-Orders/2a8x-bxjm . Labor hours are recorded aggregate labor; they do not measure elapsed downtime. Downtime definitions were too vague to support the earlier time-to-return story.
+2 minutes. Fleet equipment, not verified individual passenger vehicles. An order is the observation; equipment can contribute several orders. Work-order year defines the cohort, not necessarily completion year. Source: https://data.cincinnati-oh.gov/Thriving-Neighborhoods/Fleet-Preventative-Maintenance-Repair-Work-Orders/2a8x-bxjm . Labor hours are recorded aggregate labor; they do not measure elapsed downtime.
 :::
 
 ## Typical work and total work
@@ -452,39 +459,57 @@ Models use all positive values. Display shows 0–20 hours, with the longer tail
 2 minutes. Compare the peak and body. A density height is not a probability; area over a range gives probability. Rounded work hours create ties that a smooth density cannot reproduce as point masses. All models include the 88-hour observation.
 :::
 
-## Lognormal fits best among these candidates {.qq-slide}
+## Lognormal fits best among these candidates
 
-![](figures/repair_qq.png){height="420px"}
+:::: {.columns}
+
+::: {.column width="55%"}
+![](figures/repair_qq.png){height="460px"}
+:::
+
+::: {.column width="45%"}
+\
+
+| Model     |          AIC |
+|-----------|-------------:|
+| Gamma     |     12147.59 |
+| Lognormal | **11526.07** |
+| Weibull   |     12166.14 |
+
+::: small
+Lower AIC means better relative fit. Lognormal tracks the long tail most closely.
+:::
+:::
+
+::::
 
 ::: notes
-2 minutes. Equal axis scaling. AIC: Gamma 12147.59, Lognormal 11526.07, Weibull 12166.14. Lognormal has lowest AIC/BIC and lower KS/CvM/AD descriptive discrepancies in the user's R run. This is a relative comparison, not an adequacy certificate or future validation.
+2 minutes. Equal axis scaling. Lognormal has the lowest AIC and BIC, and the smallest KS, CvM, and AD discrepancies among these three. This is a relative comparison, not proof that Lognormal is adequate or that it will predict future years well.
 :::
 
 ## Which model gets a large job right?
 
-| Positive-labor orders above 8 hours |     Share |
-|-------------------------------------|----------:|
-| Observed                            | **8.81%** |
-| Gamma                               |     7.19% |
-| Lognormal                           |     6.98% |
-| Weibull                             | **7.96%** |
+|           | Share above 8 hours | 90th percentile |
+|-----------|--------------------:|----------------:|
+| Observed  |           **8.81%** |    **7.6 hours** |
+| Gamma     |               7.19% |       7.0 hours |
+| Lognormal |               6.98% |       6.6 hours |
+| Weibull   |           **7.96%** |   **7.3 hours** |
 
-**Weibull is closer at this threshold. Lognormal fits better overall.**
-
-::: notes
-3 minutes. Ask whether lowest AIC makes every estimate most accurate. All estimates come from fitting and evaluating the same sample, so this is an illustration of task-specific fit rather than a forecasting contest. Eight labor hours is an illustrative staffing threshold, not an official service standard. Tail frequency alone is not total workload; job sizes and arrival volume also matter.
+::: small
+Positive-labor orders (n = 2,837).
 :::
 
-## Why does fit matter?
+**Weibull is closer for these questions. Lognormal fits better overall.**
 
-A distribution changes estimated probabilities and percentiles.
-
-Underestimating large jobs can reduce planned capacity.
-
-Acceptable error depends on the decision and its consequences.
+::: fragment
+Underestimating large jobs can reduce planned capacity. Acceptable error depends on the decision.
+:::
 
 ::: notes
-1 minute. No empirical claim that Cincinnati actually uses these models or suffered understaffing. These are teaching applications. Gamma MLE matches the positive sample mean closely even though it misses other features; use that fact to distinguish mean estimation from tail estimation. Future planning needs volume and validation across time or equipment.
+2 minutes. These answer the two questions from the opening slide: about 8.8% of jobs exceed 8 hours, and about 7.6 hours covers 90% of positive-labor jobs. All three models understate both, Lognormal the most. Ask whether lowest AIC makes every estimate most accurate. All estimates come from fitting and evaluating the same sample, so this is an illustration of task-specific fit rather than a forecasting contest. Eight labor hours is an illustrative staffing threshold, not an official service standard. Tail frequency alone is not total workload; job sizes and arrival volume also matter.
+
+Talking point: the Gamma fit reproduces the sample mean exactly (3.14 hours among positive-labor orders; this is a property of the Gamma MLE), yet it still understates large jobs. Getting the average right does not mean getting the tail right. No claim that Cincinnati uses these models or was understaffed; these are teaching applications.
 :::
 
 ## Flood claims after Hurricane Helene {background-color="#183b49"}
@@ -515,12 +540,23 @@ Data snapshot: September 8, 2026 · Payments may change as claims develop.
 2 minutes. Source: https://www.fema.gov/openfema-data-page/nfip-redacted-claims-v3 and https://www.fema.gov/api/open/v3/NfipClaims . Filter occupancyType=11, floodEvent='Hurricane Helene', state NC, yearOfLoss 2024, totalBuildingInsuranceCoverage=250000. Variable netBuildingPaymentAmount. Snapshot asOfDate September 8 2026. Claims may develop; no closed-status field establishing finalization. Paid amount differs from total damage or latent loss. One storm creates dependence across claims.
 :::
 
+## Why model insurance claim payments?
+
+**An average payment does not tell us how often large claims occur.**
+
+- How likely is a claim payment to exceed **$100,000**?
+- How often do payments reach the **$250,000 coverage limit**?
+
+::: fragment
+**Underestimating large payments can lead to underestimating funding needs.**
+:::
+
 ## The policy helps shape the distribution
 
 ![](figures/insurance_hist.png){width="100%"}
 
 ::: notes
-3 minutes. Equal \$10,000 bins including 0 and cap. Histogram endpoints are not smooth tails. 140 zeros and 63 exactly at cap. Zero payment does not establish zero damage or claim denial. Mean about \$67,137 and median \$26,453. We do not infer policy-level claim probability from a sample containing claims only.
+2 minutes. Equal \$10,000 bins; the \$0 payments and capped payments are shown in separate colors. Histogram endpoints are not smooth tails. 140 zeros and 63 exactly at cap. Zero payment does not establish zero damage or claim denial. Mean about \$67,137 and median \$26,453. We do not infer policy-level claim probability from a sample containing claims only.
 :::
 
 ## A mixed distribution for payments
@@ -543,32 +579,14 @@ A point mass at **\$250,000**: 8.07%
 578 interior claims. Truncated Lognormal has lower AIC (ΔAIC ≈ 32.78).
 :::
 
-::: notes
-2 minutes. Truncated Lognormal has lower AIC than truncated Gamma in this exploratory likelihood comparison, delta AIC about 32.78. The normalization is F(cap)-F(0). Do not present ordinary fits after simply deleting capped claims. Generalized Pareto splicing or latent mixtures remain candidates for future work, not tested findings. No uncapped-loss tail is identified from the cap values.
+**Payment above \$100,000: observed 27.4% · model 25.5%**
+
+::: small
+Model = truncated Lognormal interior + the 8.07% point mass at \$250,000.
 :::
 
-## Ordinary claims and unusually large claims
-
-Could different mechanisms require different distributions?
-
-**Mixture:** overlapping components for different latent groups.
-
-**Splicing:** one model below a threshold, another above it.
-
 ::: notes
-1 minute. A Lognormal body and GPD tail is a possible example, not a fitted model here. Threshold choice, sufficient exceedances and treatment of the policy cap need scrutiny. More flexible models can overfit. For paid amount, the cap and zero masses remain part of the model. Avoid claiming this dataset proves a mixture mechanism.
-:::
-
-## Insurance decisions need frequency and severity
-
-Expected payment per policy requires:
-
-$$P(\text{claim})\times E(\text{payment}\mid\text{claim}).$$
-
-Claim records describe severity. Policy exposure supplies the frequency denominator.
-
-::: notes
-2 minutes. Formula assumes at most one claim or a binary indicator over a specified period. With multiple claims, use expected count times appropriate average severity under the needed conditions. Pricing, reserves and policy design are applications, not advice to price from this storm alone. Shared storms matter for portfolio totals.
+2 minutes. This answers the \$100,000 question: 214 of 781 claims (27.4%) exceed \$100,000; the mixed model (74.01% × truncated-Lognormal P(interior > \$100k) ≈ 23.6%, plus the 8.07% cap mass) gives about 25.5%. Truncated Lognormal has lower AIC than truncated Gamma in this exploratory likelihood comparison, delta AIC about 32.78. The normalization is F(cap)-F(0). Do not present ordinary fits after simply deleting capped claims. No uncapped-loss tail is identified from the cap values. If asked about pricing: expected payment per policy needs both P(claim) from policy exposure and the payment distribution from claims; these records only give the second.
 :::
 
 ## Professor “Close Enough” revisited
@@ -580,7 +598,7 @@ Close enough for a tail probability?
 Close enough for the decision you need to make?
 
 ::: notes
-2 minutes. Ask students which fit measure they would use for each case. Evidence can support different answers for different tasks. All candidates can be poor. Check support, recording, dependence, time changes, and decision-specific errors without overwhelming the introductory audience.
+1–2 minutes. Ask students which fit measure they would use for each case. Evidence can support different answers for different tasks. All candidates can be poor. Check support, recording, dependence, time changes, and decision-specific errors without overwhelming the introductory audience.
 :::
 
 ## You can make a presentation like this
@@ -592,7 +610,7 @@ A `.qmd` file combines Markdown, code, and presentation settings.
 **MTH 209** introduces the skills behind reproducible statistical documents.
 
 ::: notes
-1 minute. User supplied the course connection. Avoid promising a specific current Quarto syllabus. Mention data and source code are available to explore. Questions can use the final five minutes; adjust discussion to the 45-minute slot.
+1 minute. Mention that the data and source code are available to explore. Leave the remaining time (about 8 to 10 minutes) for questions.
 :::
 
 ## All models are wrong, but some are useful {background-color="#183b49"}
@@ -604,3 +622,13 @@ George Box
 ::: notes
 1 minute. Attribution: George E. P. Box, Robustness in the Strategy of Scientific Model Building, 1979. The wording is the familiar quotation. Return to the decision before concluding that a better AIC alone is enough.
 :::
+
+
+## Thank You!
+
+- Please do not hesitate to contact me (Tessa Chen) at <a href="mailto:ychen4@udayton.edu"><i class="fa fa-paper-plane fa-fw"></i>&nbsp; ychen4@udayton.edu</a> for questions or further discussions.
+
+
+![](figures/Tessa_grey_G.gif){height="460px" fig-align="center"}
+
+
